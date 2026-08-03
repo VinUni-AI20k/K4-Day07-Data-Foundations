@@ -45,9 +45,10 @@ BENCHMARK = [
         "query": "Among the outerwear, which coat is made of faux fur?",
         "query_vi": "Trong nhóm áo khoác, sản phẩm nào làm từ lông giả?",
         "gold_answer": "Daisy Street mid-length faux fur coat in wavy checkerboard print.",
-        "metadata_filter": {"category_group": "outerwear"},
+        "metadata_filter": {"category_group": "outerwear", "customer_role": "buyer"},
         "expected_doc_ids": ["asos-daisy-street-mid-length-faux-fur-coat-in-wavy-checkerboard-print"],
-        "evidence": "Lọc category_group=outerwear (4 doc: bershka, daisy-street, jdy, miss-selfridge); "
+        "evidence": "Lọc category_group=outerwear và customer_role=buyer "
+                    "(4 doc: bershka, daisy-street, jdy, miss-selfridge); "
                     "mục 'About Me' của daisy-street ghi 'Super-soft faux fur'.",
     },
     {
@@ -65,7 +66,7 @@ BENCHMARK = [
             "asos-hollister-co-ord-halterneck-bikini-top-in-black",
         ],
         "evidence": "Cả hai đều color=black + 'Halterneck style' trong mục 'Dac diem'. "
-                    "Câu multi-result: top-3 nên chứa ít nhất một trong hai.",
+                    "Câu multi-result: top-3 phải chứa cả hai tài liệu.",
     },
     {
         "id": 5,

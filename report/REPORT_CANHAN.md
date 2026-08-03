@@ -50,6 +50,7 @@ Base case là văn bản đã ngắn hơn `chunk_size`, không còn separator, h
 `HeadingRecursiveChunker` là chiến lược riêng của tôi cho product listing.
 Nó tách từng section Markdown theo heading, giữ heading trong mọi child chunk và dùng recursive fallback cho section quá dài.
 
+<<<<<<< HEAD
 **`SentenceChunker.chunk`** — hướng tiếp cận:
 > Dùng `re.split(r"(?<=[.!?])\s+", text)`: **lookbehind** `(?<=...)` chỉ *khớp vị trí* khoảng trắng đứng sau dấu câu chứ không nuốt dấu câu, nên `"Câu một. Câu hai."` cho `["Câu một.", "Câu hai."]` — giữ nguyên `.`/`!`/`?` ở cuối câu trước. `\s+` gộp luôn trường hợp `".\n"` và nhiều khoảng trắng liên tiếp nên không cần liệt kê riêng `". "`, `"! "`, `"? "`.
 > Edge case đã xử lý: text rỗng → `[]`; `strip()` từng câu rồi loại câu rỗng (tránh chunk chỉ chứa khoảng trắng khi text có dấu câu ở cuối); text không có dấu câu nào → regex không tách được, trả về đúng 1 chunk là cả đoạn; `max_sentences_per_chunk` được ép `max(1, ...)` trong `__init__` để `range(0, n, limit)` không bao giờ nhận step = 0 (vòng lặp vô hạn).
@@ -57,10 +58,17 @@ Nó tách từng section Markdown theo heading, giữ heading trong mọi child 
 **`RecursiveChunker.chunk` / `_split`** — hướng tiếp cận:
 > `_split(text, separators)` thử separator theo **thứ tự ưu tiên** `["\n\n", "\n", ". ", " ", ""]` — tách theo ranh giới ngữ nghĩa lớn trước, chỉ hạ xuống ranh giới nhỏ hơn khi buộc phải làm. Với separator hiện tại, hàm cắt text rồi **gộp các phần liền kề vào một buffer** chừng nào chưa vượt `chunk_size` (nhờ vậy 3 câu ngắn nằm chung 1 chunk thay vì thành 3 chunk vụn); phần nào tự nó vẫn dài quá thì **đệ quy** với danh sách separator còn lại.
 > Ba nhánh dừng, bảo đảm đệ quy luôn tiến và không lặp vô hạn: (1) `len(text) <= chunk_size` → trả `[text]`; (2) hết separator **hoặc** separator là `""` → `_fixed_cut` cắt cứng theo `chunk_size` (lối thoát cuối); (3) separator không xuất hiện trong text → gọi lại với `separators[1:]`, text giữ nguyên — không tách nhưng danh sách separator ngắn đi 1 nên vẫn hội tụ về (1) hoặc (2).
+=======
+### EmbeddingStore
+
+`add_documents` sao chép metadata, bảo đảm có `doc_id`, tạo ID chunk duy nhất và lưu embedding cùng nội dung trong in-memory store.
+`search` embed query một lần, tính dot product với các record, sắp xếp giảm dần theo score và trả về `top_k` kết quả.
+>>>>>>> cd9427de4f9d4d7d9db94152ba1da3adf96d0db3
 
 `search_with_filter` lọc metadata trước rồi mới xếp hạng similarity trên tập record còn lại.
 `delete_document` xóa toàn bộ record có cùng `doc_id`, còn `get_collection_size` trả về số chunk hiện có.
 
+<<<<<<< HEAD
 **`add_documents` + `search`** — hướng tiếp cận:
 > **Lưu trữ:** backend in-memory (`self._store` là `list[dict]`, `_use_chroma = False` — Chroma là phần bonus, không làm). `_make_record(doc)` chuẩn hoá mọi Document về đúng một schema `{id, content, metadata, embedding}`; metadata được **copy** (`dict(doc.metadata)`) để store không sửa nhầm dict của người gọi, và luôn có khóa `doc_id` (`setdefault(doc_id, doc.id)`) vì `delete_document` lọc theo chính khóa này. `id` ghép `doc.id` với `self._next_index` nên thêm cùng một `doc.id` nhiều lần vẫn không đụng id.
 > **Tính độ tương tự:** `_search_records` nhúng query **đúng một lần** (ngoài vòng lặp — nhúng lại trong loop là N lần gọi embedding thừa), tính **dot product** với từng embedding đã lưu, sort giảm dần theo `score` rồi cắt `[:top_k]`. Dùng dot thay vì cosine đầy đủ là hợp lệ ở đây vì `MockEmbedder` đã L2-normalize vector đầu ra, nên dot ≡ cosine.
@@ -68,9 +76,16 @@ Nó tách từng section Markdown theo heading, giữ heading trong mọi child 
 **`search_with_filter` + `delete_document`** — hướng tiếp cận:
 > **Lọc TRƯỚC, xếp hạng SAU.** Làm ngược lại (lấy top-k rồi mới bỏ record lệch metadata) có thể trả về **0 kết quả dù store vẫn còn tài liệu hợp lệ**: nếu 3 chunk `department=marketing` tình cờ chiếm trọn top-3 thì lọc-sau sẽ vứt sạch cả 3 và không còn gì để trả, trong khi lọc-trước vẫn xếp hạng trong nhóm `engineering` và trả về đủ `top_k`. Một record chỉ đi tiếp khi khớp **mọi** cặp key/value trong `metadata_filter` (`all(...)`).
 > `search()` và `search_with_filter()` **dùng chung `_search_records`**, nên khi `metadata_filter=None` hai hàm chắc chắn cho cùng kết quả thay vì lệch nhau do trùng lặp logic. `delete_document(doc_id)` dựng lại danh sách chỉ gồm record có `metadata['doc_id'] != doc_id`, so sánh độ dài trước/sau để biết có xoá được gì không → `True` nếu ít nhất 1 record biến mất, `False` nếu không khớp record nào. Cách này xoá **tất cả** chunk của cùng một file gốc trong một lần, đúng với việc `ingest.py` sinh nhiều chunk (`<doc_id>::chunk_0`, `::chunk_1`, ...) từ một tài liệu.
+=======
+### KnowledgeBaseAgent
+
+`answer` lấy top-k chunks, dựng context có số thứ tự và source ID, sau đó đưa context cùng câu hỏi vào prompt.
+Nếu store rỗng, agent trả về thông báo thiếu context thay vì gọi LLM với dữ liệu rỗng.
+>>>>>>> cd9427de4f9d4d7d9db94152ba1da3adf96d0db3
 
 ### Kết quả kiểm thử
 
+<<<<<<< HEAD
 **`answer`** — hướng tiếp cận:
 > Agent **không tự nhúng gì cả**: nó gọi `self.store.search(question, top_k=top_k)` và tái sử dụng toàn bộ phần retrieval đã hoàn thành. Store rỗng / không có kết quả → trả thẳng thông báo thiếu căn cứ, **không gọi LLM** (gọi lúc đó chỉ tạo cơ hội cho model bịa).
 > **Cấu trúc prompt** gồm 4 phần: *instruction* (chỉ dùng Context, nói rõ khi không đủ thông tin, trích dẫn bằng `[n]`) → *Context* → *Question* → nhãn `Answer:` để model biết chỗ bắt đầu sinh. **Inject context** bằng cách đánh số từng chunk `[1] (nguồn: <doc_id>) <nội dung>` ngăn cách bởi dòng trống — nhờ số hiệu + `doc_id` mà mỗi ý trong câu trả lời truy vết được về đúng chunk và đúng file gốc, đây chính là tiêu chí *grounding* trong `docs/EVALUATION.md`.
@@ -148,6 +163,16 @@ tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_tr
 > ```
 
 **Số lượng bài test vượt qua (pass):** **42** / 42
+=======
+Bộ test được chạy với package cá nhân bằng cách ánh xạ package Long vào tên import `src`.
+
+```text
+..........................................                               [100%]
+42 passed in 0.01s
+```
+
+## 3. Dự đoán độ tương tự (Similarity Predictions) - 5 điểm
+>>>>>>> cd9427de4f9d4d7d9db94152ba1da3adf96d0db3
 
 Các điểm dưới đây được tính bằng `MockEmbedder` deterministic của package cá nhân.
 Mock embedding chỉ dùng để kiểm tra kỹ thuật, không dùng để kết luận chất lượng ngữ nghĩa của product retrieval.
