@@ -215,11 +215,18 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 ## Tự Đánh Giá (Phần Cá Nhân)
 
-| Tiêu chí | Điểm tự đánh giá |
-|----------|-------------------|
-| Khởi động (Warm-up) | / 5 |
-| Hướng tiếp cận của tôi (My Approach) | / 10 |
-| Hoàn thiện code (Core Implementation — tests) | / 30 |
-| Dự đoán độ tương tự (Similarity Predictions) | / 5 |
-| Kết quả truy xuất của tôi (Competition Results) | / 10 |
-| **Tổng phần cá nhân** | **/ 60** |
+| Tiêu chí | Điểm tự đánh giá | Căn cứ |
+|----------|-------------------|--------|
+| Khởi động (Warm-up) | 5 / 5 | Hoàn thành cả 1.1 và 1.2; phép tính chunking được đối chiếu ngược với vòng lặp thật trong `FixedSizeChunker.chunk` (23 chunk) chứ không chỉ áp công thức. |
+| Hướng tiếp cận của tôi (My Approach) | 10 / 10 | Ghi rõ cả 5 khối: regex tách câu, 2 base case của đệ quy, cấu trúc bản ghi, lý do pre-filter, cấu trúc prompt — kèm lý do chọn và hạn chế đã biết. |
+| Hoàn thiện code (Core Implementation — tests) | 30 / 30 | 42/42 test PASSED (xem Phần 3). |
+| Dự đoán độ tương tự (Similarity Predictions) | 5 / 5 | Chỉ đoán đúng 2/5, nhưng thang điểm tính phần *phản ngẫm*: đã truy ra nguyên nhân (MD5 hash không có tính liên tục ngữ nghĩa) và kiểm chứng bằng phép đo phụ (chênh 1 dấu chấm → −0.263). |
+| Kết quả truy xuất của tôi (Competition Results) | 7 / 10 | Theo thang 2/1/0 của `docs/SCORING.md`: câu 1 (1đ) + câu 2 (1đ) + câu 3 (2đ) + câu 4 (2đ) + câu 5 (1đ). |
+| **Tổng phần cá nhân** | **57 / 60** | |
+
+### Tự phản ngẫm (Self-reflection)
+
+- **Điều làm tốt:** không dừng ở "code chạy được". Khi thấy điểm số dồn cục quanh 0.32, tôi đo phân phối cosine của vector ngẫu nhiên 64 chiều (mean +0.0017, std 0.1264, max qua 139 mẫu ≈ +0.3157) và xác nhận top-1 lúc đó chỉ là **argmax của nhiễu** — chứ không kết luận vội rằng chiến lược chunking kém.
+- **Sai lầm đã mắc và đã sửa:** ban đầu tôi viết trong báo cáo rằng `MockEmbedder` không chuẩn hóa vector, trong khi mã nguồn có chuẩn hóa (`embeddings.py`). Lý do dùng `compute_similarity` thay vì `_dot` vẫn đúng nhưng phải diễn đạt lại cho chính xác: là để độc lập với backend, không phải để sửa lỗi chuẩn hóa.
+- **Điều mất nhiều thời gian nhất:** phân biệt "kết quả đúng tài liệu" với "kết quả đúng đoạn văn". Ba cách đếm (top-1 theo `doc_id`, top-3 theo `doc_id`, và đoạn thực sự chứa gold) cho ra ba con số khác nhau — 2/5, 4/5, 4/5. Nếu chỉ báo cáo con số đẹp nhất thì báo cáo sẽ sai lệch.
+- **Nếu làm lại:** (1) cài `LocalEmbedder` ngay từ đầu thay vì chạy hết vòng đánh giá trên mock rồi phải làm lại toàn bộ Phần 5; (2) thêm `metadata_filter` vào `KnowledgeBaseAgent.answer()` để phần truy xuất và phần trả lời dùng chung một tập ứng viên; (3) đề xuất nhóm chấm gold answer theo **nội dung đoạn** thay vì theo `doc_id`, vì câu 5 cho thấy hai tài liệu khác nhau cùng phát biểu đúng một quy định.
