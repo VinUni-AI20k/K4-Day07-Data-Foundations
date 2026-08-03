@@ -24,3 +24,4 @@ data/*
 !data/*.py
 !data/**/*.py
 !data/.gitkeep
+!data/README.md
