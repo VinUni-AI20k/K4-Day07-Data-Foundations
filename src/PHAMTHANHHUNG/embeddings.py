@@ -32,6 +32,7 @@ class LocalEmbedder:
     """Sentence Transformers-backed local embedder."""
 
     def __init__(self, model_name: str = LOCAL_EMBEDDING_MODEL) -> None:
+        # pyrefly: ignore [missing-import]
         from sentence_transformers import SentenceTransformer
 
         self.model_name = model_name
