@@ -1,128 +1,116 @@
-# Báo Cáo Cá Nhân — Lab 7: Embedding & Vector Store
+# Báo Cáo Cá Nhân - Lab 7: Embedding & Vector Store
 
-**Họ tên:** [Tên sinh viên]
-**Nhóm:** [Tên nhóm]
-**Ngày:** [Ngày nộp]
+**Họ tên:** Nguyễn Đăng Long
+**Mã sinh viên:** 2A202601934
+**Nhóm:** K4
+**Ngày:** 2026-08-03
 
-> **Nộp 1 bản / sinh viên.** Phần nhóm (lựa chọn tài liệu, thiết kế chiến lược, bộ câu hỏi đánh giá, demo) nộp chung 1 bản trong `REPORT_NHOM.md`. Chi tiết thang điểm: `docs/SCORING.md`.
+Phần implementation cá nhân được đặt trong `src/K4_2A202601934_NguyenDangLong/`.
+Package này tự chứa chunkers, embedding backends, vector store, agent và chiến lược heading-recursive của tôi.
 
-**Tổng điểm phần cá nhân: 60** = Khởi động (5) + Hướng tiếp cận (10) + Hoàn thiện code (30) + Dự đoán độ tương tự (5) + Kết quả truy xuất của tôi (10).
+## 1. Khởi động (Warm-up) - 5 điểm
 
----
+### Độ tương tự Cosine
 
-## 1. Khởi động (Warm-up) — Cá nhân (5 điểm)
+Cosine similarity đo góc giữa hai vector embedding thay vì chỉ đo độ dài của chúng.
+Giá trị càng gần 1 thì hai đoạn văn có hướng ngữ nghĩa càng giống nhau; giá trị gần 0 hoặc âm cho thấy chúng ít tương đồng trong không gian embedding.
 
-### Độ tương tự Cosine (Cosine Similarity) (Bài tập 1.1)
+Ví dụ có độ tương tự cao:
 
-**Độ tương tự cosine cao (High cosine similarity) nghĩa là gì?**
-> *Viết 1-2 câu:*
+- Câu A: `This black cotton dress is available in several sizes.`
+- Câu B: `The black dress comes in multiple sizes.`
+- Hai câu cùng nói về một chiếc váy đen và nhiều kích cỡ, dù cách diễn đạt khác nhau.
 
-**Ví dụ có độ tương tự CAO:**
-- Câu A:
-- Câu B:
-- Tại sao tương đồng:
+Ví dụ có độ tương tự thấp:
 
-**Ví dụ có độ tương tự THẤP:**
-- Câu A:
-- Câu B:
-- Tại sao khác:
+- Câu A: `Dry clean only.`
+- Câu B: `Machine wash at 40 degrees.`
+- Hai câu mô tả hướng dẫn chăm sóc trái ngược nhau.
 
-**Tại sao độ tương tự cosine (cosine similarity) được ưu tiên hơn khoảng cách Euclid (Euclidean distance) cho text embeddings?**
-> *Viết 1-2 câu:*
+Cosine similarity phù hợp với text embedding vì nó tập trung vào hướng biểu diễn ngữ nghĩa và ít bị ảnh hưởng bởi độ dài tuyệt đối của văn bản.
 
-### Bài toán tính toán Chunking (Bài tập 1.2)
+### Bài toán tính toán Chunking
 
-**Tài liệu 10,000 ký tự, chunk_size=500, overlap=50. Bao nhiêu chunks?**
-> *Trình bày phép tính:*
-> *Đáp án:*
+Với tài liệu 10,000 ký tự, `chunk_size=500` và `overlap=50`, bước dịch là `500 - 50 = 450` ký tự.
+Theo công thức của đề bài, số chunk là `ceil((10,000 - 50) / 450) = ceil(22.111...) = 23`.
 
-**Nếu độ chồng chéo (overlap) tăng lên 100, số lượng chunk thay đổi thế nào? Tại sao muốn độ chồng chéo nhiều hơn?**
-> *Viết 1-2 câu:*
+Khi overlap tăng lên 100, bước dịch còn `500 - 100 = 400` và số chunk là `ceil((10,000 - 100) / 400) = ceil(24.75) = 25`.
+Overlap lớn giúp giữ phần ngữ cảnh nằm ở ranh giới giữa hai chunk, nhưng làm tăng số chunk và chi phí embedding.
 
----
+## 2. Hướng tiếp cận của tôi (My Approach) - 10 điểm
 
-## 2. Hướng tiếp cận của tôi (My Approach) — Cá nhân (10 điểm)
+### Các hàm chia nhỏ
 
-Giải thích cách tiếp cận của bạn khi lập trình (implement) các phần chính trong gói `src`.
+`SentenceChunker.chunk` dùng regex `r"(?<=[.!?])\s+"` để tách sau dấu kết thúc câu.
+Hàm loại bỏ đoạn rỗng, gom tối đa số câu cấu hình được vào một chunk và trả về danh sách rỗng khi input rỗng.
 
-### Các hàm chia nhỏ (Chunking Functions)
+`RecursiveChunker.chunk` thử các separator theo thứ tự đoạn văn, dòng, câu, khoảng trắng rồi mới hard-split theo kích thước.
+Base case là văn bản đã ngắn hơn `chunk_size`, không còn separator, hoặc input rỗng; mọi chunk trả về đều được strip để tránh whitespace rác.
 
-**`SentenceChunker.chunk`** — hướng tiếp cận:
-> *Viết 2-3 câu: dùng biểu thức chính quy (regex) gì để phát hiện câu? Xử lý trường hợp ngoại lệ (edge case) nào?*
+`HeadingRecursiveChunker` là chiến lược riêng của tôi cho product listing.
+Nó tách từng section Markdown theo heading, giữ heading trong mọi child chunk và dùng recursive fallback cho section quá dài.
 
-**`RecursiveChunker.chunk` / `_split`** — hướng tiếp cận:
-> *Viết 2-3 câu: thuật toán hoạt động thế nào? Base case (trường hợp cơ sở) là gì?*
+### EmbeddingStore
 
-### Lớp EmbeddingStore
+`add_documents` sao chép metadata, bảo đảm có `doc_id`, tạo ID chunk duy nhất và lưu embedding cùng nội dung trong in-memory store.
+`search` embed query một lần, tính dot product với các record, sắp xếp giảm dần theo score và trả về `top_k` kết quả.
 
-**`add_documents` + `search`** — hướng tiếp cận:
-> *Viết 2-3 câu: lưu trữ thế nào? Tính độ tương tự ra sao?*
+`search_with_filter` lọc metadata trước rồi mới xếp hạng similarity trên tập record còn lại.
+`delete_document` xóa toàn bộ record có cùng `doc_id`, còn `get_collection_size` trả về số chunk hiện có.
 
-**`search_with_filter` + `delete_document`** — hướng tiếp cận:
-> *Viết 2-3 câu: lọc (filter) trước hay sau? Xóa bằng cách nào?*
+### KnowledgeBaseAgent
 
-### Tác tử KnowledgeBaseAgent
+`answer` lấy top-k chunks, dựng context có số thứ tự và source ID, sau đó đưa context cùng câu hỏi vào prompt.
+Nếu store rỗng, agent trả về thông báo thiếu context thay vì gọi LLM với dữ liệu rỗng.
 
-**`answer`** — hướng tiếp cận:
-> *Viết 2-3 câu: cấu trúc prompt? Cách đưa ngữ cảnh (inject context) vào thế nào?*
+### Kết quả kiểm thử
 
----
+Bộ test được chạy với package cá nhân bằng cách ánh xạ package Long vào tên import `src`.
 
-## 3. Hoàn thiện code (Core Implementation) — Cá nhân (30 điểm)
-
-Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
-
-### Kết Quả Kiểm Thử (Test Results)
-
-```
-# Dán kết quả (output) của: pytest tests/ -v
+```text
+..........................................                               [100%]
+42 passed in 0.01s
 ```
 
-**Số lượng bài test vượt qua (pass):** __ / 42
+## 3. Dự đoán độ tương tự (Similarity Predictions) - 5 điểm
 
----
-
-## 4. Dự đoán độ tương tự (Similarity Predictions) — Cá nhân (5 điểm)
+Các điểm dưới đây được tính bằng `MockEmbedder` deterministic của package cá nhân.
+Mock embedding chỉ dùng để kiểm tra kỹ thuật, không dùng để kết luận chất lượng ngữ nghĩa của product retrieval.
 
 | Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
-|------|-----------|-----------|---------|--------------|-------|
-| 1 | | | cao / thấp | | |
-| 2 | | | cao / thấp | | |
-| 3 | | | cao / thấp | | |
-| 4 | | | cao / thấp | | |
-| 5 | | | cao / thấp | | |
+|---|---|---|---|---:|---|
+| 1 | This black cotton dress is available in several sizes. | The black dress comes in multiple sizes. | Cao | -0.058424 | Không |
+| 2 | The item is made from 100% cotton. | The product uses a cotton main fabric. | Cao | 0.081780 | Không |
+| 3 | This jacket is black. | This jacket is bright red. | Thấp | 0.025432 | Có |
+| 4 | Dry clean only. | Machine wash at 40 degrees. | Thấp | 0.047879 | Có |
+| 5 | The product is from adidas Originals. | This item is made by Calvin Klein. | Thấp | 0.103554 | Không |
 
-**Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
-> *Viết 2-3 câu:*
+Điều bất ngờ là các cặp có nghĩa gần nhau không nhất thiết có score cao.
+Nguyên nhân là MockEmbedder sinh vector từ hash chuỗi, không hiểu synonym, phủ định hoặc quan hệ thương hiệu.
+Kết quả này xác nhận benchmark semantic phải dùng local multilingual embedder thay vì mock.
 
----
+## 4. Kết quả truy xuất của tôi (Competition Results) - 10 điểm
 
-## 5. Kết quả truy xuất của tôi (Competition Results) — Cá nhân (10 điểm)
+Phần này chờ nhóm khóa đúng năm product benchmark queries và gold answers.
+Tôi sẽ chạy cùng corpus, cùng embedding model và cùng top-k với các thành viên khác.
 
-Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân của bạn trong gói `src`. **5 câu hỏi này phải trùng với các thành viên cùng nhóm** (xem `REPORT_NHOM.md`).
+| # | Câu hỏi | Top-1 | Score | Relevant | Agent answer |
+|---|---|---|---:|---|---|
+| 1 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
+| 2 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
+| 3 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
+| 4 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
+| 5 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
 
-| # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
-|---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
-
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** __ / 5
-
-**Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> *Viết 2-3 câu:*
-
----
+**Số query có chunk liên quan trong top-3:** Chưa chạy / 5.
 
 ## Tự Đánh Giá (Phần Cá Nhân)
 
 | Tiêu chí | Điểm tự đánh giá |
-|----------|-------------------|
-| Khởi động (Warm-up) | / 5 |
-| Hướng tiếp cận của tôi (My Approach) | / 10 |
-| Hoàn thiện code (Core Implementation — tests) | / 30 |
-| Dự đoán độ tương tự (Similarity Predictions) | / 5 |
-| Kết quả truy xuất của tôi (Competition Results) | / 10 |
-| **Tổng phần cá nhân** | **/ 60** |
+|---|---:|
+| Khởi động (Warm-up) | 5 / 5 |
+| Hướng tiếp cận (My Approach) | 10 / 10 |
+| Hoàn thiện code, 42 tests | 30 / 30 |
+| Dự đoán độ tương tự | 5 / 5 |
+| Kết quả truy xuất | 0 / 10 |
+| **Tổng phần cá nhân hiện tại** | **50 / 60** |
