@@ -1,3 +1,7 @@
 doc_id,file_path,title,source_url,retrieved_at,document_version,license_or_permission
-k4-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách đổi trả,https://example.com/chinh-sach/doi-tra,2026-08-02,2026.1,example-template-replace-me
-k4-seller-listing,data/k4_ecommerce/seller-listing.md,Quy định đăng bán,https://example.com/nguoi-ban/dang-ban,2026-08-02,2026.1,example-template-replace-me
+k4-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách trả hàng và hoàn tiền,https://help.shopee.vn/portal/4/article/77251,2026-08-03,2026-03-04,public-page
+k4-seller-listing,data/k4_ecommerce/seller-listing.md,Quy định về đăng bán sản phẩm trên Shopee,https://help.shopee.vn/portal/4/article/77246,2026-08-03,2024-08-14,public-page
+k4-shipping-policy,data/k4_ecommerce/shipping-policy.md,Chính sách vận chuyển Shopee,https://help.shopee.vn/portal/4/article/77250,2026-08-03,2026-03-20,public-page
+k4-payment-methods,data/k4_ecommerce/payment-methods.md,Các phương thức thanh toán Shopee,https://help.shopee.vn/portal/4/article/79198,2026-08-03,not-stated,public-page
+k4-privacy-policy,data/k4_ecommerce/privacy-policy.md,Chính sách bảo mật Shopee,https://help.shopee.vn/portal/4/article/77244,2026-08-03,2026-06-04,public-page
+k4-terms-of-service,data/k4_ecommerce/terms-of-service.md,Điều khoản dịch vụ Shopee,https://help.shopee.vn/portal/4/article/77243,2026-08-03,2026-04-24,public-page
