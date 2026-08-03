@@ -77,6 +77,25 @@ def make_probe_llm(captured: dict):
     return probe_llm
 
 
+class RetrievalStoreView:
+    """Apply an optional strategy-specific result postprocessor consistently."""
+
+    def __init__(self, store, postprocess=None):
+        self._store = store
+        self._postprocess = postprocess or (lambda results: results)
+
+    def search(self, query: str, top_k: int = 5):
+        return self._postprocess(self._store.search(query, top_k=top_k))
+
+    def search_with_filter(self, query: str, top_k: int = 3, metadata_filter: dict = None):
+        results = self._store.search_with_filter(
+            query,
+            top_k=top_k,
+            metadata_filter=metadata_filter,
+        )
+        return self._postprocess(results)
+
+
 def auto_score(results: list[dict], gold_docs: list[str]) -> tuple[int, str]:
     """Chấm phần truy xuất: 2 nếu top-1 đúng tài liệu, 1 nếu gold ở top-3, 0 nếu không."""
     if not results:
@@ -100,8 +119,14 @@ def run(package_name: str, strategy_name: str, top_k: int, data_dir: Path, out_p
     store, stats = build_kb(package, strategy, data_dir=data_dir, embedding_fn=embedder)
     effective_top_k = strategy.top_k or top_k
 
+    postprocess_results = strategy.extra.get("postprocess_results")
+    retrieval_store = RetrievalStoreView(store, postprocess=postprocess_results)
+
     captured: dict = {}
-    agent = package.KnowledgeBaseAgent(store=store, llm_fn=make_probe_llm(captured))
+    agent = package.KnowledgeBaseAgent(
+        store=retrieval_store,
+        llm_fn=make_probe_llm(captured),
+    )
 
     lines: list[str] = []
     add = lines.append
@@ -142,8 +167,12 @@ def run(package_name: str, strategy_name: str, top_k: int, data_dir: Path, out_p
         metadata_filter = query["metadata_filter"]
 
         if metadata_filter:
-            results = store.search_with_filter(question, top_k=effective_top_k, metadata_filter=metadata_filter)
-            unfiltered = store.search(question, top_k=effective_top_k)
+            results = retrieval_store.search_with_filter(
+                question,
+                top_k=effective_top_k,
+                metadata_filter=metadata_filter,
+            )
+            unfiltered = retrieval_store.search(question, top_k=effective_top_k)
             score_f, _ = auto_score(results, gold_docs)
             score_u, _ = auto_score(unfiltered, gold_docs)
             rows_filter.append(
@@ -152,7 +181,7 @@ def run(package_name: str, strategy_name: str, top_k: int, data_dir: Path, out_p
                 f"{md_cell(results[0]['metadata'].get('doc_id') if results else '-', 40)} |"
             )
         else:
-            results = store.search(question, top_k=effective_top_k)
+            results = retrieval_store.search(question, top_k=effective_top_k)
 
         score, reason = auto_score(results, gold_docs)
         total_score += score
