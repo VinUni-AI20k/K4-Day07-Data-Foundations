@@ -1,0 +1,78 @@
+{
+  "benchmark_version": "aramhonloan-k4-v1",
+  "frozen": true,
+  "cases": [
+    {
+      "id": "Q1",
+      "query": "Người mua có bao lâu để yêu cầu trả hàng hoặc hoàn tiền, và thời hạn đối với thực phẩm tươi sống khác thế nào?",
+      "gold_answer": "Người mua thông thường có 15 ngày kể từ khi đơn hàng được cập nhật trạng thái giao hàng thành công. Đối với thực phẩm tươi sống và đông lạnh, thời hạn là 24 giờ.",
+      "expected_doc_id": "returns-policy",
+      "metadata_filter": {
+        "customer_role": "buyer",
+        "category": "returns"
+      },
+      "required_facts": [
+        "15 ngày",
+        "24 giờ"
+      ]
+    },
+    {
+      "id": "Q2",
+      "query": "Tiền hoàn cho giao dịch thanh toán bằng thẻ tín dụng hoặc thẻ ghi nợ mất bao lâu để trả về thẻ?",
+      "gold_answer": "Tiền được hoàn về thẻ tín dụng hoặc thẻ ghi nợ trong vòng 7 đến 14 ngày làm việc, tùy theo chính sách của ngân hàng.",
+      "expected_doc_id": "payment-policy",
+      "metadata_filter": {
+        "customer_role": "buyer",
+        "category": "payment"
+      },
+      "required_facts": [
+        "7",
+        "14 ngày làm việc"
+      ]
+    },
+    {
+      "id": "Q3",
+      "query": "Người bán phải chuẩn bị đơn hàng thông thường trong bao lâu, và điều gì xảy ra nếu chuẩn bị trễ?",
+      "gold_answer": "Người bán phải chuẩn bị đơn hàng thông thường trong tối đa 1.5 ngày làm việc. Nếu quá thời hạn, đơn hàng sẽ tự động bị hệ thống hủy do chuẩn bị hàng trễ.",
+      "expected_doc_id": "shipping-policy",
+      "metadata_filter": {
+        "customer_role": "both",
+        "category": "shipping"
+      },
+      "required_facts": [
+        "1.5 ngày làm việc",
+        "tự động",
+        "hủy"
+      ]
+    },
+    {
+      "id": "Q4",
+      "query": "Từ tháng 5 năm 2026, phí xử lý giao dịch Shopee áp dụng cho người bán là bao nhiêu?",
+      "gold_answer": "Phí xử lý giao dịch là 6%, đã bao gồm thuế giá trị gia tăng.",
+      "expected_doc_id": "seller-fees",
+      "metadata_filter": {
+        "customer_role": "seller",
+        "category": "fees"
+      },
+      "required_facts": [
+        "6%",
+        "thuế"
+      ]
+    },
+    {
+      "id": "Q5",
+      "query": "Shopee xử lý thế nào đối với sản phẩm vi phạm quy định đăng bán?",
+      "gold_answer": "Sản phẩm vi phạm sẽ bị xóa. Người bán vi phạm nhiều lần hoặc nghiêm trọng có thể bị trừ điểm, giới hạn quyền lợi, tạm khóa hoặc khóa tài khoản vĩnh viễn. Shopee cũng có thể phong tỏa số dư và cung cấp thông tin cho cơ quan chức năng.",
+      "expected_doc_id": "seller-listing",
+      "metadata_filter": {
+        "customer_role": "seller",
+        "category": "listing"
+      },
+      "required_facts": [
+        "xóa",
+        "tạm khóa",
+        "khóa tài khoản"
+      ]
+    }
+  ]
+}
