@@ -1,0 +1,48 @@
+{
+  "package": "src.K4_2A202601934_NguyenDangLong",
+  "chunker": "HeadingRecursiveChunker",
+  "chunk_size": 400,
+  "top_k": 3,
+  "embedding_model": "BAAI/bge-m3",
+  "corpus": "data/k4_asos_products",
+  "retrieval_score": 10,
+  "retrieval_score_max": 10,
+  "agent_answers_verified": false,
+  "results": [
+    {
+      "query_id": 1,
+      "outcome": "TOP-1",
+      "top_1_doc": "asos-adidas-originals-plus-three-stripe-bralet-in-black",
+      "top_1_score": 0.532,
+      "retrieval_points": 2
+    },
+    {
+      "query_id": 2,
+      "outcome": "TOP-1",
+      "top_1_doc": "asos-asos-edition-satin-cami-maxi-dress-with-full-skirt-in-dusky-blue",
+      "top_1_score": 0.747,
+      "retrieval_points": 2
+    },
+    {
+      "query_id": 3,
+      "outcome": "TOP-1",
+      "top_1_doc": "asos-daisy-street-mid-length-faux-fur-coat-in-wavy-checkerboard-print",
+      "top_1_score": 0.607,
+      "retrieval_points": 2
+    },
+    {
+      "query_id": 4,
+      "outcome": "TOP-1",
+      "top_1_doc": "asos-hollister-co-ord-halterneck-bikini-top-in-black",
+      "top_1_score": 0.626,
+      "retrieval_points": 2
+    },
+    {
+      "query_id": 5,
+      "outcome": "TOP-1",
+      "top_1_doc": "asos-asos-design-maternity-cami-wrap-midi-dress-with-lace-up-back",
+      "top_1_score": 0.642,
+      "retrieval_points": 2
+    }
+  ]
+}

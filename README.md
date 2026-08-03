@@ -2,6 +2,16 @@
 
 > Bản K4 của Lab 07. Hướng dẫn Codelabs được phát riêng trên lớp/LMS (không kèm trong repo); yêu cầu Giai đoạn 2 riêng xem [K4_VARIANT.md](K4_VARIANT.md).
 
+## Thành viên nhóm K4
+
+| Thành viên | Mã sinh viên |
+|---|---|
+| Nguyễn Đăng Long | 2A202601934 |
+| Đào Minh Chiến | 2A202601184 |
+| Lương Minh Quân | 2A202601308 |
+| Lê Đăng Tấn | 2A202601916 |
+| Vũ Hữu An | 2A202601078 |
+
 ---
 
 ## Mục Tiêu
@@ -21,9 +31,10 @@ Sau bài thực hành (lab) này, bạn cần có thể:
 
 Mỗi sinh viên **tự mình** hoàn thành tất cả các mục CẦN LÀM (TODO) trong `src/chunking.py`, `src/store.py`, và `src/agent.py`. Lớp dữ liệu `Document` (dataclass) và `FixedSizeChunker` đã được lập trình sẵn làm ví dụ.
 
-### Giai Đoạn 2 — Nhóm: So Sánh Chiến Lược Truy Xuất (Retrieval Strategy)
+### Giai Đoạn 2 — Nhóm: Truy Xuất Danh Mục Sản Phẩm
 
-Nhóm cùng chọn một bộ tài liệu và thống nhất 5 câu hỏi đánh giá (benchmark queries). Mỗi thành viên **thử chiến lược riêng** (chunking, metadata), chạy cùng các câu hỏi, rồi **so sánh kết quả trong nhóm** để học hỏi lẫn nhau.
+Nhóm sử dụng danh mục sản phẩm ASOS và thống nhất 5 câu hỏi đánh giá (benchmark queries).
+Mỗi thành viên **thử chiến lược riêng** (chunking, metadata), chạy cùng các câu hỏi, rồi **so sánh kết quả trong nhóm**.
 
 ---
 
@@ -64,7 +75,7 @@ print(len(embedder("embedding smoke test")))
 PY
 ```
 
-- Gói `src` hỗ trợ mô hình `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, phù hợp với kho ngữ liệu tiếng Việt, thông qua thư viện `sentence-transformers`.
+- Gói `src` hỗ trợ mô hình multilingual `BAAI/bge-m3`, phù hợp với kho ngữ liệu product đa ngôn ngữ, thông qua thư viện `sentence-transformers`.
 - Lần chạy đầu tiên, mô hình và thư viện phụ thuộc PyTorch sẽ được tải về; đây là phần **tùy chọn**, không cần thiết để làm các TODO hoặc chạy bài kiểm thử.
 
 ### 3) Tùy chọn: Trình nhúng OpenAI (OpenAI embedder)
@@ -137,7 +148,7 @@ PY
 │   ├── chunking.py       ← Các lớp Chunking + hàm hỗ trợ tính độ tương tự
 │   ├── store.py          ← Lớp EmbeddingStore
 │   ├── agent.py          ← Lớp KnowledgeBaseAgent
-│   └── ...               ← Các module nhỏ hơn
+│   └── K4_2A202601934_NguyenDangLong/ ← Bài làm cá nhân của Nguyễn Đăng Long
 ├── data/                  ← Tài liệu mẫu + tài liệu do nhóm thu thập (.txt/.md)
 ├── tests/
 │   └── test_solution.py   ← Bộ kiểm thử (42 tests)
@@ -151,13 +162,16 @@ PY
 └── requirements.txt
 ```
 
+Các module `src` ở root là compatibility facades để lệnh `pytest tests/` mặc định vẫn chạy.
+Implementation thật và mọi thay đổi cá nhân của Long nằm trong folder `K4_2A202601934_NguyenDangLong`.
+
 ---
 
 ## Các Giai Đoạn Của Lab
 
 | Giai Đoạn | Hoạt Động |
 |-----------|-----------|
-| Chuẩn bị tài liệu | Nhóm thu thập tài liệu theo **chủ đề cố định của lớp K4** (chính sách TMĐT / hỗ trợ khách hàng), chuyển sang định dạng .md/.txt |
+| Chuẩn bị tài liệu | Nhóm chuẩn hóa danh mục sản phẩm ASOS thành tài liệu Markdown có metadata |
 | Lập trình cá nhân | Khởi động + hoàn thành tất cả TODO (cá nhân) |
 | Thiết kế chiến lược | Mỗi người thử chiến lược riêng, thống nhất 5 câu hỏi đánh giá |
 | So sánh trong nhóm | Chạy đánh giá (benchmark), so sánh kết quả, chuẩn bị thuyết trình |
@@ -181,12 +195,13 @@ PY
 
 ---
 
-## Nhiệm Vụ Nhóm (Giai Đoạn 2) — So Sánh Chiến Lược
+## Nhiệm Vụ Nhóm (Giai Đoạn 2) — Truy Xuất Sản Phẩm
 
-> Trước khi thu thập dữ liệu, đọc [Hướng dẫn crawl và format dữ liệu](docs/DATA_COLLECTION.md). Mỗi nhóm crawl theo **chủ đề cố định của lớp K4** (chính sách TMĐT / hỗ trợ khách hàng — xem [K4_VARIANT.md](K4_VARIANT.md)), dùng 5–10 nguồn công khai/được phép và lưu kèm metadata có thể truy vết.
+> Phạm vi cuối cùng của nhóm là truy xuất sản phẩm từ dataset công khai `UniqueData/asos-e-commerce-dataset`.
+> Dữ liệu được lưu kèm nguồn, giấy phép và metadata có thể truy vết.
 
-1. **Thu thập bộ tài liệu** (5-10 tài liệu) trong chủ đề cố định của lớp K4: chính sách/FAQ/hướng dẫn về thanh toán, đổi trả, giao hàng, quyền riêng tư, điều kiện người bán
-2. **Chuyển sang định dạng .txt/.md** nếu cần (xem mẹo trong exercises.md); nạp bằng `build_knowledge_base()` trong `ingest.py`
+1. **Thu thập bộ tài liệu sản phẩm** từ nguồn dataset công khai đã chọn
+2. **Chuyển mỗi sản phẩm thành một file Markdown**; nạp bằng `build_knowledge_base()` trong `ingest.py`
 3. **Thống nhất 5 câu hỏi đánh giá** kèm theo câu trả lời chuẩn (gold answers)
 4. **Mỗi thành viên thử chiến lược riêng**: phương pháp chunking, các tham số, cấu trúc metadata
 5. **So sánh kết quả trong nhóm**: chiến lược nào cho việc truy xuất tốt hơn? Tại sao?
