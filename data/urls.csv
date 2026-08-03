@@ -1,0 +1,11 @@
+url,doc_id,title,customer_role,category,language,region,document_version,license_or_permission
+https://europa.eu/youreurope/citizens/consumers/shopping/returns/index_en.htm,eu-returns-right-of-withdrawal,Trả hàng và quyền rút khỏi hợp đồng (EU),buyer,returns-policy,en,eu,not-stated,public-page
+https://europa.eu/youreurope/citizens/consumers/shopping/shipping-delivery/index_en.htm,eu-shipping-delivery,Vận chuyển và giao hàng (EU),buyer,shipping-policy,en,eu,not-stated,public-page
+https://europa.eu/youreurope/citizens/consumers/shopping/guarantees/index_en.htm,eu-consumer-guarantees,Bảo hành hàng hóa mua tại EU,buyer,warranty-policy,en,eu,not-stated,public-page
+https://europa.eu/youreurope/citizens/consumers/shopping/pricing-payments/index_en.htm,eu-pricing-payments,Giá cả và thanh toán tại EU,both,payment-policy,en,eu,not-stated,public-page
+https://europa.eu/youreurope/citizens/consumers/consumers-dispute-resolution/informal-alternative-dispute-resolution/index_en.htm,eu-consumer-dispute-resolution,Giải quyết tranh chấp ngoài tòa án cho người tiêu dùng (EU),buyer,dispute-resolution,en,eu,not-stated,public-page
+https://europa.eu/youreurope/citizens/consumers/internet-telecoms/data-protection-online-privacy/index_en.htm,eu-data-protection-online-privacy,Bảo vệ dữ liệu và quyền riêng tư trực tuyến (EU),both,privacy-policy,en,eu,not-stated,public-page
+https://europa.eu/youreurope/business/selling-in-eu/selling-goods-services/ecommerce-distance-selling/index_en.htm,eu-b2c-ecommerce-distance-selling,Bán hàng B2C từ xa và thương mại điện tử (EU),seller,seller-obligations,en,eu,not-stated,public-page
+https://europa.eu/youreurope/business/selling-in-eu/consumer-contracts-guarantees/consumer-guarantees/index_en.htm,eu-seller-guarantees-claims,Bảo hành và xử lý khiếu nại dành cho người bán (EU),seller,warranty-policy,en,eu,not-stated,public-page
+https://europa.eu/youreurope/business/growing/digitalising/deliveries-fulfilment-online-sales/index_en.htm,eu-seller-deliveries-fulfilment,Giao hàng và hoàn tất đơn hàng trực tuyến (EU),seller,shipping-policy,en,eu,not-stated,public-page
+https://www.gov.uk/accepting-returns-and-giving-refunds,uk-accepting-returns-refunds,Nghĩa vụ nhận trả hàng và hoàn tiền (Anh),seller,returns-policy,en,uk,not-stated,public-page
