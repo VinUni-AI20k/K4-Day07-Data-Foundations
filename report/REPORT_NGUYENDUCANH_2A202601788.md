@@ -15,20 +15,20 @@
 ### Độ tương tự Cosine (Cosine Similarity) (Bài tập 1.1)
 
 **Độ tương tự cosine cao (High cosine similarity) nghĩa là gì?**
-> *Viết 1-2 câu:*
+> *Là khi mà 2 vector cùng hướng tức là giá trị cosin tiến gần về 1*
 
 **Ví dụ có độ tương tự CAO:**
-- Câu A:
-- Câu B:
-- Tại sao tương đồng:
+- Câu A: con chó đang chạy ở trong nhà
+- Câu B: con cẩu đang chơi trong nhà
+- Tại sao tương đồng: Vì 2 câu đều miêu tả chung 1 bối cảnh, tình huống, ý nghĩa, ngữ nghĩa dù dùng các từ khác nhau vì vậy vector embedding của chúng chỉ về cùng 1 hướng
 
 **Ví dụ có độ tương tự THẤP:**
-- Câu A:
-- Câu B:
-- Tại sao khác:
+- Câu A: trời hôm nay không mưa
+- Câu B: điện thoại tôi không bị hỏng
+- Tại sao khác: vì 2 câu này là 2 chủ đề hoàn toàn khác nhau vì vậy vector embedding của chúng sẽ có thể gần như vuông góc với nhau
 
 **Tại sao độ tương tự cosine (cosine similarity) được ưu tiên hơn khoảng cách Euclid (Euclidean distance) cho text embeddings?**
-> *Viết 1-2 câu:*
+> *Cosine similarity chỉ tập trung vào ngữ nghĩa tức là hướng của vector, nên không bị ảnh hưởng bởi độ lớn của vector gây ra do sự chênh lệch về độ dài văn bản*
 
 ### Bài toán tính toán Chunking (Bài tập 1.2)
 
