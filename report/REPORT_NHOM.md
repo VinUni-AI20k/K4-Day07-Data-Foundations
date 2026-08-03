@@ -23,11 +23,11 @@
 
 | # | Tên tài liệu | Nguồn (Source URL) | Ngày lấy / Phiên bản | Số ký tự | Metadata đã gán |
 |---|--------------|------------|--------------------|----------|-----------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | Chính Sách Bán Hàng Và Trả Hàng | [Apple Store VN](https://www.apple.com/vn/shop/browse/open/salespolicies) | 2026-08-03 / not-stated | ~600 | role: buyer, category: returns |
+| 2 | Bảo Hành Có Giới Hạn 1 Năm | [Apple Legal](https://www.apple.com/legal/warranty/products/warranty-rest-of-apac-vietnamese.html) | 2026-08-03 / not-stated | ~600 | role: buyer, category: warranty |
+| 3 | Chính Sách Quyền Riêng Tư | [Apple Privacy](https://www.apple.com/vn/legal/privacy/vn/) | 2026-08-03 / not-stated | ~600 | role: both, category: privacy |
+| 4 | Điều Khoản Dịch Vụ Truyền Thông | [Apple iTunes](https://www.apple.com/vn/legal/internet-services/itunes/vn/terms.html) | 2026-08-03 / not-stated | ~600 | role: buyer, category: terms |
+| 5 | Nhận Biết Thư Email Lừa Đảo | [Apple Support](https://support.apple.com/vi-vn/102568) | 2026-08-03 / not-stated | ~600 | role: both, category: security |
 
 **Danh sách kiểm tra quản trị dữ liệu (Data governance checklist):**
 - [ ] Tập tài liệu (Corpus) chỉ chứa nguồn công khai/được phép dùng và không chứa dữ liệu cá nhân, thông tin đăng nhập hoặc tài liệu nội bộ.
@@ -37,8 +37,8 @@
 
 | Trường metadata | Kiểu | Ví dụ giá trị | Tại sao hữu ích cho truy xuất (retrieval)? |
 |----------------|------|---------------|-------------------------------|
-| | | | |
-| | | | |
+| customer_role | string | buyer, both | Hữu ích để lọc riêng các tài liệu liên quan đến người mua hoặc áp dụng chung, tránh đưa ra các chính sách sai đối tượng. |
+| category | string | returns, warranty, privacy | Giúp phân loại rõ ràng từng nhóm chủ đề chính sách (đổi trả, bảo hành, bảo mật), hỗ trợ việc lọc chính xác hơn nếu quy mô tài liệu lớn lên. |
 
 ---
 
@@ -99,11 +99,11 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 | # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Chunk nào chứa thông tin? |
 |---|-------|-------------------------------|--------------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | Tôi có bao nhiêu ngày để hoàn trả sản phẩm mua từ Apple Store? | Bạn có thể hoàn trả các sản phẩm đủ điều kiện trong vòng 14 ngày kể từ ngày nhận được sản phẩm. | k4-apple-sales-refund.md |
+| 2 | Các lớp bảo vệ hoặc pin bị chai theo thời gian có được Apple bảo hành không? | Không. Bảo hành không áp dụng cho các linh kiện tiêu hao, như pin hoặc các lớp bảo vệ được thiết kế là sẽ hao mòn theo thời gian. | k4-apple-warranty.md |
+| 3 | Trẻ em dưới 15 tuổi có được tự do tạo tài khoản Apple ID không? | Trẻ em dưới 15 tuổi không được tạo tài khoản trừ khi được cha mẹ hoặc người giám hộ hợp pháp chấp thuận thông qua Chia sẻ trong gia đình. | k4-apple-media-terms.md |
+| 4 | (Filter role: buyer) Là người mua, tôi có được hoàn tiền khi lỡ mua ứng dụng trên App Store không? | Tất cả các giao dịch mua nội dung số trên App Store là giao dịch cuối cùng và không thể hoàn tiền (trừ khi pháp luật quy định khác). | k4-apple-media-terms.md |
+| 5 | (Filter role: both) Tôi nhận được email yêu cầu cung cấp số thẻ tín dụng từ Apple, tôi có nên làm theo không? | Không. Apple sẽ không bao giờ yêu cầu cung cấp số thẻ tín dụng qua email. Bạn nên chuyển tiếp email đó đến reportphishing@apple.com. | k4-apple-phishing.md |
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 

@@ -1,3 +1,6 @@
 doc_id,file_path,title,source_url,retrieved_at,document_version,license_or_permission
-k4-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách đổi trả,https://example.com/chinh-sach/doi-tra,2026-08-02,2026.1,example-template-replace-me
-k4-seller-listing,data/k4_ecommerce/seller-listing.md,Quy định đăng bán,https://example.com/nguoi-ban/dang-ban,2026-08-02,2026.1,example-template-replace-me
+k4-apple-sales-refund,data/k4_ecommerce/k4-apple-sales-refund.md,Chính Sách Bán Hàng Và Trả Hàng của Apple,https://www.apple.com/vn/shop/browse/open/salespolicies,2026-08-03,not-stated,public-source
+k4-apple-warranty,data/k4_ecommerce/k4-apple-warranty.md,Bảo Hành Có Giới Hạn 1 Năm Của Apple,https://www.apple.com/legal/warranty/products/warranty-rest-of-apac-vietnamese.html,2026-08-03,not-stated,public-source
+k4-apple-privacy,data/k4_ecommerce/k4-apple-privacy.md,Chính Sách Quyền Riêng Tư Của Apple,https://www.apple.com/vn/legal/privacy/vn/,2026-08-03,not-stated,public-source
+k4-apple-media-terms,data/k4_ecommerce/k4-apple-media-terms.md,Điều Khoản Dịch Vụ Truyền Thông Apple,https://www.apple.com/vn/legal/internet-services/itunes/vn/terms.html,2026-08-03,not-stated,public-source
+k4-apple-phishing,data/k4_ecommerce/k4-apple-phishing.md,Nhận Biết Các Thư Email Lừa Đảo,https://support.apple.com/vi-vn/102568,2026-08-03,not-stated,public-source
