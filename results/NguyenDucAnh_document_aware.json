@@ -1,0 +1,785 @@
+{
+  "benchmark_version": "aramhonloan-k4-v1",
+  "member": "Nguyễn Đức Anh",
+  "strategy": "Structure-Based / Document-Aware Chunking",
+  "chunker_config": {
+    "max_chunk_size": 700
+  },
+  "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "data_dir": "data/k4_ecommerce",
+  "cases": [
+    {
+      "id": "Q1",
+      "query": "Người mua có bao lâu để yêu cầu trả hàng hoặc hoàn tiền, và thời hạn đối với thực phẩm tươi sống khác thế nào?",
+      "gold_answer": "Người mua thông thường có 15 ngày kể từ khi đơn hàng được cập nhật trạng thái giao hàng thành công. Đối với thực phẩm tươi sống và đông lạnh, thời hạn là 24 giờ.",
+      "expected_doc_id": "returns-policy",
+      "metadata_filter": {
+        "customer_role": "buyer",
+        "category": "returns"
+      },
+      "top_1": {
+        "rank": 1,
+        "score": 0.7300686680066846,
+        "doc_id": "returns-policy",
+        "chunk_index": 1,
+        "customer_role": "buyer",
+        "category": "returns",
+        "source_url": "https://help.shopee.vn/portal/article/79233",
+        "content": "[Heading path: Chính sách Trả hàng và Hoàn tiền Shopee > 1. Thời hạn yêu cầu Trả hàng/Hoàn tiền]\n\n## 1. Thời hạn yêu cầu Trả hàng/Hoàn tiền\n* Người mua được quyền yêu cầu Trả hàng/Hoàn tiền trong vòng **15 ngày** kể từ khi đơn hàng được cập nhật trạng thái \"Giao hàng thành công\" (kể cả khi đã bấm xác nhận \"Đã nhận được hàng\").\n* Đối với đơn hàng thực phẩm tươi sống & đông lạnh, thời hạn khiếu nại ngắn hơn, cụ thể là **24 giờ** kể từ khi giao hàng thành công.\n* Nếu quá thời hạn trên, Shopee sẽ xem xét hỗ trợ tùy theo từng trường hợp nếu người mua liên hệ trực tiếp với bộ phận Chăm sóc khách hàng.",
+        "metadata": {
+          "doc_id": "returns-policy",
+          "title": "Chính sách Trả hàng và Hoàn tiền Shopee",
+          "customer_role": "buyer",
+          "category": "returns",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/79233",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\returns-policy.md",
+          "chunk_index": 1
+        }
+      },
+      "top_2": {
+        "rank": 2,
+        "score": 0.45419033677687426,
+        "doc_id": "returns-policy",
+        "chunk_index": 3,
+        "customer_role": "buyer",
+        "category": "returns",
+        "source_url": "https://help.shopee.vn/portal/article/79233",
+        "content": "[Heading path: Chính sách Trả hàng và Hoàn tiền Shopee > 3. Quy định về lý do \"Không còn nhu cầu\"]\n\n## 3. Quy định về lý do \"Không còn nhu cầu\"\n* Từ ngày 19/06/2025, lý do trả hàng \"Hàng nguyên vẹn nhưng không còn nhu cầu\" không còn áp dụng đại trà cho tất cả người bán.\n* Lý do này chỉ được áp dụng cho các đơn hàng mua từ gian hàng **Shopee Mall**.\n* Người mua cần trả lại sản phẩm trong tình trạng còn nguyên vẹn tem, nhãn mác, chưa qua sử dụng và nguyên hộp đựng sản phẩm (nếu có).",
+        "metadata": {
+          "doc_id": "returns-policy",
+          "title": "Chính sách Trả hàng và Hoàn tiền Shopee",
+          "customer_role": "buyer",
+          "category": "returns",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/79233",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\returns-policy.md",
+          "chunk_index": 3
+        }
+      },
+      "top_3": {
+        "rank": 3,
+        "score": 0.4424346132487962,
+        "doc_id": "returns-policy",
+        "chunk_index": 4,
+        "customer_role": "buyer",
+        "category": "returns",
+        "source_url": "https://help.shopee.vn/portal/article/79233",
+        "content": "[Heading path: Chính sách Trả hàng và Hoàn tiền Shopee > 4. Quy trình đổi trả hàng]\n\n## 4. Quy trình đổi trả hàng\n* Shopee hiện không hỗ trợ đổi hàng trực tiếp (đổi size, đổi màu). Khách hàng cần làm thủ tục Trả hàng/Hoàn tiền, sau đó đặt đơn hàng mới.\n* Nếu đơn hàng có hỗ trợ đồng kiểm, khách hàng có thể kiểm tra và từ chối nhận hàng ngay khi shipper giao.",
+        "metadata": {
+          "doc_id": "returns-policy",
+          "title": "Chính sách Trả hàng và Hoàn tiền Shopee",
+          "customer_role": "buyer",
+          "category": "returns",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/79233",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\returns-policy.md",
+          "chunk_index": 4
+        }
+      },
+      "unfiltered_top_3": [
+        {
+          "rank": 1,
+          "score": 0.7300686680066846,
+          "doc_id": "returns-policy",
+          "chunk_index": 1,
+          "customer_role": "buyer",
+          "category": "returns",
+          "source_url": "https://help.shopee.vn/portal/article/79233",
+          "content": "[Heading path: Chính sách Trả hàng và Hoàn tiền Shopee > 1. Thời hạn yêu cầu Trả hàng/Hoàn tiền]\n\n## 1. Thời hạn yêu cầu Trả hàng/Hoàn tiền\n* Người mua được quyền yêu cầu Trả hàng/Hoàn tiền trong vòng **15 ngày** kể từ khi đơn hàng được cập nhật trạng thái \"Giao hàng thành công\" (kể cả khi đã bấm xác nhận \"Đã nhận được hàng\").\n* Đối với đơn hàng thực phẩm tươi sống & đông lạnh, thời hạn khiếu nại ngắn hơn, cụ thể là **24 giờ** kể từ khi giao hàng thành công.\n* Nếu quá thời hạn trên, Shopee sẽ xem xét hỗ trợ tùy theo từng trường hợp nếu người mua liên hệ trực tiếp với bộ phận Chăm sóc khách hàng.",
+          "metadata": {
+            "doc_id": "returns-policy",
+            "title": "Chính sách Trả hàng và Hoàn tiền Shopee",
+            "customer_role": "buyer",
+            "category": "returns",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/79233",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\returns-policy.md",
+            "chunk_index": 1
+          }
+        },
+        {
+          "rank": 2,
+          "score": 0.626624460373638,
+          "doc_id": "shipping-policy",
+          "chunk_index": 4,
+          "customer_role": "both",
+          "category": "shipping",
+          "source_url": "https://help.shopee.vn/portal/article/79534",
+          "content": "[Heading path: Chính sách Vận chuyển và Thời gian Giao hàng Shopee > 3. Quy định chuẩn bị hàng cho người bán]\n\n## 3. Quy định chuẩn bị hàng cho người bán\n* Người bán có trách nhiệm xác nhận đơn hàng và chuẩn bị đóng gói hàng hóa trong vòng tối đa **1.5 ngày làm việc** (đơn thông thường) hoặc trong thời gian đã cài đặt (với sản phẩm đặt trước - Pre-order).\n* Quá thời hạn trên, đơn hàng sẽ tự động bị hệ thống hủy bỏ do lỗi \"Chuẩn bị hàng trễ\".",
+          "metadata": {
+            "doc_id": "shipping-policy",
+            "title": "Chính sách Vận chuyển và Thời gian Giao hàng Shopee",
+            "customer_role": "both",
+            "category": "shipping",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/79534",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\shipping-policy.md",
+            "chunk_index": 4
+          }
+        },
+        {
+          "rank": 3,
+          "score": 0.5681148762570847,
+          "doc_id": "payment-policy",
+          "chunk_index": 4,
+          "customer_role": "buyer",
+          "category": "payment",
+          "source_url": "https://help.shopee.vn/portal/article/189473",
+          "content": "[Heading path: Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee > 2. Kênh nhận tiền hoàn tương ứng với phương thức thanh toán]\n\n* Thanh toán qua Thẻ tín dụng/ghi nợ (Credit/Debit Card): Tiền hoàn về thẻ tín dụng đã dùng (trong vòng 7 - 14 ngày làm việc tùy thuộc chính sách từng ngân hàng).\n* Thanh toán qua SPayLater: Số dư tiền gốc được hoàn trả và cấn trừ vào hóa đơn trả góp SPayLater gần nhất trong vòng 24 giờ.",
+          "metadata": {
+            "doc_id": "payment-policy",
+            "title": "Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee",
+            "customer_role": "buyer",
+            "category": "payment",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/189473",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\payment-policy.md",
+            "chunk_index": 4
+          }
+        }
+      ],
+      "agent_answer": "Thời hạn yêu cầu Trả hàng/Hoàn tiền (Nguồn: returns-policy) Người mua được quyền yêu cầu Trả hàng/Hoàn tiền trong vòng 15 ngày kể từ khi đơn hàng được cập nhật trạng thái \"Giao hàng thành công\" (kể cả khi đã bấm xác nhận \"Đã nhận được hàng\"). (Nguồn: returns-policy) Đối với đơn hàng thực phẩm tươi sống & đông lạnh, thời hạn khiếu nại ngắn hơn, cụ thể là 24 giờ kể từ khi giao hàng thành công. (Nguồn: returns-policy)",
+      "expected_doc_rank": 1,
+      "relevant_in_top3": true,
+      "required_facts_found": [
+        "15 ngày",
+        "24 giờ"
+      ],
+      "retrieval_point": 2,
+      "notes": "Expected document is top-1 and the grounded answer contains all required facts."
+    },
+    {
+      "id": "Q2",
+      "query": "Tiền hoàn cho giao dịch thanh toán bằng thẻ tín dụng hoặc thẻ ghi nợ mất bao lâu để trả về thẻ?",
+      "gold_answer": "Tiền được hoàn về thẻ tín dụng hoặc thẻ ghi nợ trong vòng 7 đến 14 ngày làm việc, tùy theo chính sách của ngân hàng.",
+      "expected_doc_id": "payment-policy",
+      "metadata_filter": {
+        "customer_role": "buyer",
+        "category": "payment"
+      },
+      "top_1": {
+        "rank": 1,
+        "score": 0.7783063530099924,
+        "doc_id": "payment-policy",
+        "chunk_index": 4,
+        "customer_role": "buyer",
+        "category": "payment",
+        "source_url": "https://help.shopee.vn/portal/article/189473",
+        "content": "[Heading path: Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee > 2. Kênh nhận tiền hoàn tương ứng với phương thức thanh toán]\n\n* Thanh toán qua Thẻ tín dụng/ghi nợ (Credit/Debit Card): Tiền hoàn về thẻ tín dụng đã dùng (trong vòng 7 - 14 ngày làm việc tùy thuộc chính sách từng ngân hàng).\n* Thanh toán qua SPayLater: Số dư tiền gốc được hoàn trả và cấn trừ vào hóa đơn trả góp SPayLater gần nhất trong vòng 24 giờ.",
+        "metadata": {
+          "doc_id": "payment-policy",
+          "title": "Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee",
+          "customer_role": "buyer",
+          "category": "payment",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/189473",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\payment-policy.md",
+          "chunk_index": 4
+        }
+      },
+      "top_2": {
+        "rank": 2,
+        "score": 0.5714321325799154,
+        "doc_id": "payment-policy",
+        "chunk_index": 3,
+        "customer_role": "buyer",
+        "category": "payment",
+        "source_url": "https://help.shopee.vn/portal/article/189473",
+        "content": "[Heading path: Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee > 2. Kênh nhận tiền hoàn tương ứng với phương thức thanh toán]\n\n## 2. Kênh nhận tiền hoàn tương ứng với phương thức thanh toán\nKhi đơn hàng của người mua được hoàn tiền thành công, số tiền sẽ được trả về các kênh tương ứng như sau:\n* Thanh toán qua COD hoặc Thẻ Napas: Tiền hoàn trả trực tiếp về Ví ShopeePay (trong vòng 24 giờ) hoặc về Tài khoản Ngân hàng liên kết mặc định đã được đăng ký trên Shopee (trong vòng 2 ngày làm việc).\n* Thanh toán qua Ví ShopeePay: Tiền hoàn trả lại số dư Ví ShopeePay trong vòng 24 giờ.",
+        "metadata": {
+          "doc_id": "payment-policy",
+          "title": "Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee",
+          "customer_role": "buyer",
+          "category": "payment",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/189473",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\payment-policy.md",
+          "chunk_index": 3
+        }
+      },
+      "top_3": {
+        "rank": 3,
+        "score": 0.4449939955574093,
+        "doc_id": "payment-policy",
+        "chunk_index": 1,
+        "customer_role": "buyer",
+        "category": "payment",
+        "source_url": "https://help.shopee.vn/portal/article/189473",
+        "content": "[Heading path: Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee > 1. Các phương thức thanh toán được hỗ trợ trên Shopee]\n\n## 1. Các phương thức thanh toán được hỗ trợ trên Shopee\n* Thanh toán khi nhận hàng (COD): Người mua thanh toán bằng tiền mặt trực tiếp cho shipper khi nhận được gói hàng.\n* Ví điện tử ShopeePay: Thanh toán trực tuyến liên kết tài khoản ngân hàng hoặc số dư ví.\n* Thẻ tín dụng/ghi nợ (Visa, Mastercard, JCB, American Express): Hỗ trợ thanh toán quốc tế trực tiếp.\n* Thẻ nội địa Napas: Thanh toán qua cổng Napas bằng thẻ ngân hàng nội địa.\n* SPayLater: Dịch vụ mua trước trả sau được cung cấp bởi đối tác tài chính của Shopee.",
+        "metadata": {
+          "doc_id": "payment-policy",
+          "title": "Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee",
+          "customer_role": "buyer",
+          "category": "payment",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/189473",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\payment-policy.md",
+          "chunk_index": 1
+        }
+      },
+      "unfiltered_top_3": [
+        {
+          "rank": 1,
+          "score": 0.7783063530099924,
+          "doc_id": "payment-policy",
+          "chunk_index": 4,
+          "customer_role": "buyer",
+          "category": "payment",
+          "source_url": "https://help.shopee.vn/portal/article/189473",
+          "content": "[Heading path: Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee > 2. Kênh nhận tiền hoàn tương ứng với phương thức thanh toán]\n\n* Thanh toán qua Thẻ tín dụng/ghi nợ (Credit/Debit Card): Tiền hoàn về thẻ tín dụng đã dùng (trong vòng 7 - 14 ngày làm việc tùy thuộc chính sách từng ngân hàng).\n* Thanh toán qua SPayLater: Số dư tiền gốc được hoàn trả và cấn trừ vào hóa đơn trả góp SPayLater gần nhất trong vòng 24 giờ.",
+          "metadata": {
+            "doc_id": "payment-policy",
+            "title": "Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee",
+            "customer_role": "buyer",
+            "category": "payment",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/189473",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\payment-policy.md",
+            "chunk_index": 4
+          }
+        },
+        {
+          "rank": 2,
+          "score": 0.5714321325799154,
+          "doc_id": "payment-policy",
+          "chunk_index": 3,
+          "customer_role": "buyer",
+          "category": "payment",
+          "source_url": "https://help.shopee.vn/portal/article/189473",
+          "content": "[Heading path: Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee > 2. Kênh nhận tiền hoàn tương ứng với phương thức thanh toán]\n\n## 2. Kênh nhận tiền hoàn tương ứng với phương thức thanh toán\nKhi đơn hàng của người mua được hoàn tiền thành công, số tiền sẽ được trả về các kênh tương ứng như sau:\n* Thanh toán qua COD hoặc Thẻ Napas: Tiền hoàn trả trực tiếp về Ví ShopeePay (trong vòng 24 giờ) hoặc về Tài khoản Ngân hàng liên kết mặc định đã được đăng ký trên Shopee (trong vòng 2 ngày làm việc).\n* Thanh toán qua Ví ShopeePay: Tiền hoàn trả lại số dư Ví ShopeePay trong vòng 24 giờ.",
+          "metadata": {
+            "doc_id": "payment-policy",
+            "title": "Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee",
+            "customer_role": "buyer",
+            "category": "payment",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/189473",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\payment-policy.md",
+            "chunk_index": 3
+          }
+        },
+        {
+          "rank": 3,
+          "score": 0.4449939955574093,
+          "doc_id": "payment-policy",
+          "chunk_index": 1,
+          "customer_role": "buyer",
+          "category": "payment",
+          "source_url": "https://help.shopee.vn/portal/article/189473",
+          "content": "[Heading path: Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee > 1. Các phương thức thanh toán được hỗ trợ trên Shopee]\n\n## 1. Các phương thức thanh toán được hỗ trợ trên Shopee\n* Thanh toán khi nhận hàng (COD): Người mua thanh toán bằng tiền mặt trực tiếp cho shipper khi nhận được gói hàng.\n* Ví điện tử ShopeePay: Thanh toán trực tuyến liên kết tài khoản ngân hàng hoặc số dư ví.\n* Thẻ tín dụng/ghi nợ (Visa, Mastercard, JCB, American Express): Hỗ trợ thanh toán quốc tế trực tiếp.\n* Thẻ nội địa Napas: Thanh toán qua cổng Napas bằng thẻ ngân hàng nội địa.\n* SPayLater: Dịch vụ mua trước trả sau được cung cấp bởi đối tác tài chính của Shopee.",
+          "metadata": {
+            "doc_id": "payment-policy",
+            "title": "Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee",
+            "customer_role": "buyer",
+            "category": "payment",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/189473",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\payment-policy.md",
+            "chunk_index": 1
+          }
+        }
+      ],
+      "agent_answer": "Thanh toán qua Thẻ tín dụng/ghi nợ (Credit/Debit Card): Tiền hoàn về thẻ tín dụng đã dùng (trong vòng 7 - 14 ngày làm việc tùy thuộc chính sách từng ngân hàng). (Nguồn: payment-policy) Thẻ tín dụng/ghi nợ (Visa, Mastercard, JCB, American Express): Hỗ trợ thanh toán quốc tế trực tiếp. (Nguồn: payment-policy) Thanh toán qua COD hoặc Thẻ Napas: Tiền hoàn trả trực tiếp về Ví ShopeePay (trong vòng 24 giờ) hoặc về Tài khoản Ngân hàng liên kết mặc định đã được đăng ký trên Shopee (trong vòng 2 ngày làm việc). (Nguồn: payment-policy)",
+      "expected_doc_rank": 1,
+      "relevant_in_top3": true,
+      "required_facts_found": [
+        "7",
+        "14 ngày làm việc"
+      ],
+      "retrieval_point": 2,
+      "notes": "Expected document is top-1 and the grounded answer contains all required facts."
+    },
+    {
+      "id": "Q3",
+      "query": "Người bán phải chuẩn bị đơn hàng thông thường trong bao lâu, và điều gì xảy ra nếu chuẩn bị trễ?",
+      "gold_answer": "Người bán phải chuẩn bị đơn hàng thông thường trong tối đa 1.5 ngày làm việc. Nếu quá thời hạn, đơn hàng sẽ tự động bị hệ thống hủy do chuẩn bị hàng trễ.",
+      "expected_doc_id": "shipping-policy",
+      "metadata_filter": {
+        "customer_role": "both",
+        "category": "shipping"
+      },
+      "top_1": {
+        "rank": 1,
+        "score": 0.7770633593592495,
+        "doc_id": "shipping-policy",
+        "chunk_index": 4,
+        "customer_role": "both",
+        "category": "shipping",
+        "source_url": "https://help.shopee.vn/portal/article/79534",
+        "content": "[Heading path: Chính sách Vận chuyển và Thời gian Giao hàng Shopee > 3. Quy định chuẩn bị hàng cho người bán]\n\n## 3. Quy định chuẩn bị hàng cho người bán\n* Người bán có trách nhiệm xác nhận đơn hàng và chuẩn bị đóng gói hàng hóa trong vòng tối đa **1.5 ngày làm việc** (đơn thông thường) hoặc trong thời gian đã cài đặt (với sản phẩm đặt trước - Pre-order).\n* Quá thời hạn trên, đơn hàng sẽ tự động bị hệ thống hủy bỏ do lỗi \"Chuẩn bị hàng trễ\".",
+        "metadata": {
+          "doc_id": "shipping-policy",
+          "title": "Chính sách Vận chuyển và Thời gian Giao hàng Shopee",
+          "customer_role": "both",
+          "category": "shipping",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/79534",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\shipping-policy.md",
+          "chunk_index": 4
+        }
+      },
+      "top_2": {
+        "rank": 2,
+        "score": 0.6326135698314771,
+        "doc_id": "shipping-policy",
+        "chunk_index": 1,
+        "customer_role": "both",
+        "category": "shipping",
+        "source_url": "https://help.shopee.vn/portal/article/79534",
+        "content": "[Heading path: Chính sách Vận chuyển và Thời gian Giao hàng Shopee > 1. Thời gian giao hàng dự kiến theo phương thức vận chuyển]\n\n## 1. Thời gian giao hàng dự kiến theo phương thức vận chuyển\n* Hỏa tốc (Instant/Priority): Đơn giao nhận trong vòng từ **1 - 4 giờ** làm việc kể từ thời điểm người bán đóng gói xong và bàn giao cho shipper (trong khung giờ hoạt động).\n* Trong Ngày:\n    * Đơn đặt trước 14:00: Dự kiến nhận trước 21:00 cùng ngày.\n    * Đơn đặt sau 14:00: Dự kiến nhận trước 21:00 ngày hôm sau.\n    * Áp dụng chủ yếu tại khu vực nội thành Hà Nội và Thành phố Hồ Chí Minh.\n* Nhanh (Standard/Nhanh): Thời gian giao hàng dao động từ **1 - 4 ngày** làm việc.",
+        "metadata": {
+          "doc_id": "shipping-policy",
+          "title": "Chính sách Vận chuyển và Thời gian Giao hàng Shopee",
+          "customer_role": "both",
+          "category": "shipping",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/79534",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\shipping-policy.md",
+          "chunk_index": 1
+        }
+      },
+      "top_3": {
+        "rank": 3,
+        "score": 0.5451741637454276,
+        "doc_id": "shipping-policy",
+        "chunk_index": 3,
+        "customer_role": "both",
+        "category": "shipping",
+        "source_url": "https://help.shopee.vn/portal/article/79534",
+        "content": "[Heading path: Chính sách Vận chuyển và Thời gian Giao hàng Shopee > 2. Khung giờ làm việc của nhân viên giao hàng (Shipper)]\n\n## 2. Khung giờ làm việc của nhân viên giao hàng (Shipper)\n* Giờ giao hàng tiêu chuẩn: Từ **08:00 đến 18:00** hàng ngày từ thứ Hai đến thứ Bảy.\n* Tại khu vực đô thị lớn, shipper có thể hỗ trợ giao ngoài giờ hành chính (khoảng 19:00 - 21:00) tùy theo thỏa thuận trước với người nhận.\n* Hầu hết đơn vị vận chuyển nghỉ ngày Chủ Nhật và các ngày Lễ Tết theo quy định của Nhà nước (trừ dịch vụ Hỏa tốc hoạt động xuyên suốt).",
+        "metadata": {
+          "doc_id": "shipping-policy",
+          "title": "Chính sách Vận chuyển và Thời gian Giao hàng Shopee",
+          "customer_role": "both",
+          "category": "shipping",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/79534",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\shipping-policy.md",
+          "chunk_index": 3
+        }
+      },
+      "unfiltered_top_3": [
+        {
+          "rank": 1,
+          "score": 0.7770633593592495,
+          "doc_id": "shipping-policy",
+          "chunk_index": 4,
+          "customer_role": "both",
+          "category": "shipping",
+          "source_url": "https://help.shopee.vn/portal/article/79534",
+          "content": "[Heading path: Chính sách Vận chuyển và Thời gian Giao hàng Shopee > 3. Quy định chuẩn bị hàng cho người bán]\n\n## 3. Quy định chuẩn bị hàng cho người bán\n* Người bán có trách nhiệm xác nhận đơn hàng và chuẩn bị đóng gói hàng hóa trong vòng tối đa **1.5 ngày làm việc** (đơn thông thường) hoặc trong thời gian đã cài đặt (với sản phẩm đặt trước - Pre-order).\n* Quá thời hạn trên, đơn hàng sẽ tự động bị hệ thống hủy bỏ do lỗi \"Chuẩn bị hàng trễ\".",
+          "metadata": {
+            "doc_id": "shipping-policy",
+            "title": "Chính sách Vận chuyển và Thời gian Giao hàng Shopee",
+            "customer_role": "both",
+            "category": "shipping",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/79534",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\shipping-policy.md",
+            "chunk_index": 4
+          }
+        },
+        {
+          "rank": 2,
+          "score": 0.6436284500740613,
+          "doc_id": "returns-policy",
+          "chunk_index": 1,
+          "customer_role": "buyer",
+          "category": "returns",
+          "source_url": "https://help.shopee.vn/portal/article/79233",
+          "content": "[Heading path: Chính sách Trả hàng và Hoàn tiền Shopee > 1. Thời hạn yêu cầu Trả hàng/Hoàn tiền]\n\n## 1. Thời hạn yêu cầu Trả hàng/Hoàn tiền\n* Người mua được quyền yêu cầu Trả hàng/Hoàn tiền trong vòng **15 ngày** kể từ khi đơn hàng được cập nhật trạng thái \"Giao hàng thành công\" (kể cả khi đã bấm xác nhận \"Đã nhận được hàng\").\n* Đối với đơn hàng thực phẩm tươi sống & đông lạnh, thời hạn khiếu nại ngắn hơn, cụ thể là **24 giờ** kể từ khi giao hàng thành công.\n* Nếu quá thời hạn trên, Shopee sẽ xem xét hỗ trợ tùy theo từng trường hợp nếu người mua liên hệ trực tiếp với bộ phận Chăm sóc khách hàng.",
+          "metadata": {
+            "doc_id": "returns-policy",
+            "title": "Chính sách Trả hàng và Hoàn tiền Shopee",
+            "customer_role": "buyer",
+            "category": "returns",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/79233",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\returns-policy.md",
+            "chunk_index": 1
+          }
+        },
+        {
+          "rank": 3,
+          "score": 0.6326135698314771,
+          "doc_id": "shipping-policy",
+          "chunk_index": 1,
+          "customer_role": "both",
+          "category": "shipping",
+          "source_url": "https://help.shopee.vn/portal/article/79534",
+          "content": "[Heading path: Chính sách Vận chuyển và Thời gian Giao hàng Shopee > 1. Thời gian giao hàng dự kiến theo phương thức vận chuyển]\n\n## 1. Thời gian giao hàng dự kiến theo phương thức vận chuyển\n* Hỏa tốc (Instant/Priority): Đơn giao nhận trong vòng từ **1 - 4 giờ** làm việc kể từ thời điểm người bán đóng gói xong và bàn giao cho shipper (trong khung giờ hoạt động).\n* Trong Ngày:\n    * Đơn đặt trước 14:00: Dự kiến nhận trước 21:00 cùng ngày.\n    * Đơn đặt sau 14:00: Dự kiến nhận trước 21:00 ngày hôm sau.\n    * Áp dụng chủ yếu tại khu vực nội thành Hà Nội và Thành phố Hồ Chí Minh.\n* Nhanh (Standard/Nhanh): Thời gian giao hàng dao động từ **1 - 4 ngày** làm việc.",
+          "metadata": {
+            "doc_id": "shipping-policy",
+            "title": "Chính sách Vận chuyển và Thời gian Giao hàng Shopee",
+            "customer_role": "both",
+            "category": "shipping",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/79534",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\shipping-policy.md",
+            "chunk_index": 1
+          }
+        }
+      ],
+      "agent_answer": "Người bán có trách nhiệm xác nhận đơn hàng và chuẩn bị đóng gói hàng hóa trong vòng tối đa 1.5 ngày làm việc (đơn thông thường) hoặc trong thời gian đã cài đặt (với sản phẩm đặt trước - Pre-order). (Nguồn: shipping-policy) Quy định chuẩn bị hàng cho người bán (Nguồn: shipping-policy) Quá thời hạn trên, đơn hàng sẽ tự động bị hệ thống hủy bỏ do lỗi \"Chuẩn bị hàng trễ\". (Nguồn: shipping-policy)",
+      "expected_doc_rank": 1,
+      "relevant_in_top3": true,
+      "required_facts_found": [
+        "1.5 ngày làm việc",
+        "tự động",
+        "hủy"
+      ],
+      "retrieval_point": 2,
+      "notes": "Expected document is top-1 and the grounded answer contains all required facts."
+    },
+    {
+      "id": "Q4",
+      "query": "Từ tháng 5 năm 2026, phí xử lý giao dịch Shopee áp dụng cho người bán là bao nhiêu?",
+      "gold_answer": "Phí xử lý giao dịch là 6%, đã bao gồm thuế giá trị gia tăng.",
+      "expected_doc_id": "seller-fees",
+      "metadata_filter": {
+        "customer_role": "seller",
+        "category": "fees"
+      },
+      "top_1": {
+        "rank": 1,
+        "score": 0.719558506054552,
+        "doc_id": "seller-fees",
+        "chunk_index": 2,
+        "customer_role": "seller",
+        "category": "fees",
+        "source_url": "https://banhang.shopee.vn/edu/article/251",
+        "content": "[Heading path: Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee > 2. Phí Xử lý giao dịch (Phí thanh toán)]\n\n## 2. Phí Xử lý giao dịch (Phí thanh toán)\n* Phí xử lý giao dịch là khoản phí áp dụng cho mỗi đơn hàng giao thành công trên hệ thống để chi trả cho các kênh thanh toán.\n* Từ tháng 5 năm 2026, Shopee áp dụng mức phí xử lý giao dịch cố định là **6%** (đã bao gồm thuế GTGT) cho mọi hình thức thanh toán được người mua sử dụng (bao gồm COD, SPayLater, ví ShopeePay, Thẻ tín dụng, v.v.).",
+        "metadata": {
+          "doc_id": "seller-fees",
+          "title": "Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee",
+          "customer_role": "seller",
+          "category": "fees",
+          "language": "vi",
+          "source_url": "https://banhang.shopee.vn/edu/article/251",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\seller-fees.md",
+          "chunk_index": 2
+        }
+      },
+      "top_2": {
+        "rank": 2,
+        "score": 0.6478554879370765,
+        "doc_id": "seller-fees",
+        "chunk_index": 3,
+        "customer_role": "seller",
+        "category": "fees",
+        "source_url": "https://banhang.shopee.vn/edu/article/251",
+        "content": "[Heading path: Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee > 3. Phí Hạ tầng hệ thống]\n\n## 3. Phí Hạ tầng hệ thống\n* Áp dụng mức phí hạ tầng cố định là **3,000 VND** cho mỗi đơn hàng thành công trên Shopee (đã bao gồm thuế GTGT) kể từ ngày 01/07/2025. Phí này trừ trực tiếp vào tổng tiền thanh toán của đơn hàng.\n* Người bán có thể theo dõi chi tiết báo cáo doanh thu và các khoản phí khấu trừ trong Kênh Người Bán -> mục Tài chính -> Doanh thu đơn hàng.",
+        "metadata": {
+          "doc_id": "seller-fees",
+          "title": "Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee",
+          "customer_role": "seller",
+          "category": "fees",
+          "language": "vi",
+          "source_url": "https://banhang.shopee.vn/edu/article/251",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\seller-fees.md",
+          "chunk_index": 3
+        }
+      },
+      "top_3": {
+        "rank": 3,
+        "score": 0.5891627433112709,
+        "doc_id": "seller-fees",
+        "chunk_index": 1,
+        "customer_role": "seller",
+        "category": "fees",
+        "source_url": "https://banhang.shopee.vn/edu/article/251",
+        "content": "[Heading path: Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee > 1. Phí Cố định (Phí hoa hồng)]\n\n## 1. Phí Cố định (Phí hoa hồng)\n* Phí hoa hồng áp dụng đối với tất cả các đơn hàng thành công (trạng thái \"Đã giao\") hoặc đơn hàng có yêu cầu Trả hàng/Hoàn tiền được hệ thống chấp nhận \"Hoàn tiền ngay\" (ngoại trừ lý do Chưa nhận được hàng).\n* Mức phí hoa hồng cố định được phân chia theo từng ngành hàng cụ thể:\n    * Đối với người bán thông thường (không thuộc Shopee Mall): Phí dao động trong khoảng từ **1.21% đến 8.1%** tùy thuộc danh mục sản phẩm.\n    * Phí này được tự động cấn trừ vào doanh thu của đơn hàng trước khi tiền được chuyển về Số dư tài khoản người bán.",
+        "metadata": {
+          "doc_id": "seller-fees",
+          "title": "Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee",
+          "customer_role": "seller",
+          "category": "fees",
+          "language": "vi",
+          "source_url": "https://banhang.shopee.vn/edu/article/251",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\seller-fees.md",
+          "chunk_index": 1
+        }
+      },
+      "unfiltered_top_3": [
+        {
+          "rank": 1,
+          "score": 0.719558506054552,
+          "doc_id": "seller-fees",
+          "chunk_index": 2,
+          "customer_role": "seller",
+          "category": "fees",
+          "source_url": "https://banhang.shopee.vn/edu/article/251",
+          "content": "[Heading path: Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee > 2. Phí Xử lý giao dịch (Phí thanh toán)]\n\n## 2. Phí Xử lý giao dịch (Phí thanh toán)\n* Phí xử lý giao dịch là khoản phí áp dụng cho mỗi đơn hàng giao thành công trên hệ thống để chi trả cho các kênh thanh toán.\n* Từ tháng 5 năm 2026, Shopee áp dụng mức phí xử lý giao dịch cố định là **6%** (đã bao gồm thuế GTGT) cho mọi hình thức thanh toán được người mua sử dụng (bao gồm COD, SPayLater, ví ShopeePay, Thẻ tín dụng, v.v.).",
+          "metadata": {
+            "doc_id": "seller-fees",
+            "title": "Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee",
+            "customer_role": "seller",
+            "category": "fees",
+            "language": "vi",
+            "source_url": "https://banhang.shopee.vn/edu/article/251",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\seller-fees.md",
+            "chunk_index": 2
+          }
+        },
+        {
+          "rank": 2,
+          "score": 0.6478554879370765,
+          "doc_id": "seller-fees",
+          "chunk_index": 3,
+          "customer_role": "seller",
+          "category": "fees",
+          "source_url": "https://banhang.shopee.vn/edu/article/251",
+          "content": "[Heading path: Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee > 3. Phí Hạ tầng hệ thống]\n\n## 3. Phí Hạ tầng hệ thống\n* Áp dụng mức phí hạ tầng cố định là **3,000 VND** cho mỗi đơn hàng thành công trên Shopee (đã bao gồm thuế GTGT) kể từ ngày 01/07/2025. Phí này trừ trực tiếp vào tổng tiền thanh toán của đơn hàng.\n* Người bán có thể theo dõi chi tiết báo cáo doanh thu và các khoản phí khấu trừ trong Kênh Người Bán -> mục Tài chính -> Doanh thu đơn hàng.",
+          "metadata": {
+            "doc_id": "seller-fees",
+            "title": "Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee",
+            "customer_role": "seller",
+            "category": "fees",
+            "language": "vi",
+            "source_url": "https://banhang.shopee.vn/edu/article/251",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\seller-fees.md",
+            "chunk_index": 3
+          }
+        },
+        {
+          "rank": 3,
+          "score": 0.6247866643044869,
+          "doc_id": "returns-policy",
+          "chunk_index": 1,
+          "customer_role": "buyer",
+          "category": "returns",
+          "source_url": "https://help.shopee.vn/portal/article/79233",
+          "content": "[Heading path: Chính sách Trả hàng và Hoàn tiền Shopee > 1. Thời hạn yêu cầu Trả hàng/Hoàn tiền]\n\n## 1. Thời hạn yêu cầu Trả hàng/Hoàn tiền\n* Người mua được quyền yêu cầu Trả hàng/Hoàn tiền trong vòng **15 ngày** kể từ khi đơn hàng được cập nhật trạng thái \"Giao hàng thành công\" (kể cả khi đã bấm xác nhận \"Đã nhận được hàng\").\n* Đối với đơn hàng thực phẩm tươi sống & đông lạnh, thời hạn khiếu nại ngắn hơn, cụ thể là **24 giờ** kể từ khi giao hàng thành công.\n* Nếu quá thời hạn trên, Shopee sẽ xem xét hỗ trợ tùy theo từng trường hợp nếu người mua liên hệ trực tiếp với bộ phận Chăm sóc khách hàng.",
+          "metadata": {
+            "doc_id": "returns-policy",
+            "title": "Chính sách Trả hàng và Hoàn tiền Shopee",
+            "customer_role": "buyer",
+            "category": "returns",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/79233",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\returns-policy.md",
+            "chunk_index": 1
+          }
+        }
+      ],
+      "agent_answer": "Từ tháng 5 năm 2026, Shopee áp dụng mức phí xử lý giao dịch cố định là 6% (đã bao gồm thuế GTGT) cho mọi hình thức thanh toán được người mua sử dụng (bao gồm COD, SPayLater, ví ShopeePay, Thẻ tín dụng, v.v.). (Nguồn: seller-fees) Phí xử lý giao dịch là khoản phí áp dụng cho mỗi đơn hàng giao thành công trên hệ thống để chi trả cho các kênh thanh toán. (Nguồn: seller-fees) Áp dụng mức phí hạ tầng cố định là 3,000 VND cho mỗi đơn hàng thành công trên Shopee (đã bao gồm thuế GTGT) kể từ ngày 01/07/2025. Phí này trừ trực tiếp vào tổng tiền thanh toán của đơn hàng. (Nguồn: seller-fees)",
+      "expected_doc_rank": 1,
+      "relevant_in_top3": true,
+      "required_facts_found": [
+        "6%",
+        "thuế"
+      ],
+      "retrieval_point": 2,
+      "notes": "Expected document is top-1 and the grounded answer contains all required facts."
+    },
+    {
+      "id": "Q5",
+      "query": "Shopee xử lý thế nào đối với sản phẩm vi phạm quy định đăng bán?",
+      "gold_answer": "Sản phẩm vi phạm sẽ bị xóa. Người bán vi phạm nhiều lần hoặc nghiêm trọng có thể bị trừ điểm, giới hạn quyền lợi, tạm khóa hoặc khóa tài khoản vĩnh viễn. Shopee cũng có thể phong tỏa số dư và cung cấp thông tin cho cơ quan chức năng.",
+      "expected_doc_id": "seller-listing",
+      "metadata_filter": {
+        "customer_role": "seller",
+        "category": "listing"
+      },
+      "top_1": {
+        "rank": 1,
+        "score": 0.7704412232918357,
+        "doc_id": "seller-listing",
+        "chunk_index": 4,
+        "customer_role": "seller",
+        "category": "listing",
+        "source_url": "https://help.shopee.vn/portal/article/77247",
+        "content": "[Heading path: Quy định Đăng bán và Danh mục Hàng cấm Shopee > 3. Chế tài xử lý vi phạm của Shopee]\n\n## 3. Chế tài xử lý vi phạm của Shopee\n* Sản phẩm vi phạm quy định đăng bán hoặc chứa hàng cấm sẽ bị hệ thống tự động xóa ngay lập tức.\n* Người bán vi phạm nhiều lần hoặc nghiêm trọng sẽ bị trừ điểm Sao Quả Tạ, giới hạn quyền lợi tài khoản, tạm khóa hoặc khóa tài khoản vĩnh viễn.\n* Shopee có quyền phong tỏa số dư tài khoản người bán và cung cấp thông tin cho cơ quan chức năng để xử lý theo pháp luật Việt Nam.",
+        "metadata": {
+          "doc_id": "seller-listing",
+          "title": "Quy định Đăng bán và Danh mục Hàng cấm Shopee",
+          "customer_role": "seller",
+          "category": "listing",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/77247",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\seller-listing.md",
+          "chunk_index": 4
+        }
+      },
+      "top_2": {
+        "rank": 2,
+        "score": 0.6310107841644906,
+        "doc_id": "seller-listing",
+        "chunk_index": 3,
+        "customer_role": "seller",
+        "category": "listing",
+        "source_url": "https://help.shopee.vn/portal/article/77247",
+        "content": "[Heading path: Quy định Đăng bán và Danh mục Hàng cấm Shopee > 2. Chứng từ bắt buộc cho các ngành hàng có điều kiện]\n\n## 2. Chứng từ bắt buộc cho các ngành hàng có điều kiện\n* Đối với ngành hàng Thực phẩm chức năng, Dược phẩm và Mỹ phẩm: Người bán bắt buộc phải cung cấp đầy đủ giấy chứng nhận công bố sản phẩm và giấy phép kinh doanh hợp lệ cho Shopee kiểm duyệt trước khi hiển thị công khai.\n* Các thiết bị điện tử viễn thông bắt buộc phải có chứng nhận hợp quy (ví dụ điện thoại chỉ hỗ trợ mạng 2G/3G mà không có 4G/5G sẽ bị cấm đăng bán).",
+        "metadata": {
+          "doc_id": "seller-listing",
+          "title": "Quy định Đăng bán và Danh mục Hàng cấm Shopee",
+          "customer_role": "seller",
+          "category": "listing",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/77247",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\seller-listing.md",
+          "chunk_index": 3
+        }
+      },
+      "top_3": {
+        "rank": 3,
+        "score": 0.6191659233462941,
+        "doc_id": "seller-listing",
+        "chunk_index": 1,
+        "customer_role": "seller",
+        "category": "listing",
+        "source_url": "https://help.shopee.vn/portal/article/77247",
+        "content": "[Heading path: Quy định Đăng bán và Danh mục Hàng cấm Shopee > 1. Các nhóm hàng hóa bị cấm đăng bán phổ biến]\n\n## 1. Các nhóm hàng hóa bị cấm đăng bán phổ biến\n* Hàng giả, hàng nhái, vi phạm quyền sở hữu trí tuệ: Các sản phẩm giả mạo thương hiệu lớn mà không có giấy phép chính hãng.\n* Vũ khí, công cụ nguy hiểm: Súng, dao kiếm (trừ dao nhà bếp), thiết bị nghe lén, thiết bị phá sóng wifi/GPS.\n* Chất cấm và vật liệu dễ cháy nổ: Pháo hoa, thuốc nổ, xăng dầu, hóa chất độc hại nằm trong danh mục cấm của Bộ Công Thương.\n* Tiền tệ: Bao gồm tiền giấy, tiền xu (cả thật và giả), hoặc các loại thẻ tín dụng/ghi nợ đã qua sử dụng.",
+        "metadata": {
+          "doc_id": "seller-listing",
+          "title": "Quy định Đăng bán và Danh mục Hàng cấm Shopee",
+          "customer_role": "seller",
+          "category": "listing",
+          "language": "vi",
+          "source_url": "https://help.shopee.vn/portal/article/77247",
+          "retrieved_at": "2026-08-03",
+          "document_version": "2026.02",
+          "source": "data\\k4_ecommerce\\seller-listing.md",
+          "chunk_index": 1
+        }
+      },
+      "unfiltered_top_3": [
+        {
+          "rank": 1,
+          "score": 0.7704412232918357,
+          "doc_id": "seller-listing",
+          "chunk_index": 4,
+          "customer_role": "seller",
+          "category": "listing",
+          "source_url": "https://help.shopee.vn/portal/article/77247",
+          "content": "[Heading path: Quy định Đăng bán và Danh mục Hàng cấm Shopee > 3. Chế tài xử lý vi phạm của Shopee]\n\n## 3. Chế tài xử lý vi phạm của Shopee\n* Sản phẩm vi phạm quy định đăng bán hoặc chứa hàng cấm sẽ bị hệ thống tự động xóa ngay lập tức.\n* Người bán vi phạm nhiều lần hoặc nghiêm trọng sẽ bị trừ điểm Sao Quả Tạ, giới hạn quyền lợi tài khoản, tạm khóa hoặc khóa tài khoản vĩnh viễn.\n* Shopee có quyền phong tỏa số dư tài khoản người bán và cung cấp thông tin cho cơ quan chức năng để xử lý theo pháp luật Việt Nam.",
+          "metadata": {
+            "doc_id": "seller-listing",
+            "title": "Quy định Đăng bán và Danh mục Hàng cấm Shopee",
+            "customer_role": "seller",
+            "category": "listing",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/77247",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\seller-listing.md",
+            "chunk_index": 4
+          }
+        },
+        {
+          "rank": 2,
+          "score": 0.6310107841644906,
+          "doc_id": "seller-listing",
+          "chunk_index": 3,
+          "customer_role": "seller",
+          "category": "listing",
+          "source_url": "https://help.shopee.vn/portal/article/77247",
+          "content": "[Heading path: Quy định Đăng bán và Danh mục Hàng cấm Shopee > 2. Chứng từ bắt buộc cho các ngành hàng có điều kiện]\n\n## 2. Chứng từ bắt buộc cho các ngành hàng có điều kiện\n* Đối với ngành hàng Thực phẩm chức năng, Dược phẩm và Mỹ phẩm: Người bán bắt buộc phải cung cấp đầy đủ giấy chứng nhận công bố sản phẩm và giấy phép kinh doanh hợp lệ cho Shopee kiểm duyệt trước khi hiển thị công khai.\n* Các thiết bị điện tử viễn thông bắt buộc phải có chứng nhận hợp quy (ví dụ điện thoại chỉ hỗ trợ mạng 2G/3G mà không có 4G/5G sẽ bị cấm đăng bán).",
+          "metadata": {
+            "doc_id": "seller-listing",
+            "title": "Quy định Đăng bán và Danh mục Hàng cấm Shopee",
+            "customer_role": "seller",
+            "category": "listing",
+            "language": "vi",
+            "source_url": "https://help.shopee.vn/portal/article/77247",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\seller-listing.md",
+            "chunk_index": 3
+          }
+        },
+        {
+          "rank": 3,
+          "score": 0.62114632489582,
+          "doc_id": "seller-fees",
+          "chunk_index": 0,
+          "customer_role": "seller",
+          "category": "fees",
+          "source_url": "https://banhang.shopee.vn/edu/article/251",
+          "content": "[Heading path: Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee]\n\n# Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee",
+          "metadata": {
+            "doc_id": "seller-fees",
+            "title": "Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee",
+            "customer_role": "seller",
+            "category": "fees",
+            "language": "vi",
+            "source_url": "https://banhang.shopee.vn/edu/article/251",
+            "retrieved_at": "2026-08-03",
+            "document_version": "2026.02",
+            "source": "data\\k4_ecommerce\\seller-fees.md",
+            "chunk_index": 0
+          }
+        }
+      ],
+      "agent_answer": "Sản phẩm vi phạm quy định đăng bán hoặc chứa hàng cấm sẽ bị hệ thống tự động xóa ngay lập tức. (Nguồn: seller-listing) Chế tài xử lý vi phạm của Shopee (Nguồn: seller-listing) Đối với ngành hàng Thực phẩm chức năng, Dược phẩm và Mỹ phẩm: Người bán bắt buộc phải cung cấp đầy đủ giấy chứng nhận công bố sản phẩm và giấy phép kinh doanh hợp lệ cho Shopee kiểm duyệt trước khi hiển thị công khai. (Nguồn: seller-listing)",
+      "expected_doc_rank": 1,
+      "relevant_in_top3": true,
+      "required_facts_found": [
+        "xóa"
+      ],
+      "retrieval_point": 1,
+      "notes": "Expected document is top-1, but the grounded answer is missing required facts: tạm khóa, khóa tài khoản"
+    }
+  ],
+  "summary": {
+    "queries_run": 5,
+    "top3_hits": 5,
+    "top1_hits": 5,
+    "retrieval_points": 9,
+    "maximum_points": 10,
+    "average_top1_score": 0.7550876219444629
+  }
+}
