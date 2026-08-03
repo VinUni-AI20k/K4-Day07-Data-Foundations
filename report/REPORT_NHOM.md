@@ -1,6 +1,8 @@
 # Báo Cáo Nhóm — Lab 7: Embedding & Vector Store
 
-**Tên nhóm:** K4 — Nhóm Nguyễn Đức Anh
+**Nhóm:** Sigmoid
+**Thành viên:** Nguyễn Đức Anh, Nguyễn Trọng Đăng Khoa, Nguyễn Duy Thái, Nguyễn Hoàng Long
+**Ngày:** [Ngày nộp]
 
 **Ngày hoàn thiện:** 2026-08-03
 
