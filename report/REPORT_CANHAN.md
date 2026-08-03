@@ -1,128 +1,240 @@
 # Báo Cáo Cá Nhân — Lab 7: Embedding & Vector Store
 
-**Họ tên:** [Tên sinh viên]
-**Nhóm:** [Tên nhóm]
-**Ngày:** [Ngày nộp]
+**Họ tên:** Đào Minh Chiến
 
-> **Nộp 1 bản / sinh viên.** Phần nhóm (lựa chọn tài liệu, thiết kế chiến lược, bộ câu hỏi đánh giá, demo) nộp chung 1 bản trong `REPORT_NHOM.md`. Chi tiết thang điểm: `docs/SCORING.md`.
+**Mã sinh viên:** 2A202601184
 
-**Tổng điểm phần cá nhân: 60** = Khởi động (5) + Hướng tiếp cận (10) + Hoàn thiện code (30) + Dự đoán độ tương tự (5) + Kết quả truy xuất của tôi (10).
+**Lớp/Nhóm:** K4
+
+**Ngày:** 03/08/2026
+
+> **Nộp 1 bản / sinh viên.** Mã nguồn cá nhân nằm trong package
+> `src.K4_2A202601184_DaoMinhChien`. Các module mẫu trực tiếp dưới `src/` được
+> giữ nguyên để không ảnh hưởng bài làm của thành viên khác.
+
+**Tổng điểm phần cá nhân: 60** = Khởi động (5) + Hướng tiếp cận (10) + Hoàn
+thiện code (30) + Dự đoán độ tương tự (5) + Kết quả truy xuất cá nhân (10).
 
 ---
 
 ## 1. Khởi động (Warm-up) — Cá nhân (5 điểm)
 
-### Độ tương tự Cosine (Cosine Similarity) (Bài tập 1.1)
+### Độ tương tự Cosine (Cosine Similarity) — Bài tập 1.1
 
-**Độ tương tự cosine cao (High cosine similarity) nghĩa là gì?**
-> *Viết 1-2 câu:*
+**Độ tương tự cosine cao nghĩa là gì?**
 
-**Ví dụ có độ tương tự CAO:**
-- Câu A:
-- Câu B:
-- Tại sao tương đồng:
+Hai embedding có cosine similarity cao khi chúng hướng gần giống nhau trong
+không gian vector. Với văn bản, điều này thường cho biết hai đoạn nói về nội
+dung hoặc ý nghĩa gần nhau, ngay cả khi cách diễn đạt không hoàn toàn giống nhau.
 
-**Ví dụ có độ tương tự THẤP:**
-- Câu A:
-- Câu B:
-- Tại sao khác:
+**Ví dụ có độ tương tự cao:**
 
-**Tại sao độ tương tự cosine (cosine similarity) được ưu tiên hơn khoảng cách Euclid (Euclidean distance) cho text embeddings?**
-> *Viết 1-2 câu:*
+- Câu A: “Người mua có thể yêu cầu đổi trả khi hàng bị lỗi.”
+- Câu B: “Khách hàng được trả lại sản phẩm nếu sản phẩm có lỗi.”
+- Hai câu cùng diễn đạt quyền đổi trả khi sản phẩm bị lỗi.
 
-### Bài toán tính toán Chunking (Bài tập 1.2)
+**Ví dụ có độ tương tự thấp:**
 
-**Tài liệu 10,000 ký tự, chunk_size=500, overlap=50. Bao nhiêu chunks?**
-> *Trình bày phép tính:*
-> *Đáp án:*
+- Câu A: “Chính sách đổi trả bảo vệ quyền lợi người mua.”
+- Câu B: “Trời hôm nay có nhiều mây.”
+- Hai câu thuộc hai chủ đề hoàn toàn khác nhau: chính sách TMĐT và thời tiết.
 
-**Nếu độ chồng chéo (overlap) tăng lên 100, số lượng chunk thay đổi thế nào? Tại sao muốn độ chồng chéo nhiều hơn?**
-> *Viết 1-2 câu:*
+**Tại sao ưu tiên cosine similarity hơn Euclidean distance cho text embeddings?**
+
+Cosine tập trung vào góc, tức hướng ngữ nghĩa của vector, và ít bị ảnh hưởng bởi
+độ lớn của vector. Euclidean distance phụ thuộc nhiều vào độ lớn nên hai vector
+có cùng hướng nhưng khác độ dài vẫn có thể bị xem là cách xa nhau.
+
+### Bài toán tính toán Chunking — Bài tập 1.2
+
+Với tài liệu dài 10.000 ký tự, `chunk_size=500`, `overlap=50`:
+
+```text
+step = 500 - 50 = 450
+số chunk = ceil((10.000 - 50) / 450)
+          = ceil(22,111...)
+          = 23 chunk
+```
+
+Nếu tăng `overlap` lên 100:
+
+```text
+step = 500 - 100 = 400
+số chunk = ceil((10.000 - 100) / 400)
+          = ceil(24,75)
+          = 25 chunk
+```
+
+Số chunk tăng từ 23 lên 25 vì mỗi lần dịch cửa sổ chỉ tiến 400 ký tự. Overlap
+lớn hơn giúp bảo toàn ngữ cảnh nằm gần ranh giới hai chunk, nhưng làm tăng số
+chunk, dung lượng lưu trữ và chi phí truy xuất.
 
 ---
 
 ## 2. Hướng tiếp cận của tôi (My Approach) — Cá nhân (10 điểm)
 
-Giải thích cách tiếp cận của bạn khi lập trình (implement) các phần chính trong gói `src`.
-
 ### Các hàm chia nhỏ (Chunking Functions)
 
-**`SentenceChunker.chunk`** — hướng tiếp cận:
-> *Viết 2-3 câu: dùng biểu thức chính quy (regex) gì để phát hiện câu? Xử lý trường hợp ngoại lệ (edge case) nào?*
+**`SentenceChunker.chunk`**
 
-**`RecursiveChunker.chunk` / `_split`** — hướng tiếp cận:
-> *Viết 2-3 câu: thuật toán hoạt động thế nào? Base case (trường hợp cơ sở) là gì?*
+Tôi dùng regex `(?<=[.!?])\s+` để tách tại khoảng trắng đứng sau dấu kết thúc
+câu, nhờ đó dấu câu vẫn nằm trong nội dung. Các câu rỗng được bỏ qua, khoảng
+trắng thừa được loại bỏ, sau đó tối đa `max_sentences_per_chunk` câu được ghép
+thành một chunk. Chuỗi rỗng hoặc chỉ có khoảng trắng trả về danh sách rỗng.
+
+**`RecursiveChunker.chunk` / `_split`**
+
+Thuật toán thử separator theo thứ tự từ cấu trúc lớn đến nhỏ:
+`["\n\n", "\n", ". ", " ", ""]`. Nếu đoạn hiện tại đã không lớn hơn
+`chunk_size`, đó là base case và được trả về ngay; nếu vẫn quá lớn, thuật toán
+chia bằng separator tiếp theo. Separator được gắn lại để không làm mất dấu câu
+hoặc ranh giới đoạn; khi hết separator, thuật toán cắt cứng theo số ký tự.
+
+**`compute_similarity` và `ChunkingStrategyComparator`**
+
+`compute_similarity` tính tích vô hướng chia cho tích độ lớn hai vector và trả
+`0.0` nếu một vector có độ lớn bằng không. Comparator chạy ba chiến thuật
+`fixed_size`, `by_sentences`, `recursive`, rồi trả số chunk, độ dài trung bình và
+danh sách chunk để có thể so sánh trực tiếp.
 
 ### Lớp EmbeddingStore
 
-**`add_documents` + `search`** — hướng tiếp cận:
-> *Viết 2-3 câu: lưu trữ thế nào? Tính độ tương tự ra sao?*
+**`add_documents` + `search`**
 
-**`search_with_filter` + `delete_document`** — hướng tiếp cận:
-> *Viết 2-3 câu: lọc (filter) trước hay sau? Xóa bằng cách nào?*
+Mỗi tài liệu được chuẩn hóa thành record gồm ID duy nhất, nội dung, metadata,
+embedding và `doc_id` có thể truy vết. Store ưu tiên ChromaDB nếu khả dụng, nếu
+không sẽ dùng danh sách trong bộ nhớ. Khi tìm kiếm, truy vấn được embed một lần,
+điểm dot product được tính với từng record rồi sắp xếp giảm dần và giới hạn theo
+`top_k`.
+
+**`search_with_filter` + `delete_document`**
+
+Metadata được lọc trước khi xếp hạng tương đồng; nhiều điều kiện trong filter
+được kết hợp theo phép AND. `delete_document` tìm tất cả chunk có cùng
+`metadata["doc_id"]`, xóa toàn bộ và trả `True` khi thực sự có dữ liệu bị xóa.
 
 ### Tác tử KnowledgeBaseAgent
 
-**`answer`** — hướng tiếp cận:
-> *Viết 2-3 câu: cấu trúc prompt? Cách đưa ngữ cảnh (inject context) vào thế nào?*
+**`answer`**
+
+Agent truy xuất các chunk Top-k, đánh số từng context rồi đưa chúng cùng câu hỏi
+vào prompt. Prompt yêu cầu chỉ trả lời dựa trên context và phải nói không đủ
+thông tin nếu tài liệu không chứa câu trả lời; cuối cùng prompt được truyền vào
+`llm_fn`, nhờ đó có thể thay LLM thật bằng hàm giả lập trong unit test.
 
 ---
 
 ## 3. Hoàn thiện code (Core Implementation) — Cá nhân (30 điểm)
 
-Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
+Mã nguồn được đặt riêng tại:
 
-### Kết Quả Kiểm Thử (Test Results)
-
+```text
+src/K4_2A202601184_DaoMinhChien/
+├── __init__.py
+├── agent.py
+├── chunking.py
+├── embeddings.py
+├── evaluation.py
+├── models.py
+└── store.py
 ```
-# Dán kết quả (output) của: pytest tests/ -v
+
+Lệnh kiểm thử:
+
+```powershell
+$env:LAB_SOLUTION_PACKAGE='src.K4_2A202601184_DaoMinhChien'
+python -m pytest tests -v
 ```
 
-**Số lượng bài test vượt qua (pass):** __ / 42
+Kết quả:
+
+```text
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0
+collected 42 items
+tests/test_solution.py .......................................... [100%]
+============================= 42 passed in 0.07s =============================
+```
+
+**Số lượng bài test vượt qua:** **42 / 42**
 
 ---
 
 ## 4. Dự đoán độ tương tự (Similarity Predictions) — Cá nhân (5 điểm)
 
-| Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
-|------|-----------|-----------|---------|--------------|-------|
-| 1 | | | cao / thấp | | |
-| 2 | | | cao / thấp | | |
-| 3 | | | cao / thấp | | |
-| 4 | | | cao / thấp | | |
-| 5 | | | cao / thấp | | |
+Tôi tạo vector từ tần suất từ vựng đã chuẩn hóa để phép đo có thể tái lập hoàn
+toàn khi chưa cài mô hình SentenceTransformers. Hai vector sau đó được đưa vào
+`compute_similarity`; trong phép thử này, điểm từ `0,20` được phân loại là cao.
+Toàn bộ phép đo có thể chạy lại bằng:
 
-**Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
-> *Viết 2-3 câu:*
+```powershell
+$env:PYTHONUTF8='1'
+python -m src.K4_2A202601184_DaoMinhChien.evaluation
+```
+
+| Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
+|---|---|---|---|---:|---|
+| 1 | Người mua có thể yêu cầu đổi trả khi hàng bị lỗi. | Khách hàng được trả lại sản phẩm nếu sản phẩm có lỗi. | Cao | 0,2887 | Có |
+| 2 | Người bán phải cung cấp mô tả sản phẩm chính xác. | Thông tin đăng bán cần phản ánh đúng sản phẩm. | Cao | 0,2860 | Có |
+| 3 | Chính sách đổi trả bảo vệ quyền lợi người mua. | Trời hôm nay có nhiều mây. | Thấp | 0,0000 | Có |
+| 4 | Sản phẩm bị cấm không được đăng bán. | Người bán không được đăng các mặt hàng bị cấm. | Cao | 0,6708 | Có |
+| 5 | Yêu cầu đổi trả cần kèm bằng chứng. | Người bán cập nhật giá sản phẩm. | Thấp | 0,0000 | Có |
+
+Kết quả đáng chú ý nhất là cặp 1 và 2 chỉ đạt khoảng 0,29 dù ý nghĩa khá gần
+nhau. Nguyên nhân là vector từ vựng chỉ nhận biết các từ trùng nhau, chưa hiểu
+tốt các quan hệ như “người mua” với “khách hàng”. Một embedding đa ngữ thực sự
+có thể biểu diễn các quan hệ ngữ nghĩa này tốt hơn.
 
 ---
 
 ## 5. Kết quả truy xuất của tôi (Competition Results) — Cá nhân (10 điểm)
 
-Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân của bạn trong gói `src`. **5 câu hỏi này phải trùng với các thành viên cùng nhóm** (xem `REPORT_NHOM.md`).
+### Phạm vi phép thử
 
-| # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
-|---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+Tại thời điểm chạy, `REPORT_NHOM.md` chưa có năm benchmark query chung và thư
+mục `data/k4_ecommerce/` mới chứa hai tài liệu khởi động. Vì vậy, bảng dưới đây
+là **benchmark cá nhân tạm thời**, không giả định là kết quả chính thức của nhóm.
+Tôi dùng `RecursiveChunker(chunk_size=500)`, thu được 3 chunk, và dùng vector từ
+vựng chuẩn hóa thay cho mock embedding ngẫu nhiên. Câu 5 được lọc bằng
+`metadata_filter={"customer_role": "seller"}`.
 
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** __ / 5
+Script `src/K4_2A202601184_DaoMinhChien/evaluation.py` lưu cố định năm cặp câu,
+năm truy vấn, vectorizer, cấu hình chunking, Top-3 và Agent stub trích xuất; vì
+vậy các số liệu trong hai bảng có thể được kiểm tra lại độc lập.
 
-**Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> *Viết 2-3 câu:*
+| # | Câu hỏi | Top-1 chunk truy xuất được | Score | Liên quan? | Câu trả lời Agent (tóm tắt từ context) |
+|---|---|---|---:|---|---|
+| 1 | Người mua cần làm gì khi hàng bị lỗi hoặc không đúng mô tả? | `k4-returns-policy`: điều kiện gửi yêu cầu đổi trả | 0,4193 | Có | Gửi yêu cầu trong thời hạn chính sách và kèm bằng chứng phù hợp nếu hàng lỗi hoặc sai mô tả. |
+| 2 | Người bán phải cung cấp những thông tin nào khi đăng sản phẩm? | `k4-seller-listing`: trách nhiệm đăng bán | 0,4430 | Có | Cung cấp chính xác giá, mô tả và tình trạng hàng. |
+| 3 | Sản phẩm bị hạn chế hoặc bị cấm có được đăng bán không? | `k4-seller-listing`: quy định hàng cấm | 0,5041 | Có | Không; sản phẩm bị hạn chế hoặc bị cấm không được đăng bán. |
+| 4 | Ai có trách nhiệm phản hồi yêu cầu đổi trả? | `k4-returns-policy`: trách nhiệm xử lý đổi trả | 0,2752 | Có | Người bán có trách nhiệm phản hồi theo quy trình của sàn. |
+| 5 | Với vai trò người bán, trách nhiệm về độ chính xác của thông tin sản phẩm là gì? | `k4-seller-listing`, lọc `seller` | 0,3765 | Có | Người bán chịu trách nhiệm bảo đảm giá, mô tả và tình trạng hàng chính xác. |
+
+**Số câu có chunk liên quan trong Top-3:** **5 / 5** trên corpus khởi động.
+
+Metadata filter ở câu 5 loại bỏ toàn bộ chunk dành cho `buyer`, giúp tập ứng
+viên chỉ còn tài liệu người bán. Tuy vậy, corpus chỉ có ba chunk nên kết quả 5/5
+chưa chứng minh chất lượng retrieval trên dữ liệu thật; sau khi nhóm bổ sung
+5–10 nguồn và năm câu hỏi chung, cần chạy lại bảng này bằng local multilingual
+embedder.
+
+**Điều học được từ quá trình tự kiểm tra:** cùng một nội dung nhưng cách chia
+chunk quyết định lượng ngữ cảnh đi kèm kết quả. Metadata giúp giảm nhiễu khi câu
+hỏi xác định rõ vai trò, còn chất lượng embedding ảnh hưởng trực tiếp đến thứ tự
+Top-k. Chưa có dữ liệu demo của thành viên khác để đưa ra so sánh nhóm trung thực.
 
 ---
 
 ## Tự Đánh Giá (Phần Cá Nhân)
 
 | Tiêu chí | Điểm tự đánh giá |
-|----------|-------------------|
-| Khởi động (Warm-up) | / 5 |
-| Hướng tiếp cận của tôi (My Approach) | / 10 |
-| Hoàn thiện code (Core Implementation — tests) | / 30 |
-| Dự đoán độ tương tự (Similarity Predictions) | / 5 |
-| Kết quả truy xuất của tôi (Competition Results) | / 10 |
-| **Tổng phần cá nhân** | **/ 60** |
+|---|---:|
+| Khởi động | 5 / 5 |
+| Hướng tiếp cận của tôi | 10 / 10 |
+| Hoàn thiện code — 42/42 tests | 30 / 30 |
+| Dự đoán độ tương tự | 5 / 5 |
+| Kết quả truy xuất tạm thời | 6 / 10 |
+| **Tổng phần cá nhân hiện tại** | **56 / 60** |
+
+Phần retrieval tự đánh giá 6/10 vì mã và phép đo đã hoàn thành nhưng corpus cùng
+benchmark chính thức của nhóm chưa có. Khi nhóm cung cấp 5–10 tài liệu thật và
+năm câu hỏi chung, cần thay bảng tạm thời để chốt điểm phần này.

@@ -1,0 +1,154 @@
+"""Reproduce the individual similarity and provisional retrieval report.
+
+Run from the repository root:
+    python -m src.K4_2A202601184_DaoMinhChien.evaluation
+"""
+
+from __future__ import annotations
+
+import json
+import math
+import re
+from collections import Counter
+from pathlib import Path
+
+from ingest import chunk_document, load_documents
+
+from .agent import KnowledgeBaseAgent
+from .chunking import RecursiveChunker, compute_similarity
+from .store import EmbeddingStore
+
+
+SIMILARITY_PAIRS = [
+    (
+        "Người mua có thể yêu cầu đổi trả khi hàng bị lỗi.",
+        "Khách hàng được trả lại sản phẩm nếu sản phẩm có lỗi.",
+        "cao",
+    ),
+    (
+        "Người bán phải cung cấp mô tả sản phẩm chính xác.",
+        "Thông tin đăng bán cần phản ánh đúng sản phẩm.",
+        "cao",
+    ),
+    (
+        "Chính sách đổi trả bảo vệ quyền lợi người mua.",
+        "Trời hôm nay có nhiều mây.",
+        "thấp",
+    ),
+    (
+        "Sản phẩm bị cấm không được đăng bán.",
+        "Người bán không được đăng các mặt hàng bị cấm.",
+        "cao",
+    ),
+    (
+        "Yêu cầu đổi trả cần kèm bằng chứng.",
+        "Người bán cập nhật giá sản phẩm.",
+        "thấp",
+    ),
+]
+
+BENCHMARK_QUERIES = [
+    "Người mua cần làm gì khi hàng bị lỗi hoặc không đúng mô tả?",
+    "Người bán phải cung cấp những thông tin nào khi đăng sản phẩm?",
+    "Sản phẩm bị hạn chế hoặc bị cấm có được đăng bán không?",
+    "Ai có trách nhiệm phản hồi yêu cầu đổi trả?",
+    "Với vai trò người bán, trách nhiệm về độ chính xác của thông tin sản phẩm là gì?",
+]
+
+
+def _tokens(text: str) -> list[str]:
+    return re.findall(r"\w+", text.lower(), flags=re.UNICODE)
+
+
+def _make_lexical_embedder(texts: list[str]):
+    vocabulary = sorted({token for text in texts for token in _tokens(text)})
+
+    def embed(text: str) -> list[float]:
+        counts = Counter(_tokens(text))
+        vector = [float(counts.get(word, 0)) for word in vocabulary]
+        magnitude = math.sqrt(sum(value * value for value in vector)) or 1.0
+        return [value / magnitude for value in vector]
+
+    return embed
+
+
+def _extract_top_context(prompt: str) -> str:
+    """Small deterministic LLM stub used only to verify Agent prompt grounding."""
+    marker = "[Context 1]\n"
+    if marker not in prompt:
+        return "Không đủ thông tin trong cơ sở tri thức."
+    context = prompt.split(marker, 1)[1].split("\n\n[Context 2]", 1)[0]
+    return context.strip()
+
+
+def run_evaluation() -> dict:
+    repo_root = Path(__file__).resolve().parents[2]
+    documents = load_documents(repo_root / "data" / "k4_ecommerce")
+    chunker = RecursiveChunker(chunk_size=500)
+    chunks = [
+        chunk
+        for document in documents
+        for chunk in chunk_document(document, chunker)
+    ]
+
+    source_texts = [text for pair in SIMILARITY_PAIRS for text in pair[:2]]
+    source_texts.extend(BENCHMARK_QUERIES)
+    source_texts.extend(chunk.content for chunk in chunks)
+    embed = _make_lexical_embedder(source_texts)
+
+    similarity_results = []
+    for sentence_a, sentence_b, prediction in SIMILARITY_PAIRS:
+        score = compute_similarity(embed(sentence_a), embed(sentence_b))
+        actual = "cao" if score >= 0.20 else "thấp"
+        similarity_results.append(
+            {
+                "sentence_a": sentence_a,
+                "sentence_b": sentence_b,
+                "prediction": prediction,
+                "score": round(score, 4),
+                "actual": actual,
+                "correct": prediction == actual,
+            }
+        )
+
+    store = EmbeddingStore("personal_report", embedding_fn=embed)
+    store.add_documents(chunks)
+    agent = KnowledgeBaseAgent(store, llm_fn=_extract_top_context)
+    retrieval_results = []
+    for index, query in enumerate(BENCHMARK_QUERIES, start=1):
+        metadata_filter = {"customer_role": "seller"} if index == 5 else None
+        results = store.search_with_filter(
+            query,
+            top_k=3,
+            metadata_filter=metadata_filter,
+        )
+        retrieval_results.append(
+            {
+                "query": query,
+                "metadata_filter": metadata_filter,
+                "top_1_score": round(results[0]["score"], 4) if results else None,
+                "top_1_doc_id": results[0]["metadata"].get("doc_id") if results else None,
+                "top_3_doc_ids": [result["metadata"].get("doc_id") for result in results],
+                "agent_answer": agent.answer(
+                    query,
+                    top_k=3,
+                    metadata_filter=metadata_filter,
+                ),
+            }
+        )
+
+    return {
+        "embedding": "normalized lexical term-frequency vector",
+        "chunker": "RecursiveChunker(chunk_size=500)",
+        "chunk_count": len(chunks),
+        "similarity_results": similarity_results,
+        "retrieval_results": retrieval_results,
+    }
+
+
+def main() -> None:
+    print(json.dumps(run_evaluation(), ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
