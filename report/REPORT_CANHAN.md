@@ -125,9 +125,9 @@ Tôi chọn **`max_sentences_per_chunk=8`** vì có top-3 hit rate và top-1 hit
 
 Với cấu hình 8, lượt không filter có top-3 lần lượt từ `shopee-order-cancellation`, `shopee-terms-of-service`, `shopee-return-refund-policy`. Filter `{"customer_role": "buyer"}` giữ nguyên đúng top-1 và score 0.746921 nhưng loại hai tài liệu metadata `both`; chỉ còn hai chunk buyer-only của tài liệu hủy đơn. Như vậy filter không cải thiện rank 1 trong lần đo này, nhưng làm sạch phần còn lại của candidate set.
 
-### Bài học từ demo
+### Bài học từ đối chiếu benchmark giữa các thành viên
 
-Tại thời điểm hoàn thiện nhánh cá nhân, nhóm chưa cung cấp kết quả demo của các chiến lược thành viên khác. Vì vậy tôi không bịa nội dung so sánh; mục này cần bổ sung sau buổi demo bằng một nhận xét có tên chiến lược và số liệu thật của thành viên khác.
+Qua benchmark chung, tôi học được từ chiến lược `FixedSizeChunker(chunk_size=800, overlap=100)` của Nguyễn Đức Anh rằng giới hạn độ dài và overlap có thể quan trọng hơn việc chỉ giữ nguyên biên câu. FixedSize đạt relevant top-3 **5/5** và đủ evidence **5/5**, trong khi `SentenceChunker(8)` của tôi đạt top-3 **4/5** nhưng có top-1 tốt hơn (**4/5** so với **3/5**). SentenceChunker tạo ít chunk hơn và thường đưa kết quả đúng lên đầu, nhưng chunk dài nhất trong benchmark chung tới **6.301 ký tự** và bỏ lỡ câu hỏi thời hạn trả hàng; FixedSize giữ tối đa **800 ký tự** và overlap giúp bảo toàn evidence qua biên. Nếu cải tiến tiếp, tôi sẽ kết hợp biên câu với giới hạn ký tự cứng và overlap nhỏ để giữ tính mạch lạc mà tránh chunk quá dài.
 
 ## Tự đánh giá
 
