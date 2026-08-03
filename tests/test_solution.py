@@ -16,6 +16,7 @@ from pathlib import Path
 DAY_DIR = Path(__file__).parent.parent
 PACKAGE_NAME = os.getenv("LAB_SOLUTION_PACKAGE", "src")
 
+
 _m = importlib.import_module(PACKAGE_NAME)
 
 Document = getattr(_m, 'Document')
