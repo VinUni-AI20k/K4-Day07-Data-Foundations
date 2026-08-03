@@ -1,8 +1,8 @@
 # Báo Cáo Cá Nhân — Lab 7: Embedding & Vector Store
 
-**Họ tên:** [Tên sinh viên]
-**Nhóm:** [Tên nhóm]
-**Ngày:** [Ngày nộp]
+**Họ tên:** Chu Quang Hiếu
+**Nhóm:** C5-3
+**Ngày:** 03/08/2026
 
 > **Nộp 1 bản / sinh viên.** Phần nhóm (lựa chọn tài liệu, thiết kế chiến lược, bộ câu hỏi đánh giá, demo) nộp chung 1 bản trong `REPORT_NHOM.md`. Chi tiết thang điểm: `docs/SCORING.md`.
 
@@ -187,23 +187,26 @@ tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_tr
 
 Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân của bạn trong gói `src`. **5 câu hỏi này phải trùng với các thành viên cùng nhóm** (xem `REPORT_NHOM.md`).
 
-> **Cấu hình chạy:** `RecursiveChunker(chunk_size=500)` + `MockEmbedder` trên `data/k4_ecommerce` (10 tài liệu → **139 chunk**). Câu 4 chạy bằng `search_with_filter(metadata_filter={"customer_role": "seller"})`, 4 câu còn lại dùng `search` thường. `llm_fn` là hàm giả lập trả về nguyên khối ngữ cảnh đầu tiên (chưa gắn LLM thật).
+> **Cấu hình chạy:** `RecursiveChunker(chunk_size=500)` + **`LocalEmbedder`** (`sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`) trên `data/k4_ecommerce` (10 tài liệu → **139 chunk**). Câu 4 chạy bằng `search_with_filter(metadata_filter={"customer_role": "seller"})`, 4 câu còn lại dùng `search` thường. `llm_fn` là hàm giả lập trả về nguyên khối ngữ cảnh đầu tiên (chưa gắn LLM thật).
 
 | # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
 |---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | Bao nhiêu ngày để gửi yêu cầu Trả hàng/Hoàn tiền? | `chinh-sach-tra-hang-hoan-tien` — "Shopee khuyến khích Người Mua chủ động liên hệ với Người Bán để thương lượng…" | +0.3215 | ❌ Sai tài liệu (cần `quy-dinh-chung-tra-hang-hoan-tien`), top-3 cũng không có | Lặp lại đoạn thương lượng với Người Bán — không trả lời được mốc 15 ngày |
-| 2 | Thẻ tín dụng bao lâu nhận được tiền hoàn? | `quan-ly-don-tra-hang-hoan-tien` — "Nhấn chọn Nhập tồn kho nhanh để hoàn tất quá trình nhập hàng…" | +0.3402 | ❌ Sai tài liệu (cần `thoi-gian-nhan-tien-hoan`), top-3 cũng không có | Nói về nhập tồn kho — lạc đề hoàn toàn |
-| 3 | Cây cảnh / thực phẩm đông lạnh còn nguyên vẹn có trả được không? | `phuong-thuc-gui-hang-va-phi-hoan-tra` — "Sau khi bạn đã gửi yêu cầu hoàn tiền và chọn hình thức trả hàng…" | +0.3162 | ⚠️ Top-1 sai, nhưng `san-pham-han-che-tra-hang` **có** ở hạng 3 | Nói về hình thức gửi trả tại bưu cục — không trả lời được câu hỏi |
-| 4 | **(lọc `customer_role: seller`)** Người bán phải phản hồi trong bao lâu? | `quan-ly-don-tra-hang-hoan-tien` — "Nhấn chọn Nhập tồn kho nhanh…" | +0.1357 | ⚠️ Đúng tài liệu nhưng **hiển nhiên**: bộ lọc chỉ còn đúng 1 tài liệu nên mọi kết quả đều là nó; sai đoạn (cần mục C, mốc 2 ngày) | Trả về đoạn về các loại bể vỡ — sai đoạn, và **không dùng bộ lọc** (xem ghi chú dưới) |
-| 5 | Hình thức trả hàng nào phải tự trả phí trước? | `phuong-thuc-gui-hang-va-phi-hoan-tra` — "Bước 4: Đơn vị vận chuyển sẽ đến lấy hàng… Trả hàng tại bưu cục (Miễn phí…)" | +0.3359 | ⚠️ Đúng tài liệu, sai đoạn (cần mục "Tự sắp xếp") | Nói về ĐVVC đến lấy hàng — gần chủ đề nhưng không nêu được "Tự sắp xếp" |
+| 1 | Bao nhiêu ngày để gửi yêu cầu Trả hàng/Hoàn tiền? | `huong-dan-gui-yeu-cau` — "tiền sẽ được hoàn trong 1 - 14 ngày làm việc, tùy phương thức thanh toán" | +0.8249 | ⚠️ Top-1 lệch (trả lời *thời gian hoàn tiền* chứ không phải *thời hạn gửi yêu cầu*), nhưng **hạng 2 và hạng 3 đều chứa đúng mốc "15 ngày"** | Lặp mốc 1-14 ngày — trả lời nhầm sang thời gian hoàn tiền |
+| 2 | Thẻ tín dụng bao lâu nhận được tiền hoàn? | `huong-dan-gui-yeu-cau` — "hoàn trong 1 - 14 ngày làm việc, tùy thuộc phương thức thanh toán" | +0.6888 | ⚠️ Đúng chủ đề nhưng chung chung; hạng 2-3 là `thoi-gian-nhan-tien-hoan` nhưng rơi vào đoạn COD/QR và Ví ShopeePay, **không phải** đoạn thẻ Tín dụng 7-14 ngày | Nêu 1-14 ngày chung — thiếu chi tiết riêng cho thẻ tín dụng |
+| 3 | Cây cảnh / thực phẩm đông lạnh còn nguyên vẹn có trả được không? | `san-pham-han-che-tra-hang` — "Sản phẩm hạn chế trả hàng là những sản phẩm có tính đặc thù cao, dễ hư hỏng…" | +0.5010 | ✅ Đúng tài liệu **và** đúng đoạn định nghĩa cần thiết để kết luận "không được trả" | Trích đúng định nghĩa nhóm sản phẩm hạn chế trả hàng |
+| 4 | **(lọc `customer_role: seller`)** Người bán phải phản hồi trong bao lâu? | `quan-ly-don-tra-hang-hoan-tien` — "Nhấn Chi tiết giao dịch… Nhấn Hoàn tất để hoàn thành" | +0.7882 | ✅ Đúng tài liệu (bộ lọc chỉ chừa 1 tài liệu nên đây là kết quả hiển nhiên); top-1 sai đoạn | ✅ **Trúng gold**: "Người Bán cần gửi phản hồi trong vòng 02 ngày lịch…" |
+| 5 | Hình thức trả hàng nào phải tự trả phí trước? | `chinh-sach-tra-hang-hoan-tien` — "Đơn hàng đủ điều kiện trả hàng/hoàn tiền khi Người Mua đã gửi trả Sản Phẩm…" | +0.7040 | ❌ Sai tài liệu mong đợi, **nhưng** hạng 2 chứa đúng gold: "Theo hình thức 'Tự sắp xếp': Người Mua cần thanh toán trước chi phí vận chuyển" | Nói về điều kiện hoàn tiền — chưa nêu được "Tự sắp xếp" |
 
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** **3 / 5** (đúng ở mức *tài liệu*: câu 3, 4, 5). Chặt hơn: top-1 đúng tài liệu chỉ **2/5**, và **0/5** nếu tính ở mức *đoạn văn thực sự chứa câu trả lời chuẩn*.
+**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** **4 / 5** ở mức *tài liệu* (câu 1, 2, 3, 4); top-1 đúng tài liệu **2/5**. Nếu chấm ở mức *đoạn thực sự chứa câu trả lời chuẩn* thì **4/5** (câu 1, 3, 4, 5) — câu 2 chỉ trả lời được chung chung.
+
+**Tự chấm theo `docs/SCORING.md` (2/1/0 mỗi câu): 1 + 1 + 2 + 2 + 1 = 7/10.**
 
 **Phân tích kết quả:**
-- **Điểm số dồn cục quanh 0.32** cho cả kết quả đúng lẫn sai (0.3162 vs 0.3215 vs 0.3402) — score **không phân biệt được** tín hiệu với nhiễu, đúng như dự đoán ở Phần 4 về `MockEmbedder`.
-- **Câu 4 cho thấy metadata filter thật sự có tác dụng**: chỉ 1 trong 10 tài liệu có `customer_role: seller`, nên bộ lọc loại sạch nhiễu và ép top-3 về đúng tài liệu — đây là trường hợp duy nhất mà việc "trúng" không phụ thuộc vào chất lượng embedding.
-- **Hạn chế phát hiện được ở `KnowledgeBaseAgent`:** `answer()` chỉ gọi `store.search()`, chưa có đường truyền `metadata_filter` xuống. Vì vậy ở câu 4, phần truy xuất có lọc nhưng câu trả lời của agent thì không — hai con số trong bảng lệch nhau. Nếu làm tiếp, tôi sẽ thêm tham số `metadata_filter` cho `answer()`.
-- **Kết luận:** con số 3/5 ở trên **không** phản ánh chất lượng chiến lược chunking. Muốn đánh giá thật phải cài `requirements-local.txt` rồi chạy lại với `EMBEDDING_PROVIDER=local`, đúng như `README.md` cảnh báo.
+- **Điểm số đã phân tách rõ:** dải 0.50-0.82 với thứ hạng có ý nghĩa, khác hẳn cụm 0.31-0.34 vô nghĩa khi chạy `MockEmbedder` ở Phần 4. Cùng một `EmbeddingStore`, cùng chunker — chỉ đổi mô hình nhúng, top-3 tăng từ 3/5 (ngẫu nhiên) lên 4/5 (thực chất). Chất lượng truy xuất do **mô hình nhúng** quyết định trước tiên.
+- **Câu 5 lộ ra sai sót ở gold answer của nhóm, không phải ở truy xuất:** nhóm ghi chunk chứa thông tin là `phuong-thuc-gui-hang-va-phi-hoan-tra`, nhưng `chinh-sach-tra-hang-hoan-tien` cũng phát biểu đúng quy định "Tự sắp xếp" và được xếp hạng 2. Chấm theo `doc_id` sẽ tính là trượt dù nội dung trả về đúng — cần chấm theo **nội dung đoạn**, không theo tên tài liệu.
+- **Câu 1 là lỗi phân biệt ý định (intent):** "bao nhiêu ngày để **gửi yêu cầu**" và "bao nhiêu ngày để **nhận tiền hoàn**" rất giống nhau về mặt từ vựng, embedding xếp nhầm đoạn 1-14 ngày lên hạng 1. Đây là loại lỗi mà chunk nhỏ hơn hoặc metadata `category` chi tiết hơn có thể khắc phục.
+- **Metadata filter vẫn hiệu quả nhất ở câu 4:** chỉ 1/10 tài liệu có `customer_role: seller`, bộ lọc loại sạch 131 chunk nhiễu. Điểm top-1 tụt xuống +0.7882 so với các câu không lọc, nhưng đó là điểm *trong tập đúng* — cho thấy score tuyệt đối không so sánh được giữa các truy vấn có bộ lọc khác nhau.
+- **Hạn chế phát hiện được ở `KnowledgeBaseAgent`:** `answer()` chỉ gọi `store.search()`, chưa truyền được `metadata_filter`. Trớ trêu là ở câu 4 chính bản không lọc lại lấy đúng đoạn "02 ngày lịch" trong khi bản có lọc thì không — nếu làm tiếp tôi sẽ thêm tham số `metadata_filter` cho `answer()` để hai đường đi nhất quán.
 
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
 > *Viết 2-3 câu sau buổi demo:*
