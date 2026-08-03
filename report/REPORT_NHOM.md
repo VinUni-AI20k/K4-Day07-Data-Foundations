@@ -99,11 +99,11 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 | # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Chunk nào chứa thông tin? |
 |---|-------|-------------------------------|--------------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | Tôi có bao nhiêu ngày để gửi yêu cầu Trả hàng/Hoàn tiền sau khi đơn hàng giao thành công? | 15 ngày kể từ lúc đơn được cập nhật ‘Giao hàng thành công’. Ngoại lệ: thực phẩm tươi sống & đông lạnh chỉ 24 giờ (trừ lý do Chưa nhận được hàng); đơn Người bán tự vận chuyển là 15 ngày kể từ khi bấm ‘Đã nhận được hàng’ hoặc 20 ngày kể từ ‘Lấy hàng thành công’ nếu không bấm. | `quy-dinh-chung-tra-hang-hoan-tien` — mục 1.2 |
+| 2 | Thanh toán bằng thẻ tín dụng thì bao lâu mới nhận được tiền hoàn? | 7–14 ngày làm việc tùy ngân hàng, hoàn về đúng thẻ Tín dụng/Ghi nợ đã dùng để thanh toán đơn hàng. | `thoi-gian-nhan-tien-hoan` — Bảng 1 + phần Lưu ý |
+| 3 | Mua cây cảnh hoặc thực phẩm đông lạnh, hàng còn nguyên vẹn nhưng không còn nhu cầu thì trả được không? | Không. Cả hai đều thuộc nhóm sản phẩm hạn chế trả hàng, Shopee không áp dụng lý do ‘Hàng nguyên vẹn nhưng không còn nhu cầu’ cho nhóm này. | `san-pham-han-che-tra-hang` — đoạn định nghĩa + bảng danh mục |
+| 4 | **(cần lọc metadata `customer_role: seller`)** Hệ thống báo trả hàng thành công nhưng Shop chưa nhận được hàng hoàn, Người bán phải phản hồi Shopee trong bao lâu? | Trong vòng 2 ngày kể từ ngày hệ thống cập nhật trả hàng thành công. Trường hợp hệ thống ghi nhận Người mua đã gửi hàng cho ĐVVC mà Shop chưa nhận được thì phản hồi sau 2 ngày kể từ ngày cập nhật đó. | `quan-ly-don-tra-hang-hoan-tien` — mục C (bảng thời hạn phản hồi) |
+| 5 | Hình thức trả hàng nào người mua phải tự trả phí trước? | Hình thức ‘Tự sắp xếp’ — người mua thanh toán trước phí trả hàng và được Shopee hỗ trợ hoàn lại theo Chính sách hỗ trợ phí trả hàng. Hai hình thức còn lại (ĐVVC đến lấy hàng, Trả hàng tại bưu cục) đều miễn phí trả hàng. | `phuong-thuc-gui-hang-va-phi-hoan-tra` — mục 1.1 + mục 2 |
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 
