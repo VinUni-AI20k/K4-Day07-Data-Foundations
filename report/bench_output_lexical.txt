@@ -1,7 +1,7 @@
 Embedding backend: lexical tf-idf (dim=2048)
 
 ==============================================================================
-STRATEGY: heading   [Nguyen Quang Ha]
+STRATEGY: heading   [Nguyen Nhat Quang]
 PARAMS  : keep_breadcrumb=True, max_chunk_size=900, min_chunk_size=120
 CHUNKS  : 50 chunk tu data/k4_ecommerce
 ------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ TRANG THAI: CHUA IMPLEMENT — bo qua.
 ==============================================================================
 STRATEGY: fixed   [baseline src/]
 PARAMS  : {'chunk_size': 500, 'overlap': 50}
-CHUNKS  : 67 chunk tu data/k4_ecommerce
+CHUNKS  : 191 chunk tu data/k4_ecommerce
 ------------------------------------------------------------------------------
 
 [Q1] (so lieu) Nếu người bán không công bố rõ thời hạn trả lời, sau bao lâu đề nghị giao kết hợp đồng của khách hàng hết hiệu lực?
@@ -330,7 +330,7 @@ CHUNKS  : 69 chunk tu data/k4_ecommerce
 ------------------------------------------------------------------------------
 TONG DIEM sentence: 7/10  (chunks=69)
 ==============================================================================
-STRATEGY: heading_nobreadcrumb   [Ha — ablation]
+STRATEGY: heading_nobreadcrumb   [Quang — ablation]
 PARAMS  : keep_breadcrumb=False, max_chunk_size=400, min_chunk_size=120
 CHUNKS  : 108 chunk tu data/k4_ecommerce
 ------------------------------------------------------------------------------
@@ -407,7 +407,7 @@ CHUNKS  : 108 chunk tu data/k4_ecommerce
 ------------------------------------------------------------------------------
 TONG DIEM heading_nobreadcrumb: 7/10  (chunks=108)
 ==============================================================================
-STRATEGY: llm_semantic   [Ha — bonus]
+STRATEGY: llm_semantic   [Quang — bonus]
 PARAMS  : max_chunk_size=900, llm_fn=khong, fallback=heading
 CHUNKS  : 50 chunk tu data/k4_ecommerce
 LLM     : khong co llm_fn -> dung HeadingChunker
@@ -490,12 +490,12 @@ BANG SO SANH STRATEGY (diem chunk-level, toi da 10)
 ==============================================================================
 strategy               nguoi phu trach         chunks   Q1   Q2   Q3   Q4   Q5   TONG
 -------------------------------------------------------------------------------------
-heading                Nguyen Quang Ha             50    2    2    1    2    2      9
-fixed                  baseline src/               67    2    0    0    2    2      6
+heading                Nguyen Nhat Quang           50    2    2    1    2    2      9
+fixed                  baseline src/              191    2    0    0    2    2      6
 recursive              baseline src/               92    2    1    0    2    2      7
 sentence               baseline src/               69    2    1    0    2    2      7
-heading_nobreadcrumb   Ha — ablation              108    2    1    0    2    2      7
-llm_semantic           Ha — bonus                  50    2    2    1    2    2      9
+heading_nobreadcrumb   Quang — ablation           108    2    1    0    2    2      7
+llm_semantic           Quang — bonus               50    2    2    1    2    2      9
 -------------------------------------------------------------------------------------
 Q4 duoc cham theo lan CO metadata_filter (customer_role=buyer).
 
