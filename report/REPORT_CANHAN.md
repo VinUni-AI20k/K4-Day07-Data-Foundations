@@ -107,6 +107,15 @@ Kết quả đầy đủ được lưu tại `src/K4_2A202601934_NguyenDangLong/
 Golden runner tính retrieval tự động là 8/10.
 Tôi chưa nhận điểm cuối cho mục này vì agent answers chưa được chạy và đối chiếu với gold answers.
 
+### Failure analysis
+
+Q1 hỏi đồng thời về hướng dẫn chăm sóc và chất liệu của cùng một sản phẩm.
+Trong tài liệu đúng, `Dry clean only` nằm dưới heading `Look After Me`, còn `100% Cotton` nằm dưới heading `About Me`; strategy heading tạo hai chunk riêng nên không có chunk nào chứa trọn hai bằng chứng.
+
+Tôi đã thử tạo thêm một compact window cho hai sibling sections liền nhau, giữ product title một lần và không thay golden query.
+Kết quả vẫn là 8/10 và Q1 vẫn MISS, vì vậy thử nghiệm không được giữ trong implementation cuối.
+Hướng cải thiện tiếp theo là so sánh structured-field retrieval hoặc hybrid lexical-semantic reranking, thay vì tiếp tục tăng số chunk trùng lặp.
+
 ## Tự Đánh Giá (Phần Cá Nhân)
 
 | Tiêu chí | Điểm tự đánh giá |
