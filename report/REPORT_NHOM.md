@@ -1,172 +1,184 @@
 # Báo Cáo Nhóm — Lab 7: Embedding & Vector Store
 
-**Nhóm:** [Tên nhóm]
-**Thành viên:** [Họ tên từng thành viên]
-**Ngày:** [Ngày nộp]
+**Tên nhóm:** K4 — Nhóm Nguyễn Đức Anh
 
-> **Nộp 1 bản / nhóm.** Phần cá nhân (hướng tiếp cận, kết quả riêng, dự đoán…) mỗi thành viên nộp riêng trong `REPORT_CANHAN.md`. Chi tiết thang điểm: `docs/SCORING.md`.
+**Ngày hoàn thiện:** 2026-08-03
 
-**Tổng điểm phần nhóm: 40** = Lựa chọn tài liệu (10) + Thiết kế chiến lược (15) + Chất lượng truy xuất (10) + Thuyết trình (5).
+| Thành viên | MSSV | Vai trò |
+|---|---|---|
+| Nguyễn Đức Anh | 2A202601624 | Team lead, tuned FixedSizeChunker |
+| Nguyễn Trọng Đăng Khoa | 2A202601964 | Markdown heading/clause chunking |
+| Nguyễn Duy Thái | 2A202601552 | Sentence chunking |
+| Nguyễn Hoàng Long | 2A202601134 | Recursive chunking |
 
----
+Hình thức hoàn thành của nhóm là nộp project trên GitHub, không tổ chức demo trực tiếp. Các phân tích kỹ thuật, so sánh strategy và kết quả retrieval được trình bày bằng văn bản trong báo cáo và benchmark artifacts.
 
-## 1. Lựa chọn tài liệu (Document Set Quality) — Nhóm (10 điểm)
+## 1. Bộ tài liệu
 
-### Phạm vi bộ tài liệu (Scope)
+### Phạm vi
 
-**Chủ đề (cố định theo lớp K4):** Chính sách thương mại điện tử / hỗ trợ khách hàng (thanh toán, đổi trả, giao hàng, quyền riêng tư, điều kiện người bán…).
+Corpus gồm chính sách công khai của Shopee Việt Nam về vòng đời đơn hàng và quy tắc marketplace: hủy đơn, trả hàng/hoàn tiền, đăng bán, hàng cấm/hạn chế và điều khoản dịch vụ. Cả năm gold answer đều kiểm chứng được trực tiếp từ corpus.
 
-**Phạm vi cụ thể nhóm tập trung:**
-> Vòng đời đơn hàng và quy tắc marketplace trên Shopee Việt Nam, từ đăng bán và sản phẩm bị cấm đến thanh toán, hủy đơn, trả hàng và hoàn tiền.
+### Document inventory
 
-### Danh sách tài liệu (Data Inventory)
+| # | Tài liệu | Source URL | Retrieved/version | Ký tự body | Metadata chính |
+|---:|---|---|---|---:|---|
+| 1 | Chính sách trả hàng và hoàn tiền | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77251?seo=1) | 2026-08-03 / 2026-03-11 | 19,420 | `both`, `returns-refunds`, `vi` |
+| 2 | Tôi có thể hủy đơn hàng không? | [Shopee Help Center](https://help.shopee.vn/portal/4/article/79182?seo=1) | 2026-08-03 / `not-stated` | 1,872 | `buyer`, `order-cancellation`, `vi` |
+| 3 | Quy định đăng bán sản phẩm | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77246?seo=1) | 2026-08-03 / 2024-08-21 | 21,279 | `seller`, `product-listing`, `vi` |
+| 4 | Chính sách cấm/hạn chế sản phẩm | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77247?seo=1) | 2026-08-03 / 2025-05-05 | 12,653 | `seller`, `prohibited-products`, `vi` |
+| 5 | Điều khoản dịch vụ | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77243?seo=1) | 2026-08-03 / 2026-05-01 | 83,183 | `both`, `payments-and-orders`, `vi` |
 
-| # | Tên tài liệu | Nguồn (Source URL) | Ngày lấy / Phiên bản | Số ký tự | Metadata đã gán |
-|---|--------------|------------|--------------------|----------|-----------------|
-| 1 | Chính sách trả hàng và hoàn tiền | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77251?seo=1) | 2026-08-03 / 2026-03-11 | 19,420 | `customer_role=both`, `category=returns-refunds`, `language=vi` |
-| 2 | Tôi có thể hủy đơn hàng không? | [Shopee Help Center](https://help.shopee.vn/portal/4/article/79182?seo=1) | 2026-08-03 / `not-stated` | 1,872 | `customer_role=buyer`, `category=order-cancellation`, `language=vi` |
-| 3 | Quy định về đăng bán sản phẩm trên Shopee | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77246?seo=1) | 2026-08-03 / 2024-08-21 | 21,279 | `customer_role=seller`, `category=product-listing`, `language=vi` |
-| 4 | Chính sách cấm/hạn chế sản phẩm | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77247?seo=1) | 2026-08-03 / 2025-05-05 | 12,653 | `customer_role=seller`, `category=prohibited-products`, `language=vi` |
-| 5 | Điều khoản dịch vụ | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77243?seo=1) | 2026-08-03 / 2026-05-01 | 83,183 | `customer_role=both`, `category=payments-and-orders`, `language=vi` |
+### Metadata schema
 
-Số ký tự được tính trên phần nội dung đã làm sạch, không gồm YAML front matter.
+| Field | Kiểu/giá trị | Công dụng retrieval |
+|---|---|---|
+| `doc_id` | string duy nhất | Truy vết, filter và xóa toàn bộ chunks của tài liệu |
+| `title` | string | Hiển thị và kiểm chứng nguồn |
+| `source_url` | URL | Đối chiếu với trang công khai gốc |
+| `retrieved_at` | `YYYY-MM-DD` | Ghi thời điểm thu thập |
+| `document_version` | date hoặc `not-stated` | Phân biệt phiên bản chính sách |
+| `customer_role` | `buyer`, `seller`, `both` | Filter bắt buộc của biến thể K4 |
+| `category` | enum nghiệp vụ | Thu hẹp theo loại chính sách |
+| `language` | `vi` | Xác định ngôn ngữ corpus/query |
+| `chunk_index` | integer | Truy vết vị trí chunk trong document |
 
-**Danh sách kiểm tra quản trị dữ liệu (Data governance checklist):**
-- [x] Tập tài liệu (Corpus) chỉ chứa nguồn công khai/được phép dùng và không chứa dữ liệu cá nhân, thông tin đăng nhập hoặc tài liệu nội bộ.
-- [x] Mỗi tài liệu có `source_url`, `retrieved_at`, `document_version` (hoặc ngày hiệu lực) trong metadata.
+Corpus chỉ chứa nội dung công khai, không có dữ liệu cá nhân, thông tin đăng nhập hoặc tài liệu nội bộ. `sources.csv` ánh xạ đủ năm file với URL và căn cứ sử dụng `public-page`.
 
-### Cấu trúc Metadata (Metadata Schema)
+## 2. Phương pháp kiểm chứng
 
-| Trường metadata | Kiểu | Ví dụ giá trị | Tại sao hữu ích cho truy xuất (retrieval)? |
-|----------------|------|---------------|-------------------------------|
-| `doc_id` | string | `shopee-order-cancellation` | Định danh duy nhất, trùng tên file và dùng để truy vết/xóa toàn bộ chunk của một tài liệu. |
-| `title` | string | `Tôi có thể hủy đơn hàng không?` | Hiển thị nguồn dễ đọc trong kết quả retrieval. |
-| `source_url` | URL | `https://help.shopee.vn/...` | Đối chiếu câu trả lời với nguồn công khai gốc. |
-| `retrieved_at` | date | `2026-08-03` | Xác định thời điểm nhóm thu thập dữ liệu. |
-| `document_version` | string/date | `2026-03-11`, `not-stated` | Phân biệt phiên bản chính sách; không suy đoán khi nguồn không nêu. |
-| `customer_role` | enum | `buyer`, `seller`, `both` | Lọc tài liệu theo vai trò khách hàng; đây là field filter bắt buộc của K4. |
-| `category` | enum | `order-cancellation`, `product-listing` | Thu hẹp retrieval theo nghiệp vụ cụ thể. |
-| `language` | string | `vi` | Xác nhận ngôn ngữ corpus và query. |
-| `effective_date` | date, optional | `2026-05-01` | Cho biết ngày chính sách có hiệu lực khi nguồn công bố rõ ràng. |
+Nhóm chạy `git fetch origin`, kiểm tra branch/commit, `REPORT_CANHAN.md`, handoff, experiment, code `src` và raw artifact. Không dùng số liệu chỉ dựa trên tin nhắn. Tests và `ingest.py` của ba branch remote được chạy lại độc lập từ archive commit; branch Đức Anh được kiểm tra trong Python 3.11 trước khi commit.
 
----
+### Báo cáo cá nhân và provenance
 
-## 2. Thiết kế chiến lược (Strategy Design) — Nhóm (15 điểm)
+| Thành viên | Branch | Commit | Artifact có trên branch |
+|---|---|---|---|
+| Nguyễn Đức Anh | `member/nguyen-duc-anh-fixed` | `c282d74` | Báo cáo, JSON raw và script FixedSize |
+| Nguyễn Trọng Đăng Khoa | `member/nguyen-trong-dang-khoa-heading` | `b345446` | Báo cáo semantic; không có handoff/benchmark script machine-readable |
+| Nguyễn Duy Thái | `member/nguyen-duy-thai-sentence` | `66c1415` | Báo cáo, handoff Markdown/JSON và script Sentence |
+| Nguyễn Hoàng Long | `member/nguyen-hoang-long-recursive` | `283e835` | Báo cáo, `bench.py`, `bench_results.json`; không có handoff trong `report/member_handoffs/` |
 
-> Mỗi thành viên thử **một chiến lược khác nhau** trên cùng bộ tài liệu; nhóm tổng hợp và so sánh ở đây.
+Báo cáo cá nhân chính thức tiếp tục nằm trên branch cá nhân. `report/REPORT_CANHAN.md` của nhánh tích hợp chỉ là chỉ mục để một thành viên không ghi đè báo cáo của người khác.
 
-### Phân tích đường cơ sở (Baseline Analysis)
+### Benchmark chung
 
-Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
+`experiments/team_strategy_benchmark.py` chạy cùng 5 query, corpus và backend `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 chiều). Raw output nằm tại `report/team_benchmark.json`.
 
-Khoa chạy cùng `chunk_size=500` trên phần body đã bỏ YAML front matter. Bảng ghi `số chunk / độ dài trung bình`; đây là thống kê cấu trúc thực tế, chưa phải điểm chất lượng semantic retrieval.
+Lệnh tái lập sau khi cài `requirements-local.txt`:
 
-| Tài liệu | Fixed-size | By-sentences | Recursive | Heading/clause-aware |
-|-----------|----------:|-------------:|----------:|---------------------:|
-| Hủy đơn hàng | 4 / 468.0 | 6 / 308.5 | 5 / 374.4 | 9 / 264.9 |
-| Trả hàng/hoàn tiền | 39 / 497.9 | 42 / 458.6 | 69 / 281.4 | 76 / 332.5 |
-| Quy định đăng bán | 43 / 494.9 | 77 / 272.8 | 53 / 401.5 | 80 / 348.2 |
-
-Sentence-based không nhận tham số kích thước ký tự nên chunk dài nhất trên ba tài liệu lần lượt là 525, 1,015 và 1,051 ký tự. Custom giữ chunk dài nhất không quá 500 ký tự trong cả ba lần chạy.
-
-### Chiến lược của từng thành viên
-
-**Nguyễn Trọng Đăng Khoa — 2A202601964**
-- **Loại chiến lược:** custom `MarkdownHeadingChunker` trong `src/chunking.py`.
-- **Cách hoạt động:** Nhận diện cây heading Markdown từ `#` đến `######` và cây nhãn điều khoản như `3.`, `3.1.`, `3.1.2.`. Mỗi chunk bắt đầu bằng đường dẫn heading/nhãn đang hoạt động. Nếu nội dung section quá lớn, phần body được chia đệ quy theo `\n\n`, `\n`, `. `, khoảng trắng rồi cắt cứng; đường dẫn context được lặp lại trên mọi continuation chunk.
-- **Vì sao phù hợp với chính sách Shopee:** Các quy định Shopee tổ chức nghĩa vụ, ngoại lệ, đối tượng áp dụng và chế tài dưới các mục/điều đánh số. Một đoạn như thời hạn “15 ngày” dễ mất phạm vi nếu tách khỏi tiêu đề “Điều kiện yêu cầu trả hàng/hoàn tiền” hoặc nhãn `3.2.`; lặp context giúp retriever trả về đoạn tự giải thích và có vị trí điều khoản để kiểm chứng.
-- **Kiểm tra bảo toàn context:** Điều `3.2.` của chính sách trả hàng/hoàn tiền được chia thành 2 chunks; cả 2 đều giữ `# Chính sách trả hàng và hoàn tiền`, heading mục 3 và nhãn `3.2.`.
-- **So với ba baseline:** Fixed-size kiểm soát độ dài tốt nhưng có thể cắt giữa điều khoản và không hiểu heading. Sentence-based giữ câu nguyên vẹn nhưng có chunk vượt xa 500 ký tự và không tự mang tên section. Recursive ưu tiên ranh giới đoạn/câu và kiểm soát kích thước tốt hơn, nhưng continuation chunk không tự lặp heading. Custom tạo nhiều chunk hơn và tốn thêm token do lặp context, đổi lại giữ được phạm vi chính sách và khả năng truy vết điều/khoản.
-
-> Mỗi thành viên điền một khối dưới đây (copy thêm nếu nhóm có nhiều hơn 3 người).
-
-**Thành viên 1 — [Tên]**
-- **Loại chiến lược:** [FixedSize / Sentence / Recursive / custom]
-- **Mô tả & lý do chọn cho chủ đề này:** *(2-3 câu)*
-- **Code snippet (nếu custom):**
-```python
-# Dán mã nguồn (implementation) vào đây
+```powershell
+$env:HF_HUB_OFFLINE = '1'
+$env:TRANSFORMERS_OFFLINE = '1'
+$env:PYTHONUTF8 = '1'
+.\.venv\Scripts\python.exe experiments\team_strategy_benchmark.py --quiet
 ```
 
-**Thành viên 2 — [Tên]**
-- **Loại chiến lược:**
-- **Mô tả & lý do chọn:**
-- **Code snippet (nếu custom):**
+Một result được tính relevant khi đúng `doc_id` và chứa evidence term của gold answer. Metric “đủ evidence” yêu cầu hợp của các gold chunks trong top-3 chứa toàn bộ mốc/điều kiện chính. Thứ tự chọn strategy:
 
-**Thành viên 3 — [Tên]**
-- **Loại chiến lược:**
-- **Mô tả & lý do chọn:**
-- **Code snippet (nếu custom):**
+1. Số query relevant trong top-3.
+2. Số query relevant ở top-1.
+3. Số query có đủ evidence cho gold answer trong top-3.
+4. Retrieval noise và max/avg chunk length.
+5. Số chunk và chi phí.
+6. Khả năng bảo trì.
 
-### So Sánh Giữa Các Thành Viên
+Không so sánh raw cosine score từ benchmark `MockEmbedder` của Long với score multilingual của các thành viên khác.
 
-| Thành viên | Chiến lược (Strategy) | Điểm truy xuất (/10) | Điểm mạnh | Điểm yếu |
-|-----------|----------|----------------------|-----------|----------|
-| | | | | |
-| | | | | |
-| | | | | |
+## 3. Baseline comparison
 
-**Chiến lược nào tốt nhất cho chủ đề này? Tại sao?**
-> *Viết 2-3 câu — đây là phần được đánh giá cao nhất (khả năng suy nghĩ & giải thích):*
+Comparator đã kiểm chứng của Thái dùng FixedSize 500/50, Sentence(3) và Recursive(500) trên ba tài liệu. Ô thể hiện `số chunks / avg chars`.
 
----
+| Tài liệu | Fixed 500/50 | Sentence(3) | Recursive(500) |
+|---|---:|---:|---:|
+| Hủy đơn | 5 / 414.40 | 6 / 310.67 | 5 / 372.60 |
+| Trả hàng/hoàn tiền | 44 / 490.23 | 42 / 460.29 | 60 / 321.82 |
+| Điều khoản dịch vụ | 185 / 499.37 | 149 / 556.23 | 251 / 329.63 |
 
-## 3. Câu hỏi đánh giá & Chất lượng truy xuất (Retrieval Quality) — Nhóm (10 điểm)
+Fixed tạo độ dài dự đoán được nhưng có thể cắt giữa ý. Sentence dễ đọc nhưng Markdown bảng/dòng không có dấu kết câu làm chunk quá dài. Recursive chuẩn repack theo separator giữ cấu trúc tốt hơn fixed; riêng implementation trong commit của Long không repack nên tạo nhiều mảnh cực ngắn. Heading giữ đường dẫn section/clause nhưng danh sách hoặc bảng dài vẫn có thể bị tách khỏi evidence continuation.
 
-### Câu hỏi đánh giá & Câu trả lời chuẩn (nhóm thống nhất)
+## 4. Bảng tổng hợp thành viên
 
-> **Đúng 5 câu hỏi**, đa dạng, có thể kiểm chứng; **ít nhất 1 câu** cần lọc metadata mới trả lời tốt. Đây là bộ câu hỏi chung cho mọi thành viên chạy.
+Các cột số lượng/độ dài và relevance dưới đây dùng benchmark chung để so sánh công bằng. Handoff riêng ghi thêm số liệu gốc và phần thiếu của từng branch.
 
-| # | Câu hỏi (Query) | Metadata filter | Câu trả lời chuẩn (Gold Answer) | Vị trí kiểm chứng trong corpus |
-|---|-------|-----------------|-------------------------------|-------------------------------|
-| 1 | Đơn hàng do đơn vị vận chuyển không phải SPX đang ở trạng thái “Chờ lấy hàng” thì Người mua có thể hủy ngay không? | `{"customer_role": "buyer"}` | Không. Người mua phải chờ phản hồi của Người bán: nếu Người bán chấp nhận thì đơn được hủy ngay; nếu từ chối thì đơn không bị hủy và tiếp tục được giao. | `shopee-order-cancellation`, mục 1, dòng “Chờ lấy hàng” trong bảng trạng thái. |
-| 2 | Người mua có bao lâu để gửi yêu cầu trả hàng/hoàn tiền sau khi đơn được giao thành công, và thời hạn riêng cho thực phẩm tươi sống hoặc đông lạnh là bao lâu? | Không | Hàng thông thường: 15 ngày kể từ khi đơn được cập nhật giao thành công. Thực phẩm tươi sống hoặc đông lạnh: 24 giờ. | `shopee-return-refund-policy`, mục 3 “Điều kiện yêu cầu trả hàng/hoàn tiền”, Điều 3.2. |
-| 3 | Ảnh sản phẩm đăng bán trên Shopee phải đáp ứng yêu cầu tối thiểu nào về ảnh thật và tỷ lệ diện tích sản phẩm? | Không | Phải có ít nhất một ảnh thật của sản phẩm do chính Người bán tự chụp; sản phẩm thật phải chiếm ít nhất 40% diện tích ảnh đó. | `shopee-product-listing-rules`, mục C.1 “Hình ảnh sản phẩm”, điểm b. |
-| 4 | Vi phạm Chính sách Cấm/Hạn chế Sản phẩm có thể khiến Người bán chịu những nhóm chế tài nào? | Không | Sản phẩm có thể bị xóa; tài khoản bị giới hạn quyền; tài khoản bị đình chỉ hoặc xóa; số dư bị cấn trừ hoặc quyền rút tiền bị phong tỏa; và có thể chịu chế tài khác theo chính sách hoặc pháp luật như phạt hành chính, xử lý hình sự hay bồi thường thiệt hại. | `shopee-prohibited-products-policy`, mục 3 “Hành vi vi phạm và biện pháp xử lý”. |
-| 5 | Nếu Người mua không nhấn “Đã nhận được hàng” hoặc “Trả hàng/Hoàn tiền”, Shopee chuyển tiền cho Người bán sớm nhất khi nào? | Không | Sớm nhất vào ngày thứ 4 kể từ khi đơn được cập nhật trạng thái giao hàng thành công; Shopee có thể thanh toán muộn hơn nếu đơn hàng bị nghi ngờ gian lận. | `shopee-terms-of-service`, mục 10 “Số dư tài khoản Shopee”, Điều 10.3(a). |
+| Thành viên | MSSV | Branch | Commit | Strategy | Cấu hình thử nghiệm | Cấu hình tốt nhất | Embedding backend | Số chunk | Avg length | Max length | Top-1 relevant | Top-3 relevant | Filter impact | Tests | Điểm mạnh | Hạn chế |
+|---|---|---|---|---|---|---|---|---:|---:|---:|---:|---:|---|---|---|---|
+| Nguyễn Đức Anh | 2A202601624 | `member/nguyen-duc-anh-fixed` | `c282d74` | FixedSize | 500/50; 800/100; 1200/150 | **800/100** | multilingual MiniLM | 199 | 793.00 | 800 | 3/5 | **5/5** | Rank 1 giữ nguyên; top-3 từ `cancellation, terms, cancellation` thành ba chunk `cancellation` | 42/42 | Đủ evidence 5/5, độ dài kiểm soát, chi phí vừa | Cắt theo ký tự; query 3 và 5 evidence ở rank 2 |
+| Nguyễn Trọng Đăng Khoa | 2A202601964 | `member/nguyen-trong-dang-khoa-heading` | `b345446` | Markdown heading/clause | Chỉ có 500 trong artifact gốc | **500** | multilingual MiniLM | 517 | 330.86 | 500 | 3/5 | 3/5 | Loại nhiễu theo role nhưng evidence query 1 vẫn ngoài top-3 | 42/42 | Context heading/clause, max length chặt, truy vết tốt | Đủ evidence 2/5; thiếu script/handoff và chưa tune nhiều config |
+| Nguyễn Duy Thái | 2A202601552 | `member/nguyen-duy-thai-sentence` | `66c1415` | Sentence | 3; 5; 8 câu/chunk | **8** | multilingual MiniLM | 124 | 1108.27 | 6301 | **4/5** | 4/5 | Rank 1 giữ nguyên; loại `both` noise, chỉ còn hai buyer chunks | 42/42 | Top-1 tốt nhất, giữ danh sách/điều khoản liền mạch | Bỏ lỡ query 2; chunk rất dài, dễ truncate/nhiễu |
+| Nguyễn Hoàng Long | 2A202601134 | `member/nguyen-hoang-long-recursive` | `283e835` | Recursive theo commit | 500; 800; 1200 | **500** | Gốc: Mock; rerun: multilingual MiniLM | 2856 | 47.12 | 500 | 2/5 | 2/5 | Làm sạch doc IDs nhưng evidence query 1 vẫn không vào top-3 | 42/42 | Dùng separator tự nhiên; có script/JSON gốc | Không repack, mất context/delimiter, quá nhiều chunk; agent gốc chỉ là chuỗi demo |
 
-### Tổng hợp chất lượng truy xuất của nhóm
+### Số liệu các cấu hình
 
-> Cách chấm (theo `docs/SCORING.md`): **2 điểm/câu** — top-3 chứa chunk liên quan + agent trả lời đúng (2), có liên quan nhưng thiếu/không ở top-1 (1), không có trong top-3 (0).
+| Strategy/config | Chunks | Avg | Max | Top-1 | Top-3 | Đủ evidence top-3 |
+|---|---:|---:|---:|---:|---:|---:|
+| Fixed 500/50 | 311 | 494.23 | 500 | 3/5 | 4/5 | 4/5 |
+| **Fixed 800/100** | **199** | **793.00** | **800** | **3/5** | **5/5** | **5/5** |
+| Fixed 1200/150 | 134 | 1177.29 | 1200 | 1/5 | 2/5 | 1/5 |
+| Sentence 3 | 329 | 417.08 | 3644 | 2/5 | 3/5 | 3/5 |
+| Sentence 5 | 199 | 690.20 | 5893 | 2/5 | 3/5 | 3/5 |
+| Sentence 8 | 124 | 1108.27 | 6301 | 4/5 | 4/5 | 4/5 |
+| Heading 500 | 517 | 330.86 | 500 | 3/5 | 3/5 | 2/5 |
+| Long Recursive 500 | 2856 | 47.12 | 500 | 2/5 | 2/5 | 2/5 |
+| Long Recursive 800 | 1295 | 105.18 | 785 | 2/5 | 2/5 | 2/5 |
+| Long Recursive 1200 | 790 | 173.10 | 1195 | 2/5 | 2/5 | 2/5 |
 
-| # | Câu hỏi | Chiến lược tốt nhất cho câu này | Có chunk liên quan trong top-3? | Ghi chú |
-|---|---------|-------------------------------|-------------------------------|---------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+## 5. Strategy được chọn
 
-**Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
-> Trong lượt chạy của Khoa ở câu 1, không filter chỉ có top-1 thuộc tài liệu hủy đơn; top-2 và top-3 là nhiễu từ Điều khoản dịch vụ và Chính sách trả hàng/hoàn tiền. Filter `customer_role=buyer` làm cả ba kết quả thuộc tài liệu hủy đơn, nên tăng precision theo chủ đề, nhưng bảng có đáp án vẫn ở hạng 4 và top-3 vẫn chưa trả lời được câu hỏi. Kết quả của các thành viên khác cần được bổ sung sau khi nhóm chạy chung.
+Nhóm chọn **FixedSizeChunker `chunk_size=800`, `overlap=100`**.
 
-### Kết quả cá nhân của Nguyễn Trọng Đăng Khoa
+Đây là strategy duy nhất đạt relevant top-3 và đủ evidence **5/5**. Sentence(8) có top-1 tốt hơn (4/5) nhưng bỏ lỡ hoàn toàn query thời hạn hoàn tiền và tạo chunk tối đa 6.301 ký tự; model có `max_seq_length=128`, nên chunk dài có nguy cơ truncate. Fixed 800 giữ max 800 ký tự, chỉ tạo 199 chunks và overlap 100 bảo toàn evidence ở biên tốt hơn 500/50. Fixed 1200 giảm số chunk nhưng làm embedding kém đặc hiệu/truncate và chỉ đạt top-3 2/5.
 
-Khoa chạy custom heading/clause-aware với mô hình `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` trên 517 chunks. Câu 2 và 3 có chunk đáp án đầy đủ ở top-1; câu 4 có phần đầu danh sách chế tài ở top-1 nhưng continuation chứa mục (v) chỉ xếp hạng 6. Câu 1 có bảng đáp án ở hạng 4 dù đã lọc `customer_role=buyer`; câu 5 không có chunk đáp án trong top-30. Theo rubric: **5/10**, và **3/5** câu có ít nhất một chunk liên quan trong top-3 nếu tính câu 4 là liên quan nhưng chưa đầy đủ.
+## 6. Kết quả đúng 5 query với Fixed 800/100
 
-**Failure case:** Query 1 minh họa điểm yếu do tách bảng khỏi đoạn dẫn: heading được bảo toàn nhưng query gần đoạn mô tả tổng quát hơn bảng trạng thái, khiến bảng đúng rơi xuống hạng 4. Query 4 cho thấy danh sách chế tài dài bị tách giữa mục (iv) và (v), còn query 5 cho thấy chỉ giữ heading/nhãn chưa đủ khi cách diễn đạt query khác mạnh với clause dài. Hướng cải thiện là nhận diện bảng/danh sách như đơn vị nguyên tử, thêm overlap có kiểm soát giữa continuation chunks, và thử tăng `chunk_size` cho section dạng danh sách trước khi đánh giá lại trên cùng năm query.
+| # | Query rút gọn | Relevant rank | Source/chunk | Evidence/answer được kiểm chứng |
+|---:|---|---:|---|---|
+| 1 | Đơn không phải SPX ở “Chờ lấy hàng” có hủy ngay? | 1 | `shopee-order-cancellation`, chunk 0 | Không hủy ngay; cần chờ Người bán. Chấp nhận thì hủy, từ chối thì đơn tiếp tục giao. |
+| 2 | Thời hạn trả hàng thường và thực phẩm tươi/đông lạnh? | 1 | `shopee-return-refund-policy`, chunk 4 | Hàng thường: 15 ngày từ khi giao thành công; thực phẩm tươi sống/đông lạnh: 24 giờ. |
+| 3 | Yêu cầu ảnh thật và tỷ lệ diện tích? | 2 | `shopee-product-listing-rules`, chunk 7 | Ít nhất một ảnh thật do Người bán tự chụp; sản phẩm thật chiếm tối thiểu 40% diện tích ảnh. |
+| 4 | Các nhóm chế tài hàng cấm/hạn chế? | 1 | `shopee-prohibited-products-policy`, chunk 1 | Xóa sản phẩm; giới hạn/đình chỉ/xóa tài khoản; cấn trừ/phong tỏa rút tiền; chế tài chính sách/pháp luật gồm hành chính, hình sự, bồi thường. |
+| 5 | Chuyển tiền sớm nhất khi không nhấn hai nút? | 2 | `shopee-terms-of-service`, chunk 56 | Sớm nhất ngày thứ 04 sau khi giao thành công; có thể chậm hơn nếu nghi ngờ gian lận. |
 
----
+**Relevant top-3:** 5/5. **Relevant top-1:** 3/5. **Đủ evidence cho gold answer trong top-3:** 5/5.
 
-## 4. Thuyết trình (Demo) & Bài học nhóm — Nhóm (5 điểm)
+Repo không có production LLM hoặc API key hợp lệ để đánh giá generation. Vì vậy bảng ghi extractive evidence/gold-grounded answer, không tuyên bố chuỗi demo là câu trả lời LLM thật. `KnowledgeBaseAgent` và đường đi RAG vẫn được kiểm tra bằng injected `llm_fn` trong 42 unit tests.
 
-**Những phân tích (insights) hay nhất nhóm sẽ trình bày:**
-> *Liệt kê 2-3 ý:*
+## 7. Filtered và unfiltered
 
-**Bài học rút ra khi so sánh trong nhóm:**
-> *Viết 2-3 câu — cùng tài liệu nhưng chiến lược khác nhau dẫn tới khác biệt gì?*
+Query 1 được chạy A/B trên cùng Fixed 800/100:
 
-**Nếu làm lại, nhóm sẽ thay đổi gì trong chiến lược dữ liệu (data strategy)?**
-> *Viết 2-3 câu:*
+- Không filter: top-3 doc IDs là `shopee-order-cancellation`, `shopee-terms-of-service`, `shopee-order-cancellation`; relevant rank = 1.
+- Filter `{"customer_role": "buyer"}`: cả ba kết quả là `shopee-order-cancellation`; relevant rank vẫn = 1.
+- Tác động: filter không tăng rank top-1 nhưng loại tài liệu role `both` khỏi candidate set, tăng precision theo chủ đề ở phần còn lại. Filter không nên được xem là thay thế cho chunking tốt vì ở Heading và Recursive, evidence đầy đủ vẫn nằm ngoài top-3 dù doc IDs đã sạch hơn.
 
----
+## 8. Bài học kỹ thuật và đề xuất cải thiện
 
-## Tự Đánh Giá (Phần Nhóm)
+1. Top-1 score cao không đồng nghĩa đủ evidence. Query 5 có chunk nhiễu cùng tài liệu ở rank 1 và evidence ở rank 2; phải kiểm tra nội dung top-3 với gold answer.
+2. Overlap vừa phải giúp Fixed 800 giữ evidence qua biên mà không nhân quá nhiều chunk. Overlap hoặc chunk quá lớn làm tăng trùng lặp/truncate.
+3. Sentence boundaries phù hợp prose nhưng không đủ cho bảng Markdown, heading và danh sách không có dấu kết câu. Cần parser cấu trúc hoặc giới hạn ký tự phụ.
+4. Heading context tăng traceability nhưng bảng/danh sách nên được xử lý như đơn vị nguyên tử; continuation cần overlap có kiểm soát.
+5. Recursive splitter phải repack các mảnh nhỏ. Chỉ đệ quy rồi emit từng phần tạo hàng nghìn chunk 47 ký tự trung bình, làm mất ngữ cảnh và tăng chi phí.
+6. Metadata filter hữu ích để loại role/category noise, nhưng có thể giảm recall nếu schema hoặc giá trị `both` không được xử lý theo ý nghĩa bao hàm.
 
-| Tiêu chí | Điểm tự đánh giá |
-|----------|-------------------|
-| Lựa chọn tài liệu (Document Set Quality) | / 10 |
-| Thiết kế chiến lược (Strategy Design) | / 15 |
-| Chất lượng truy xuất (Retrieval Quality) | / 10 |
-| Thuyết trình (Demo) | / 5 |
-| **Tổng phần nhóm** | **/ 40** |
+Đề xuất tiếp theo: thêm table/list-aware chunker; batch embedding trong pipeline; cache theo content hash; đo latency/storage; thêm Recall@k, MRR và evidence coverage; hỗ trợ filter role theo quan hệ `buyer` khớp cả `buyer` và `both` khi nghiệp vụ yêu cầu.
+
+## 9. Hình thức nộp project
+
+**Demo/Presentation:** `Không áp dụng — project được nộp và đánh giá qua GitHub`.
+
+Nhóm không chuẩn bị lời nói 5–7 phút, không phân công thuyết trình, không chờ buổi demo và không ghi bài học giả định “sau demo”. Toàn bộ bằng chứng nằm trong commit, handoff, benchmark JSON, script tái lập và báo cáo này.
+
+## 10. Tự đánh giá trung thực
+
+| Tiêu chí | Tự đánh giá | Căn cứ |
+|---|---:|---|
+| Document set quality | 10/10 | 5 tài liệu công khai, đủ metadata bắt buộc và nguồn truy vết |
+| Strategy design | 15/15 | 4 strategy, config tuning, benchmark chung và failure analysis |
+| Retrieval quality | 8/10 | Best strategy có evidence top-3 5/5, nhưng top-1 chỉ 3/5 và không có production LLM generation |
+| Demo/Presentation | Không áp dụng | Project nộp qua GitHub; rubric chưa xác nhận quy đổi 5 điểm demo |
+| **Tổng phần áp dụng** | **33/35** | Không tự cộng 5 điểm demo vào tổng /40 |
+
+### Dữ liệu còn thiếu đã ghi nhận
+
+- Khoa: không có handoff/benchmark script machine-readable và không có thử nghiệm nhiều `chunk_size` trên branch cá nhân.
+- Long: không có handoff trong `report/member_handoffs/`; benchmark gốc dùng MockEmbedder, thiếu avg/max/filter A/B và không có agent answer thật.
+- Không có production LLM evaluation cho bất kỳ thành viên nào; nhóm dùng evidence kiểm chứng thay vì bịa generation output.
