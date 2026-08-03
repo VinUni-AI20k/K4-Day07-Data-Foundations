@@ -30,41 +30,32 @@ class EmbeddingStore:
         try:
             import chromadb  # noqa: F401
 
-            # TODO: initialize chromadb client + collection
+            client = chromadb.Client()
+            self._collection = client.create_collection(name=self._collection_name)
             self._use_chroma = True
         except Exception:
             self._use_chroma = False
             self._collection = None
 
     def _make_record(self, doc: Document) -> dict[str, Any]:
-        metadata = dict(doc.metadata or {})
-        metadata.setdefault("doc_id", doc.id)
-        record_id = f"{doc.id}:{self._next_index}"
-        self._next_index += 1
+        metadata = doc.metadata.copy() if doc.metadata else {}
+        metadata["doc_id"] = doc.id
         return {
-            "id": record_id,
+            "id": str(self._next_index),
             "content": doc.content,
-            "metadata": metadata,
-            "embedding": self._embedding_fn(doc.content),
+            "metadata": metadata
         }
 
     def _search_records(self, query: str, records: list[dict[str, Any]], top_k: int) -> list[dict[str, Any]]:
-        if top_k <= 0:
-            return []
-
-        query_embedding = self._embedding_fn(query)
-        results: list[dict[str, Any]] = []
+        query_emb = self._embedding_fn(query)
+        results = []
         for record in records:
-            results.append(
-                {
-                    "id": record["id"],
-                    "content": record["content"],
-                    "metadata": dict(record["metadata"]),
-                    "score": _dot(query_embedding, record["embedding"]),
-                }
-            )
-
-        results.sort(key=lambda item: item["score"], reverse=True)
+            score = _dot(query_emb, record["embedding"])
+            r = record.copy()
+            r["score"] = score
+            results.append(r)
+        
+        results.sort(key=lambda x: x["score"], reverse=True)
         return results[:top_k]
 
     def add_documents(self, docs: list[Document]) -> None:
@@ -74,15 +65,11 @@ class EmbeddingStore:
         For ChromaDB: use collection.add(ids=[...], documents=[...], embeddings=[...])
         For in-memory: append dicts to self._store
         """
-        records = [self._make_record(doc) for doc in docs]
-        if self._use_chroma and self._collection is not None:
-            self._collection.add(
-                ids=[record["id"] for record in records],
-                documents=[record["content"] for record in records],
-                embeddings=[record["embedding"] for record in records],
-                metadatas=[record["metadata"] for record in records],
-            )
-        self._store.extend(records)
+        for doc in docs:
+            record = self._make_record(doc)
+            record["embedding"] = self._embedding_fn(doc.content)
+            self._store.append(record)
+            self._next_index += 1
 
     def search(self, query: str, top_k: int = 5) -> list[dict[str, Any]]:
         """
@@ -102,15 +89,20 @@ class EmbeddingStore:
 
         First filter stored chunks by metadata_filter, then run similarity search.
         """
-        if metadata_filter is None:
+        if not metadata_filter:
             return self.search(query, top_k)
-
-        filtered = [
-            record
-            for record in self._store
-            if all(record["metadata"].get(key) == value for key, value in metadata_filter.items())
-        ]
-        return self._search_records(query, filtered, top_k)
+        
+        filtered_records = []
+        for record in self._store:
+            match = True
+            for k, v in metadata_filter.items():
+                if record.get("metadata", {}).get(k) != v:
+                    match = False
+                    break
+            if match:
+                filtered_records.append(record)
+                
+        return self._search_records(query, filtered_records, top_k)
 
     def delete_document(self, doc_id: str) -> bool:
         """
@@ -118,8 +110,6 @@ class EmbeddingStore:
 
         Returns True if any chunks were removed, False otherwise.
         """
-        original_size = len(self._store)
-        self._store = [
-            record for record in self._store if record["metadata"].get("doc_id") != doc_id
-        ]
-        return len(self._store) != original_size
+        initial_size = len(self._store)
+        self._store = [record for record in self._store if record.get("metadata", {}).get("doc_id") != doc_id]
+        return len(self._store) < initial_size

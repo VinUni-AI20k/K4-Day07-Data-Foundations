@@ -15,7 +15,7 @@ class FixedSizeChunker:
         - If text is shorter than chunk_size, return [text].
     """
 
-    def __init__(self, chunk_size: int = 200, overlap: int = 50) -> None:
+    def __init__(self, chunk_size: int = 500, overlap: int = 50) -> None:
         self.chunk_size = chunk_size
         self.overlap = overlap
 
