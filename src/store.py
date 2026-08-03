@@ -38,12 +38,17 @@ class EmbeddingStore:
             self._collection = None
 
     def _make_record(self, doc: Document) -> dict[str, Any]:
+        # Copy metadata so external objects are not mutated
         meta = dict(doc.metadata) if doc.metadata is not None else {}
+        # Ensure there is a doc_id that points to the original source file
         if "doc_id" not in meta:
             meta["doc_id"] = doc.id
+        # Create a stable embedding for the content
         embedding = self._embedding_fn(doc.content)
+        # Compose a unique record id using the incoming doc id and current index
+        record_id = f"{doc.id}::{self._next_index}"
         return {
-            "id": doc.id,
+            "id": record_id,
             "content": doc.content,
             "metadata": meta,
             "embedding": embedding,
@@ -77,19 +82,23 @@ class EmbeddingStore:
         """
         for doc in docs:
             record = self._make_record(doc)
+            # store in-memory
             self._store.append(record)
 
+            # also add to ChromaDB if available
             if self._use_chroma and self._collection is not None:
                 try:
                     self._collection.add(
-                        ids=[f"{doc.id}_{self._next_index}"],
+                        ids=[record["id"]],
                         documents=[doc.content],
                         embeddings=[record["embedding"]],
                         metadatas=[record["metadata"]],
                     )
-                    self._next_index += 1
                 except Exception:
                     pass
+
+            # advance the global index so future records get unique ids
+            self._next_index += 1
 
     def search(self, query: str, top_k: int = 5) -> list[dict[str, Any]]:
         """
