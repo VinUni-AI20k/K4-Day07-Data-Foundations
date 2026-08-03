@@ -127,7 +127,7 @@ def parse_description(raw: str) -> dict[str, str]:
     return sections
 
 
-def split_product_details(text: str, brand_slug: str) -> tuple[str, str, list[str]]:
+def split_product_details(text: str, brand_slug: str, name: str = "") -> tuple[str, str, list[str]]:
     """Tach 'Coats & Jackets by Carhartt WIPSpread collar...Product Code: 123'.
 
     Tra ve (category, brand, list cac bullet dac diem).
@@ -155,12 +155,24 @@ def split_product_details(text: str, brand_slug: str) -> tuple[str, str, list[st
             if slugify(remainder[:end]) == brand_slug:
                 matched_end = end  # giu ket qua dai nhat con khop
 
+        # Tang 2: brand trong 'Product Details' co the khac brand slug tren URL
+        # ('Maternity dress by ASOS DESIGN...' nhung URL la /asos-maternity/).
+        # Khi do neo vao TEN san pham: ten cung mo dau bang ten thuong hieu,
+        # nen lay prefix dai nhat cua remainder ma slug con la prefix cua slug(name).
+        if matched_end is None and name:
+            name_slug = slugify(name)
+            for end in range(1, min(len(remainder), 60) + 1):
+                candidate = slugify(remainder[:end])
+                if candidate and name_slug.startswith(candidate):
+                    matched_end = end
+
         if matched_end is not None:
             brand = remainder[:matched_end].strip()
             body = remainder[matched_end:]
         else:
-            # Khong khop duoc: fallback ve ranh gioi thuong->HOA, van hon la bo trong.
-            fallback = re.match(r"^(.+?)(?=[A-Z])", remainder)
+            # Tang 3: ranh gioi thuong/so -> HOA. Bat buoc co [a-z0-9] ngay truoc chu HOA,
+            # neu khong '.+?' se dung lai sau 1 ky tu ('ASOS' -> brand 'A', body 'SOS...').
+            fallback = re.match(r"^(.+?[a-z0-9])(?=[A-Z])", remainder)
             brand = (fallback.group(1).strip() if fallback else remainder.strip())
             body = remainder[len(brand):]
 
@@ -254,7 +266,7 @@ def build_record(row: dict) -> dict | None:
         return None
 
     brand_slug = url_brand(url) or ""
-    category, brand, bullets = split_product_details(details, brand_slug)
+    category, brand, bullets = split_product_details(details, brand_slug, name)
     in_stock, out_of_stock = parse_sizes(row.get("size") or "")
     price, price_note = parse_price(row.get("price") or "")
     sku = row.get("sku")
@@ -349,12 +361,46 @@ def render_markdown(record: dict, retrieved_at: str) -> str:
     return "\n".join(lines)
 
 
+def read_existing(out_dir: Path) -> tuple[list[dict], set[str], set[str]]:
+    """Doc sources.csv da co -> (rows, tap doc_id, tap source_url)."""
+    path = out_dir / "sources.csv"
+    if not path.exists():
+        return [], set(), set()
+    with path.open(encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    return rows, {r["doc_id"] for r in rows}, {r["source_url"] for r in rows}
+
+
+def read_existing_facets(out_dir: Path) -> tuple[set[str], set[str]]:
+    """Lay tap category_slug / brand da dung trong corpus hien tai (tu front matter)."""
+    categories, brands = set(), set()
+    for path in out_dir.glob("*.md"):
+        head = path.read_text(encoding="utf-8").split("---")
+        if len(head) < 2:
+            continue
+        fields = dict(re.findall(r"^(\w+):\s*(.+)$", head[1], re.M))
+        if fields.get("category"):
+            categories.add(fields["category"].strip())
+        if fields.get("brand"):
+            brands.add(fields["brand"].strip())
+    return categories, brands
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--limit", type=int, default=10, help="so san pham can lay (mac dinh 10)")
     parser.add_argument("--output-dir", default="data/k4_asos_products", help="thu muc dich")
     parser.add_argument("--scan", type=int, default=600, help="so dong toi da quet qua API")
     parser.add_argument("--retrieved-at", default=date.today().isoformat())
+    parser.add_argument(
+        "--append",
+        action="store_true",
+        help="bo sung them san pham vao corpus da co (khong ghi de, khong lay trung)",
+    )
+    parser.add_argument(
+        "--offset-start", type=int, default=0,
+        help="dich diem bat dau quet, dung khi --append de cham vao vung dataset khac",
+    )
     args = parser.parse_args()
 
     out_dir = Path(args.output_dir)
@@ -365,7 +411,20 @@ def main() -> int:
     # Vi vay quet rai deu tren toan bo dataset.
     windows = max(1, args.scan // PAGE_SIZE)
     stride = max(PAGE_SIZE, TOTAL_ROWS // windows)
-    offsets = [min(index * stride, TOTAL_ROWS - PAGE_SIZE) for index in range(windows)]
+    offsets = [
+        min(args.offset_start + index * stride, TOTAL_ROWS - PAGE_SIZE)
+        for index in range(windows)
+    ]
+
+    # Che do bo sung: doc corpus da co de KHONG lay lai san pham cu va de uu tien
+    # brand/category chua xuat hien.
+    if args.append:
+        existing_rows, existing_ids, existing_urls = read_existing(out_dir)
+        seeded_categories, seeded_brands = read_existing_facets(out_dir)
+        print(f"che do --append: da co {len(existing_ids)} tai lieu, se bo sung {args.limit}.")
+    else:
+        existing_rows, existing_ids, existing_urls = [], set(), set()
+        seeded_categories, seeded_brands = set(), set()
 
     candidates: list[dict] = []
     seen_sku: set[str] = set()
@@ -388,6 +447,9 @@ def main() -> int:
                 continue
             if record["sku"] and record["sku"] in seen_sku:
                 continue
+            # Che do --append: loai san pham da nam trong corpus.
+            if record["doc_id"] in existing_ids or record["source_url"] in existing_urls:
+                continue
             seen_sku.add(record["sku"])
             candidates.append(record)
 
@@ -408,8 +470,9 @@ def main() -> int:
         bucket.sort(key=lambda item: (item["category_slug"], item["brand_slug"]))
 
     selected: list[dict] = []
-    seen_category: set[str] = set()
-    seen_brand: set[str] = set()
+    # Nap san cac facet da dung -> vong 1 se uu tien category/brand MOI so voi corpus cu.
+    seen_category: set[str] = set(seeded_categories)
+    seen_brand: set[str] = set(seeded_brands)
     # Vong 1 uu tien ban ghi co category_slug + brand chua xuat hien; vong 2 lay phan con lai.
     for require_new in (True, False):
         while len(selected) < args.limit:
@@ -434,7 +497,7 @@ def main() -> int:
 
     # doc_id phai duy nhat (checklist muc 6): sau khi rut gon, hai san pham co the
     # trung slug -> gan them product_id tu URL de tach.
-    used_ids: set[str] = set()
+    used_ids: set[str] = set(existing_ids)
     for record in selected:
         if record["doc_id"] in used_ids and record["product_id"]:
             record["doc_id"] = f"{record['doc_id']}-{record['product_id']}"
@@ -445,13 +508,15 @@ def main() -> int:
         path.write_text(render_markdown(record, args.retrieved_at), encoding="utf-8")
         print(f"da ghi {path}")
 
+    header = ["doc_id", "file_path", "title", "source_url", "retrieved_at",
+              "document_version", "license_or_permission"]
     sources_path = out_dir / "sources.csv"
     with sources_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
-        writer.writerow(
-            ["doc_id", "file_path", "title", "source_url", "retrieved_at",
-             "document_version", "license_or_permission"]
-        )
+        writer.writerow(header)
+        # Giu nguyen cac dong cu (che do --append) roi moi noi them dong moi.
+        for row in existing_rows:
+            writer.writerow([row.get(column, "") for column in header])
         for record in selected:
             writer.writerow([
                 record["doc_id"],
@@ -462,7 +527,7 @@ def main() -> int:
                 "not-stated",
                 f"{DATASET_LICENSE} via {DATASET_PAGE}",
             ])
-    print(f"da ghi {sources_path}")
+    print(f"da ghi {sources_path} ({len(existing_rows) + len(selected)} dong)")
 
     distribution: dict[str, int] = {}
     for record in candidates:
