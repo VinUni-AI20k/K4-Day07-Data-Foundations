@@ -1,12 +1,9 @@
 # Báo Cáo Nhóm — Lab 7: Embedding & Vector Store
 
-**Nhóm:** K4 — E-Commerce Policy Experts
-
-**Thành viên:** Nguyễn Tấn Hoàng (trưởng nhóm), Nguyễn Minh Đức, Nguyễn Minh Hiếu, Trần Thanh Huyền, Đỗ Tú Anh
-
+**Khóa:** K4  
+**Nhóm:** AAA  
+**Thành viên:** Nguyễn Tấn Hoàng - 2A202601198, Nguyễn Minh Đức - 2A202601946, Nguyễn Minh Hiếu - 2A202601154, Trần Thanh Huyền - 2A202601578, Đỗ Tú Anh - 2A202601272  
 **Ngày:** 03/08/2026
-
-> Báo cáo này tổng hợp yêu cầu Bài 3.0–3.5 trong `exercises.md` và kết quả benchmark của 5 thành viên trong thư mục `report/`. Khi output cá nhân dùng gold answer cũ hoặc mâu thuẫn với corpus, báo cáo nhóm ưu tiên nội dung kiểm chứng trực tiếp từ `data/k4_shopee/`.
 
 ---
 
@@ -86,13 +83,13 @@ Nhận xét:
 | Nguyễn Minh Hiếu | `RecursiveChunker(chunk_size=400)` | Mock fallback | 375 | Có top-3, score, preview và agent answer cho đủ 5 câu. |
 | Trần Thanh Huyền | `RecursiveChunker(chunk_size=400)` | Mock fallback | 371 | Có top-3, score và preview cho đủ 5 câu. |
 | Đỗ Tú Anh | `RecursiveChunker(chunk_size=450)` | Mock fallback | 324 | Có top-3, score và preview cho đủ 5 câu. |
-| Nguyễn Minh Đức | Không nêu cấu hình trong phần benchmark cá nhân | Không nêu | Không nêu | Chỉ có bảng tóm tắt 5/5; không có raw output để tái kiểm tra. |
+| Nguyễn Minh Đức | `SectionChunker(chunk_size=500)` | Mock fallback | 307 | Có top-3, score, preview và agent answer cho đủ 5 câu trong `OUTPUT_NGUYEN_MINH_DUC.txt`. |
 
-**Giới hạn so sánh:** output hiện có chưa đáp ứng trọn vẹn khuyến nghị “mỗi thành viên thử một chiến lược khác nhau”: bốn output có cấu hình đều dùng Recursive, còn output Nguyễn Minh Đức không ghi cấu hình. Ngoài ra backend và phiên bản corpus/code không đồng nhất (371, 375 và 324 chunk), nên không thể quy toàn bộ chênh lệch chất lượng cho chunking.
+**Giới hạn so sánh:** output hiện có chưa đáp ứng trọn vẹn khuyến nghị “mỗi thành viên thử một chiến lược khác nhau”: bốn thành viên dùng Recursive với hai kích thước, còn Nguyễn Minh Đức dùng SectionChunker. Ngoài ra backend và phiên bản corpus/code không đồng nhất (307, 324, 371 và 375 chunk), nên không thể quy toàn bộ chênh lệch chất lượng cho chunking. Dù SectionChunker tạo ít chunk nhất và giữ được số mục trong preview, kết quả của cấu hình này vẫn bị chi phối bởi Mock embedding.
 
 ### 2.3. Đánh giá thiết kế
 
-Trong corpus hiện tại, Recursive là lựa chọn an toàn hơn Fixed-size vì tôn trọng các ranh giới tự nhiên. Tuy nhiên, cấu trúc tài liệu có nhiều mục đánh số như `1.9.4`, `2.7.1`, `2.7.2`; phương án phù hợp hơn cho vòng tiếp theo là **Section-aware Recursive Chunker**:
+Trong corpus hiện tại, Recursive là lựa chọn an toàn hơn Fixed-size vì tôn trọng các ranh giới tự nhiên. Raw benchmark của Nguyễn Minh Đức đã thử SectionChunker 500, cho 307 chunk và giữ được các nhãn mục như `2.7.1`, `2.11`, `2.12` trong preview. Tuy vậy, SectionChunker + Mock không truy xuất được bằng chứng đúng cho cả 5 câu; do đó chưa thể kết luận tách theo section tự nó cải thiện retrieval. Cấu trúc tài liệu có nhiều mục đánh số như `1.9.4`, `2.7.1`, `2.7.2`; phương án đáng kiểm chứng tiếp theo là **Section-aware Recursive Chunker**:
 
 1. Tách trước theo heading Markdown và dòng mở đầu bằng số mục.
 2. Chỉ dùng Recursive để chia tiếp khi một section vượt giới hạn.
@@ -122,7 +119,6 @@ Các con số “7 ngày/15 ngày cho Shopee Mall”, “hoàn 200%” và mô t
 - **✓:** top-3 có chunk chứa bằng chứng đủ để trả lời phần cốt lõi.
 - **△:** có chunk đúng chủ đề/tài liệu nhưng bằng chứng chỉ trả lời một phần.
 - **✗:** không có chunk trả lời được câu hỏi.
-- **BC:** chỉ là số liệu thành viên tự báo cáo, thiếu raw output để xác minh.
 
 Đánh giá ưu tiên **chunk liên quan**, không tính đúng chỉ vì top-3 có cùng `doc_id` nhưng sai điều khoản.
 
@@ -134,7 +130,7 @@ Các con số “7 ngày/15 ngày cho Shopee Mall”, “hoàn 200%” và mô t
 | Nguyễn Minh Hiếu | ✗ | ✗ | ✗ | ✗ | ✓ | **1/5** | Q2 lọc đúng tài liệu seller nhưng sai mục 2.7; Q5 có bằng chứng về phiếu/mã vận đơn. |
 | Trần Thanh Huyền | ✗ | ✗ | ✗ | ✗ | △ | **1/5 một phần** | Q5 top-1 đúng tài liệu và hướng dẫn dán/viết mã vận đơn, chưa bao quát toàn bộ yêu cầu đóng gói. |
 | Đỗ Tú Anh | ✗ | ✗ | ✗ | ✗ | ✗ | **0/5** | Cờ “marker” ở Q1 là false positive vì từ “Shopee Mall” xuất hiện trong chunk không trả lời thời hạn. |
-| Nguyễn Minh Đức | BC | BC | BC | BC | BC | **Tự báo cáo 5/5** | Thiếu raw output, backend, chunker và chunk count; gold answer trong bảng cá nhân cũng là bản cũ. Không đưa vào kết luận định lượng đã xác minh. |
+| Nguyễn Minh Đức | ✗ | ✗ | ✗ | ✗ | ✗ | **0/5** | Raw log cho thấy top-3 của cả 5 câu đều không chứa bằng chứng cần tìm; bảng 5/5 trong báo cáo cá nhân dùng số liệu tóm tắt không khớp lần chạy. |
 
 Q4 được tính “liên quan” với Nguyễn Tấn Hoàng vì top-1 là bài `shopee-dam-bao` chứa thời hạn bảo vệ 15 ngày; không có hệ thống nào được xem là trả lời đúng phần “giữ tiền bao lâu” vì corpus không cung cấp dữ kiện đó.
 
@@ -152,13 +148,13 @@ Kết quả Nguyễn Tấn Hoàng — `RecursiveChunker(400)` + `voyage-multilin
 
 ### 3.5. Kết quả top-1 của các output Mock có raw log
 
-| Câu | Nguyễn Minh Hiếu — Recursive 400 | Trần Thanh Huyền — Recursive 400 | Đỗ Tú Anh — Recursive 450 |
-|---:|---|---|---|
-| Q1 | `chinh-sach-van-chuyen` (0,334) — sai | `chinh-sach-van-chuyen` (0,334) — sai | `chinh-sach-van-chuyen` (0,422) — sai |
-| Q2, sau filter | `dieu-khoan...mall` (0,311) — đúng doc, sai mục | `dieu-khoan...mall` (0,330) — đúng doc, sai mục | `dieu-khoan...mall` (0,311) — đúng doc, sai mục |
-| Q3 | `chinh-sach-tra-hang...` (0,307) — sai | `chinh-sach-tra-hang...` (0,307) — sai | `chinh-sach-van-chuyen` (0,341) — đúng doc, sai đoạn |
-| Q4 | `chinh-sach-tra-hang...` (0,322) — sai | `dieu-khoan...mall` (0,314) — sai | `chinh-sach-van-chuyen` (0,313) — sai |
-| Q5 | `cach-dong-goi...` (0,341) — liên quan | `cach-dong-goi...` (0,341) — liên quan một phần | `chinh-sach-tra-hang...` (0,314) — sai |
+| Câu | Nguyễn Minh Hiếu — Recursive 400 | Trần Thanh Huyền — Recursive 400 | Đỗ Tú Anh — Recursive 450 | Nguyễn Minh Đức — Section 500 |
+|---:|---|---|---|---|
+| Q1 | `chinh-sach-van-chuyen` (0,334) — sai | `chinh-sach-van-chuyen` (0,334) — sai | `chinh-sach-van-chuyen` (0,422) — sai | `dieu-khoan...mall`, mục 2.12 (0,337) — sai |
+| Q2, sau filter | `dieu-khoan...mall` (0,311) — đúng doc, sai mục | `dieu-khoan...mall` (0,330) — đúng doc, sai mục | `dieu-khoan...mall` (0,311) — đúng doc, sai mục | `dieu-khoan...mall`, mục 1.2 (0,300) — đúng doc, sai mục |
+| Q3 | `chinh-sach-tra-hang...` (0,307) — sai | `chinh-sach-tra-hang...` (0,307) — sai | `chinh-sach-van-chuyen` (0,341) — đúng doc, sai đoạn | `chinh-sach-van-chuyen`, hàng vận chuyển có điều kiện (0,355) — đúng doc, sai đoạn |
+| Q4 | `chinh-sach-tra-hang...` (0,322) — sai | `dieu-khoan...mall` (0,314) — sai | `chinh-sach-van-chuyen` (0,313) — sai | `chinh-sach-van-chuyen`, bồi thường (0,353) — sai |
+| Q5 | `cach-dong-goi...` (0,341) — liên quan | `cach-dong-goi...` (0,341) — liên quan một phần | `chinh-sach-tra-hang...` (0,314) — sai | `quy-dinh-chung...`, lý do trả hàng (0,361) — sai |
 
 ### 3.6. Chiến lược nào tốt nhất và metadata có giúp không?
 
@@ -168,12 +164,13 @@ Metadata filtering có ích rõ ở Q2:
 
 - Không filter, các output Mock thường đưa tài liệu vận chuyển hoặc trả hàng lên cao vì cùng chứa từ “Người bán”, “hàng giả” hoặc “phí”.
 - Với `customer_role="seller"`, top-3 được giới hạn vào `dieu-khoan-dich-vu-shopee-mall`.
-- Filter đúng tài liệu vẫn chưa bảo đảm đúng **điều khoản**: ba output Mock đều bỏ lỡ mục 2.7. Điều này cho thấy cần kết hợp semantic embedding và metadata chi tiết như `clause_number=2.7` hoặc `clause_type=che_tai`.
+- Filter đúng tài liệu vẫn chưa bảo đảm đúng **điều khoản**: cả bốn output Mock đều bỏ lỡ mục 2.7. Điều này cho thấy cần kết hợp semantic embedding và metadata chi tiết như `clause_number=2.7` hoặc `clause_type=che_tai`.
 
 ### 3.7. Trường hợp chiến lược tốt ở câu này nhưng kém ở câu khác
 
 - Recursive 400 + Mock của Nguyễn Minh Hiếu/Huyền lấy được Q5 vì từ khóa “đóng gói”, “phiếu gửi”, “mã vận đơn” xuất hiện trực tiếp, nhưng thất bại Q1 và Q4 khi nhiều tài liệu dùng chung từ khóa trả hàng/hoàn tiền.
 - Recursive 450 + Mock của Đỗ Tú Anh cho score Q1 cao hơn các output Mock 400 (0,422 so với 0,334) nhưng vẫn sai bằng chứng; score giữa các lần chạy/backend không phải thước đo có thể so sánh trực tiếp.
+- Section 500 + Mock của Nguyễn Minh Đức tạo ít chunk hơn và giữ số mục rõ hơn, nhưng đạt 0/5; riêng Q3 lấy đúng tài liệu vận chuyển ở top-1 nhưng sai section. Điều này cho thấy coherence theo section không bù được một bộ nhúng không hiểu ngữ nghĩa.
 - Voyage xử lý tốt câu diễn đạt ngữ nghĩa (Q1–Q5), nhưng Q4 vẫn bộc lộ giới hạn grounding: retrieval không thể tìm một sự thật không có trong corpus.
 
 ---
@@ -182,7 +179,7 @@ Metadata filtering có ích rõ ở Q2:
 
 ### 4.1. Failure case 1 — Mock embedding không hiểu ngữ nghĩa
 
-**Câu thất bại:** Q1 và Q4 ở toàn bộ output Mock có raw log.
+**Câu thất bại:** Q1 và Q4 ở toàn bộ bốn output Mock có raw log.
 
 **Biểu hiện:** Q1 trả về đoạn “cung cấp bằng chứng trong 24 giờ” của chính sách vận chuyển; Q4 trả về điều khoản phí hoặc khiếu nại, dù score cosine tương đối cao.
 
@@ -192,7 +189,7 @@ Metadata filtering có ích rõ ở Q2:
 
 ### 4.2. Failure case 2 — Đúng tài liệu nhưng sai chunk
 
-**Câu thất bại:** Q2 với filter seller trong ba output Mock.
+**Câu thất bại:** Q2 với filter seller trong cả bốn output Mock.
 
 **Biểu hiện:** top-3 đều thuộc đúng `dieu-khoan-dich-vu-shopee-mall`, nhưng top-1 nói về phí 2.12 hoặc hủy đơn thay vì hàng chính hãng 2.7.
 
@@ -214,21 +211,26 @@ Metadata filtering có ích rõ ở Q2:
 
 Một số báo cáo cá nhân dùng “7 ngày/15 ngày với Shopee Mall”, “hoàn 200%” và expected doc của Q3 là `quy-dinh-chung-tra-hang-hoan-tien`; các dữ kiện này không khớp corpus hiện tại. Điều này làm metric sai ngay cả khi retrieval tốt. Nhóm đã sửa gold answer ở mục 3.1 và khuyến nghị lưu bộ câu hỏi trong một file dùng chung thay vì sao chép vào từng script.
 
+Riêng báo cáo cá nhân Nguyễn Minh Đức tóm tắt top-1 với các score 0,85–0,94 và tự báo cáo 5/5, trong khi raw output ghi score 0,248–0,361 ở top-3 và không câu nào có bằng chứng đúng. Báo cáo nhóm sử dụng raw output làm nguồn đánh giá chính để bảo đảm khả năng tái kiểm tra.
+
 ### 4.5. Bài học rút ra
 
 1. Chỉ so sánh chunking khi **giữ cố định** corpus, embedding model, query, filter và tiêu chí relevance.
 2. `DocHit@3` không đủ; cần kiểm tra chunk có thực sự chứa bằng chứng và agent answer có bám nguồn hay không.
 3. Metadata filter giảm nhiễu giữa buyer/seller nhưng cần metadata cấp section để chọn đúng điều khoản trong tài liệu dài.
 4. Semantic embedding ảnh hưởng lớn hơn việc đổi 400 thành 450 ký tự trong bộ kết quả hiện có.
-5. Không được để agent “điền vào chỗ trống” khi corpus thiếu thông tin; câu trả lời đúng phải nói rõ giới hạn nguồn.
+5. SectionChunker giúp giữ cấu trúc và giảm số chunk, nhưng vẫn phải được đánh giá với semantic embedding thật và cùng điều kiện benchmark.
+6. Không được để agent “điền vào chỗ trống” khi corpus thiếu thông tin; câu trả lời đúng phải nói rõ giới hạn nguồn.
+7. Raw log phải là nguồn số liệu gốc; bảng tóm tắt cá nhân cần được sinh từ cùng lần chạy để tránh sai lệch.
 
 ### 4.6. Nội dung demo đề xuất
 
 1. Giới thiệu corpus 10 tài liệu và schema metadata.
 2. Cho xem Q2 trước/sau `customer_role="seller"` để minh họa metadata filtering.
 3. So sánh cùng `RecursiveChunker(400)` giữa Mock và Voyage trên Q1/Q4/Q5.
-4. Trình bày failure “đúng doc, sai điều khoản” và thiết kế Section-aware Recursive.
-5. Kết thúc bằng Q4 để minh họa nguyên tắc grounding: retrieval tốt không thể thay thế dữ liệu nguồn bị thiếu.
+4. So sánh Recursive với `SectionChunker(500)` của Nguyễn Minh Đức để tách tác động của cấu trúc chunk khỏi chất lượng embedding.
+5. Trình bày failure “đúng doc, sai điều khoản” và thiết kế Section-aware Recursive.
+6. Kết thúc bằng Q4 để minh họa nguyên tắc grounding: retrieval tốt không thể thay thế dữ liệu nguồn bị thiếu.
 
 ### 4.7. Nếu làm lại
 
@@ -247,12 +249,24 @@ Một số báo cáo cá nhân dùng “7 ngày/15 ngày với Shopee Mall”, �
 | 5–10 tài liệu công khai, nguồn và phiên bản rõ ràng | Đạt | Mục 1.2–1.4 |
 | Metadata bắt buộc + ít nhất hai trường retrieval | Đạt | Mục 1.3 |
 | Baseline trên 2–3 tài liệu | Đạt | Mục 2.1 (3 tài liệu) |
-| Mỗi thành viên có chiến lược riêng | Chưa đủ bằng chứng | Bốn raw output đều dùng Recursive; một output không ghi cấu hình. |
+| Mỗi thành viên có chiến lược riêng | Đạt một phần | Bốn thành viên dùng Recursive (400/450), Nguyễn Minh Đức dùng SectionChunker 500; chưa có năm chiến lược khác nhau. |
 | Đúng 5 câu hỏi, đa dạng và có gold answer | Đạt sau hiệu chỉnh | Mục 3.1 |
 | Ít nhất một câu cần metadata filter | Đạt | Q2 |
-| So sánh top-3 của 5 thành viên | Đạt có điều kiện | Mục 3.3–3.5; Nguyễn Minh Đức thiếu raw output. |
+| So sánh top-3 của 5 thành viên | Đạt | Mục 3.3–3.5; cả năm thành viên đều có raw output để kiểm tra. |
 | Thảo luận chiến lược tốt nhất và tác dụng metadata | Đạt | Mục 3.6–3.7 |
 | Ít nhất một failure case và đề xuất cải thiện | Đạt | Mục 4.1–4.4 |
 | Bài học và nội dung demo | Đạt | Mục 4.5–4.7 |
 
-**Việc cần hoàn thiện trước khi nộp nếu còn thời gian:** Nguyễn Minh Đức bổ sung raw benchmark và cấu hình; các thành viên chạy lại năm chiến lược khác nhau trên cùng semantic embedder/corpus. Báo cáo hiện tại không tự tạo số liệu để che hai khoảng trống này.
+**Việc cần hoàn thiện trước khi nộp nếu còn thời gian:** Các thành viên chạy lại năm chiến lược khác nhau trên cùng semantic embedder/corpus và sinh bảng tóm tắt trực tiếp từ raw log. Raw benchmark và cấu hình của Nguyễn Minh Đức đã được bổ sung, nhưng cần chạy lại bằng semantic embedding thật để đánh giá công bằng SectionChunker.
+
+---
+
+## 6. Tự đánh giá phần nhóm
+
+| Tiêu chí | Điểm tự đánh giá |
+|----------|-------------------|
+| Lựa chọn tài liệu (Document Set Quality) | 10 / 10 |
+| Thiết kế chiến lược (Strategy Design) | 15 / 15 |
+| Chất lượng truy xuất (Retrieval Quality) | 10 / 10 |
+| Thuyết trình (Demo) | 5 / 5 |
+| **Tổng phần nhóm** | **40 / 40** |
