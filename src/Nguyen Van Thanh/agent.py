@@ -12,18 +12,6 @@ class KnowledgeBaseAgent:
 
     def answer(self, question: str, top_k: int = 3) -> str:
         results = self.store.search(question, top_k=top_k)
-<<<<<<< HEAD
-        context = "\n\n".join(
-            f"[{index}] {result['content']}" for index, result in enumerate(results, start=1)
-        )
-
-        prompt = (
-            "Trả lời câu hỏi dựa trên ngữ cảnh được cung cấp bên dưới. "
-            "Nếu ngữ cảnh không đủ thông tin để trả lời, hãy nói rõ điều đó.\n\n"
-            f"Ngữ cảnh:\n{context}\n\n"
-            f"Câu hỏi: {question}\n"
-            "Trả lời:"
-=======
         if results:
             context_blocks = []
             for index, result in enumerate(results, start=1):
@@ -41,6 +29,5 @@ class KnowledgeBaseAgent:
             f"NGỮ CẢNH:\n{context}\n\n"
             f"CÂU HỎI:\n{question}\n\n"
             "TRẢ LỜI NGẮN GỌN, CHÍNH XÁC VÀ CÓ CĂN CỨ:"
->>>>>>> a525714b32a5792657fa05a372879b30298d0a4f
         )
         return self.llm_fn(prompt)

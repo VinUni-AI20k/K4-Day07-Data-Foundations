@@ -1,19 +1,6 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-.pytest_cache/
-
-# Environment
-.env
-.env.local
-
-# OS
-.DS_Store
-
-# IDE
-.vscode/
-.idea/
-.omx/
 .venv/
-src_w_solution/
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+chroma_data/

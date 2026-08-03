@@ -1,0 +1,407 @@
+{
+  "document_count": 7,
+  "baselines": {
+    "t-hexa-bulk-order-support": {
+      "fixed_size": {
+        "count": 2,
+        "avg_length": 231.5,
+        "chunks": [
+          "# Hỗ trợ đơn hàng số lượng lớn\n\n## Đối tượng áp dụng\nChính sách áp dụng cho lớp học, đội nhóm, câu lạc bộ, công ty hoặc gia đình đặt nhiều áo cùng thiết kế hay nhiều size.\n\n## Thông tin cần cung cấp\nKhách hàng cần cung cấp số lượng, bảng size, phom áo, màu áo, số mặt in, file thiết kế và thời hạn mo",
+          "ng muốn.\n\n## Báo giá\nMức giá phụ thuộc số lượng, số mặt in và độ phức tạp của thiết kế. T-Hexa sẽ xác nhận mockup, tiến độ và báo giá trước khi sản xuất hàng loạt."
+        ]
+      },
+      "by_sentences": {
+        "count": 2,
+        "avg_length": 230.0,
+        "chunks": [
+          "# Hỗ trợ đơn hàng số lượng lớn\n\n## Đối tượng áp dụng\nChính sách áp dụng cho lớp học, đội nhóm, câu lạc bộ, công ty hoặc gia đình đặt nhiều áo cùng thiết kế hay nhiều size. ## Thông tin cần cung cấp\nKhách hàng cần cung cấp số lượng, bảng size, phom áo, màu áo, số mặt in, file thiết kế và thời hạn mong muốn. ## Báo giá\nMức giá phụ thuộc số lượng, số mặt in và độ phức tạp của thiết kế.",
+          "T-Hexa sẽ xác nhận mockup, tiến độ và báo giá trước khi sản xuất hàng loạt."
+        ]
+      },
+      "recursive": {
+        "count": 2,
+        "avg_length": 230.5,
+        "chunks": [
+          "# Hỗ trợ đơn hàng số lượng lớn\n\n## Đối tượng áp dụng\nChính sách áp dụng cho lớp học, đội nhóm, câu lạc bộ, công ty hoặc gia đình đặt nhiều áo cùng thiết kế hay nhiều size.",
+          "## Thông tin cần cung cấp\nKhách hàng cần cung cấp số lượng, bảng size, phom áo, màu áo, số mặt in, file thiết kế và thời hạn mong muốn.\n\n## Báo giá\nMức giá phụ thuộc số lượng, số mặt in và độ phức tạp của thiết kế. T-Hexa sẽ xác nhận mockup, tiến độ và báo giá trước khi sản xuất hàng loạt."
+        ]
+      }
+    },
+    "t-hexa-design-order-guide": {
+      "fixed_size": {
+        "count": 2,
+        "avg_length": 283.5,
+        "chunks": [
+          "# Hướng dẫn thiết kế và đặt áo\n\n## Bước 1: Chọn phom áo\nKhách hàng chọn Oversize, Polo, Boxy hoặc Baby Tee, sau đó chọn màu và kích thước phù hợp.\n\n## Bước 2: Tạo thiết kế\nKhách hàng có thể tải ảnh lên, thêm chữ, vẽ hoặc dùng mẫu có sẵn. Cần kiểm tra độ phân giải và bảo đảm thiết kế nằm trong vùng i",
+          "n.\n\n## Bước 3: Duyệt mockup\nTrước khi thêm vào giỏ, khách hàng kiểm tra cả mặt trước và mặt sau, vị trí, kích thước hình in, màu áo và size.\n\n## Bước 4: Đặt hàng\nSau khi duyệt mockup, khách hàng chọn phương thức thanh toán, kiểm tra địa chỉ giao hàng và xác nhận đơn."
+        ]
+      },
+      "by_sentences": {
+        "count": 2,
+        "avg_length": 281.5,
+        "chunks": [
+          "# Hướng dẫn thiết kế và đặt áo\n\n## Bước 1: Chọn phom áo\nKhách hàng chọn Oversize, Polo, Boxy hoặc Baby Tee, sau đó chọn màu và kích thước phù hợp. ## Bước 2: Tạo thiết kế\nKhách hàng có thể tải ảnh lên, thêm chữ, vẽ hoặc dùng mẫu có sẵn. Cần kiểm tra độ phân giải và bảo đảm thiết kế nằm trong vùng in.",
+          "## Bước 3: Duyệt mockup\nTrước khi thêm vào giỏ, khách hàng kiểm tra cả mặt trước và mặt sau, vị trí, kích thước hình in, màu áo và size. ## Bước 4: Đặt hàng\nSau khi duyệt mockup, khách hàng chọn phương thức thanh toán, kiểm tra địa chỉ giao hàng và xác nhận đơn."
+        ]
+      },
+      "recursive": {
+        "count": 3,
+        "avg_length": 187.66666666666666,
+        "chunks": [
+          "# Hướng dẫn thiết kế và đặt áo\n\n## Bước 1: Chọn phom áo\nKhách hàng chọn Oversize, Polo, Boxy hoặc Baby Tee, sau đó chọn màu và kích thước phù hợp.",
+          "## Bước 2: Tạo thiết kế\nKhách hàng có thể tải ảnh lên, thêm chữ, vẽ hoặc dùng mẫu có sẵn. Cần kiểm tra độ phân giải và bảo đảm thiết kế nằm trong vùng in.\n\n## Bước 3: Duyệt mockup\nTrước khi thêm vào giỏ, khách hàng kiểm tra cả mặt trước và mặt sau, vị trí, kích thước hình in, màu áo và size.",
+          "## Bước 4: Đặt hàng\nSau khi duyệt mockup, khách hàng chọn phương thức thanh toán, kiểm tra địa chỉ giao hàng và xác nhận đơn."
+        ]
+      }
+    },
+    "t-hexa-payment-policy": {
+      "fixed_size": {
+        "count": 2,
+        "avg_length": 282.0,
+        "chunks": [
+          "# Chính sách thanh toán\n\n## Phương thức được hỗ trợ\nT-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Khách hàng cần kiểm tra tổng tiền, mã giảm giá và địa chỉ nhận hàng trước khi xác nhận.\n\n## Xác nhận thanh toán\nVới ví T-Hexa hoặc chuyển ",
+          "khoản, đơn hàng được chuyển sang bước xử lý sau khi hệ thống ghi nhận thanh toán. Với COD, khách hàng thanh toán cho đơn vị giao hàng khi nhận sản phẩm.\n\n## Lưu ý\nKhông gửi mật khẩu, mã OTP hoặc thông tin đăng nhập cho bất kỳ người nào tự xưng là nhân viên hỗ trợ."
+        ]
+      },
+      "by_sentences": {
+        "count": 2,
+        "avg_length": 280.5,
+        "chunks": [
+          "# Chính sách thanh toán\n\n## Phương thức được hỗ trợ\nT-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Khách hàng cần kiểm tra tổng tiền, mã giảm giá và địa chỉ nhận hàng trước khi xác nhận. ## Xác nhận thanh toán\nVới ví T-Hexa hoặc chuyển khoản, đơn hàng được chuyển sang bước xử lý sau khi hệ thống ghi nhận thanh toán.",
+          "Với COD, khách hàng thanh toán cho đơn vị giao hàng khi nhận sản phẩm. ## Lưu ý\nKhông gửi mật khẩu, mã OTP hoặc thông tin đăng nhập cho bất kỳ người nào tự xưng là nhân viên hỗ trợ."
+        ]
+      },
+      "recursive": {
+        "count": 3,
+        "avg_length": 186.66666666666666,
+        "chunks": [
+          "# Chính sách thanh toán\n\n## Phương thức được hỗ trợ\nT-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Khách hàng cần kiểm tra tổng tiền, mã giảm giá và địa chỉ nhận hàng trước khi xác nhận.",
+          "## Xác nhận thanh toán\nVới ví T-Hexa hoặc chuyển khoản, đơn hàng được chuyển sang bước xử lý sau khi hệ thống ghi nhận thanh toán. Với COD, khách hàng thanh toán cho đơn vị giao hàng khi nhận sản phẩm.",
+          "## Lưu ý\nKhông gửi mật khẩu, mã OTP hoặc thông tin đăng nhập cho bất kỳ người nào tự xưng là nhân viên hỗ trợ."
+        ]
+      }
+    }
+  },
+  "strategies": [
+    {
+      "strategy": "HeadingChunker",
+      "chunks": 29,
+      "points": 10,
+      "rows": [
+        {
+          "query": "T-Hexa hỗ trợ những phương thức thanh toán nào?",
+          "gold_doc": "t-hexa-payment-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-payment-policy",
+          "top1_score": 0.5693,
+          "top1_preview": "## Phương thức được hỗ trợ T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Khách hàng cần kiểm tra tổng tiền, mã giảm ",
+          "filter": null,
+          "agent_answer": "T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Với ví T-Hexa hoặc chuyển khoản, đơn hàng được chuyển sang bước xử lý sau khi hệ thống ghi nhận thanh toán."
+        },
+        {
+          "query": "Khách hàng phải gửi yêu cầu đổi trả trong bao lâu và sản phẩm cần đáp ứng điều kiện gì?",
+          "gold_doc": "t-hexa-returns-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-returns-policy",
+          "top1_score": 0.4697,
+          "top1_preview": "## Thời hạn yêu cầu Khách hàng cần gửi yêu cầu trong vòng 3 ngày kể từ thời điểm nhận hàng. Yêu cầu nên kèm mã đơn, ảnh sản phẩm và video mở gói nếu có.",
+          "filter": null,
+          "agent_answer": "Khách hàng cần gửi yêu cầu trong vòng 3 ngày kể từ thời điểm nhận hàng. Sản phẩm cần chưa qua sử dụng, chưa giặt, không có mùi lạ và còn đầy đủ phụ kiện đi kèm."
+        },
+        {
+          "query": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là bao lâu?",
+          "gold_doc": "t-hexa-shipping-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-shipping-policy",
+          "top1_score": 0.6598,
+          "top1_preview": "## Thời gian vận chuyển Sau khi bàn giao cho đơn vị vận chuyển, thời gian giao dự kiến là 1 đến 5 ngày làm việc tùy khu vực. Tổng thời gian thông thường từ khi xác nhận đơn đến khi",
+          "filter": null,
+          "agent_answer": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là khoảng 3 đến 9 ngày làm việc. Thời gian xử lý dự kiến là 2 đến 4 ngày làm việc sau khi đơn hàng được xác nhận."
+        },
+        {
+          "query": "Người bán cần đáp ứng điều kiện gì khi đăng hình ảnh và nội dung thiết kế?",
+          "gold_doc": "t-hexa-seller-listing-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-seller-listing-policy",
+          "top1_score": 0.6581,
+          "top1_preview": "# Điều kiện người bán và nội dung đăng bán",
+          "filter": {
+            "customer_role": "seller"
+          },
+          "agent_answer": "Điều kiện người bán và nội dung đăng bán Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm."
+        },
+        {
+          "query": "T-Hexa thu thập dữ liệu cá nhân nào và sử dụng để làm gì?",
+          "gold_doc": "t-hexa-privacy-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-privacy-policy",
+          "top1_score": 0.3807,
+          "top1_preview": "## Dữ liệu được thu thập T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên và lịch sử hỗ trợ.",
+          "filter": null,
+          "agent_answer": "T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên và lịch sử hỗ trợ. T-Hexa không bán dữ liệu cá nhân cho nhà quảng cáo."
+        }
+      ]
+    },
+    {
+      "strategy": "RecursiveChunker-350",
+      "chunks": 17,
+      "points": 10,
+      "rows": [
+        {
+          "query": "T-Hexa hỗ trợ những phương thức thanh toán nào?",
+          "gold_doc": "t-hexa-payment-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-payment-policy",
+          "top1_score": 0.5967,
+          "top1_preview": "# Chính sách thanh toán  ## Phương thức được hỗ trợ T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Khách hàng cần kiể",
+          "filter": null,
+          "agent_answer": "T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Với ví T-Hexa hoặc chuyển khoản, đơn hàng được chuyển sang bước xử lý sau khi hệ thống ghi nhận thanh toán."
+        },
+        {
+          "query": "Khách hàng phải gửi yêu cầu đổi trả trong bao lâu và sản phẩm cần đáp ứng điều kiện gì?",
+          "gold_doc": "t-hexa-returns-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-returns-policy",
+          "top1_score": 0.4365,
+          "top1_preview": "# Chính sách đổi trả  ## Trường hợp được hỗ trợ T-Hexa hỗ trợ đổi hoặc xử lý lại khi sản phẩm sai mẫu đã duyệt, sai màu áo, sai kích thước do lỗi của shop, thiếu sản phẩm hoặc có l",
+          "filter": null,
+          "agent_answer": "Khách hàng cần gửi yêu cầu trong vòng 3 ngày kể từ thời điểm nhận hàng. Sản phẩm cần chưa qua sử dụng, chưa giặt, không có mùi lạ và còn đầy đủ phụ kiện đi kèm."
+        },
+        {
+          "query": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là bao lâu?",
+          "gold_doc": "t-hexa-shipping-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-shipping-policy",
+          "top1_score": 0.6598,
+          "top1_preview": "## Thời gian vận chuyển Sau khi bàn giao cho đơn vị vận chuyển, thời gian giao dự kiến là 1 đến 5 ngày làm việc tùy khu vực. Tổng thời gian thông thường từ khi xác nhận đơn đến khi",
+          "filter": null,
+          "agent_answer": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là khoảng 3 đến 9 ngày làm việc. Thời gian xử lý dự kiến là 2 đến 4 ngày làm việc sau khi đơn hàng được xác nhận."
+        },
+        {
+          "query": "Người bán cần đáp ứng điều kiện gì khi đăng hình ảnh và nội dung thiết kế?",
+          "gold_doc": "t-hexa-seller-listing-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-seller-listing-policy",
+          "top1_score": 0.5111,
+          "top1_preview": "# Điều kiện người bán và nội dung đăng bán  ## Quyền sử dụng thiết kế Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm. Không được đăng nội du",
+          "filter": {
+            "customer_role": "seller"
+          },
+          "agent_answer": "Điều kiện người bán và nội dung đăng bán Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm."
+        },
+        {
+          "query": "T-Hexa thu thập dữ liệu cá nhân nào và sử dụng để làm gì?",
+          "gold_doc": "t-hexa-privacy-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-privacy-policy",
+          "top1_score": 0.3616,
+          "top1_preview": "# Chính sách quyền riêng tư  ## Dữ liệu được thu thập T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên",
+          "filter": null,
+          "agent_answer": "T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên và lịch sử hỗ trợ. T-Hexa không bán dữ liệu cá nhân cho nhà quảng cáo."
+        }
+      ]
+    },
+    {
+      "strategy": "SentenceChunker-3",
+      "chunks": 14,
+      "points": 10,
+      "rows": [
+        {
+          "query": "T-Hexa hỗ trợ những phương thức thanh toán nào?",
+          "gold_doc": "t-hexa-payment-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-payment-policy",
+          "top1_score": 0.5477,
+          "top1_preview": "# Chính sách thanh toán  ## Phương thức được hỗ trợ T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Khách hàng cần kiể",
+          "filter": null,
+          "agent_answer": "T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên và lịch sử hỗ trợ."
+        },
+        {
+          "query": "Khách hàng phải gửi yêu cầu đổi trả trong bao lâu và sản phẩm cần đáp ứng điều kiện gì?",
+          "gold_doc": "t-hexa-returns-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-returns-policy",
+          "top1_score": 0.4365,
+          "top1_preview": "# Chính sách đổi trả  ## Trường hợp được hỗ trợ T-Hexa hỗ trợ đổi hoặc xử lý lại khi sản phẩm sai mẫu đã duyệt, sai màu áo, sai kích thước do lỗi của shop, thiếu sản phẩm hoặc có l",
+          "filter": null,
+          "agent_answer": "Khách hàng cần gửi yêu cầu trong vòng 3 ngày kể từ thời điểm nhận hàng. Sản phẩm cần chưa qua sử dụng, chưa giặt, không có mùi lạ và còn đầy đủ phụ kiện đi kèm."
+        },
+        {
+          "query": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là bao lâu?",
+          "gold_doc": "t-hexa-shipping-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-shipping-policy",
+          "top1_score": 0.6596,
+          "top1_preview": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là khoảng 3 đến 9 ngày làm việc. ## Kiểm tra khi nhận Khách hàng nên quay video mở gói liên tục nếu cần làm bằng c",
+          "filter": null,
+          "agent_answer": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là khoảng 3 đến 9 ngày làm việc. Thời gian xử lý dự kiến là 2 đến 4 ngày làm việc sau khi đơn hàng được xác nhận."
+        },
+        {
+          "query": "Người bán cần đáp ứng điều kiện gì khi đăng hình ảnh và nội dung thiết kế?",
+          "gold_doc": "t-hexa-seller-listing-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-seller-listing-policy",
+          "top1_score": 0.5089,
+          "top1_preview": "# Điều kiện người bán và nội dung đăng bán  ## Quyền sử dụng thiết kế Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm. Không được đăng nội du",
+          "filter": {
+            "customer_role": "seller"
+          },
+          "agent_answer": "Điều kiện người bán và nội dung đăng bán Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm."
+        },
+        {
+          "query": "T-Hexa thu thập dữ liệu cá nhân nào và sử dụng để làm gì?",
+          "gold_doc": "t-hexa-privacy-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-privacy-policy",
+          "top1_score": 0.4637,
+          "top1_preview": "# Chính sách quyền riêng tư  ## Dữ liệu được thu thập T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên",
+          "filter": null,
+          "agent_answer": "T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên và lịch sử hỗ trợ. T-Hexa không bán dữ liệu cá nhân cho nhà quảng cáo."
+        }
+      ]
+    },
+    {
+      "strategy": "FixedSizeChunker-450-75",
+      "chunks": 14,
+      "points": 10,
+      "rows": [
+        {
+          "query": "T-Hexa hỗ trợ những phương thức thanh toán nào?",
+          "gold_doc": "t-hexa-payment-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-payment-policy",
+          "top1_score": 0.5013,
+          "top1_preview": "# Chính sách thanh toán  ## Phương thức được hỗ trợ T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Khách hàng cần kiể",
+          "filter": null,
+          "agent_answer": "T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên và lịch sử hỗ trợ."
+        },
+        {
+          "query": "Khách hàng phải gửi yêu cầu đổi trả trong bao lâu và sản phẩm cần đáp ứng điều kiện gì?",
+          "gold_doc": "t-hexa-returns-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-returns-policy",
+          "top1_score": 0.4892,
+          "top1_preview": "# Chính sách đổi trả  ## Trường hợp được hỗ trợ T-Hexa hỗ trợ đổi hoặc xử lý lại khi sản phẩm sai mẫu đã duyệt, sai màu áo, sai kích thước do lỗi của shop, thiếu sản phẩm hoặc có l",
+          "filter": null,
+          "agent_answer": "Khách hàng cần gửi yêu cầu trong vòng 3 ngày kể từ thời điểm nhận hàng. Yêu cầu nên kèm mã đơn, ảnh sản phẩm và video mở gói nếu có."
+        },
+        {
+          "query": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là bao lâu?",
+          "gold_doc": "t-hexa-shipping-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-shipping-policy",
+          "top1_score": 0.6556,
+          "top1_preview": "# Chính sách giao hàng  ## Thời gian xử lý Sản phẩm thiết kế theo yêu cầu cần thời gian kiểm tra file, in và hoàn thiện. Thời gian xử lý dự kiến là 2 đến 4 ngày làm việc sau khi đơ",
+          "filter": null,
+          "agent_answer": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là khoảng 3 đến 9 ngày làm việc. Thời gian xử lý dự kiến là 2 đến 4 ngày làm việc sau khi đơn hàng được xác nhận."
+        },
+        {
+          "query": "Người bán cần đáp ứng điều kiện gì khi đăng hình ảnh và nội dung thiết kế?",
+          "gold_doc": "t-hexa-seller-listing-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-seller-listing-policy",
+          "top1_score": 0.4618,
+          "top1_preview": "# Điều kiện người bán và nội dung đăng bán  ## Quyền sử dụng thiết kế Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm. Không được đăng nội du",
+          "filter": {
+            "customer_role": "seller"
+          },
+          "agent_answer": "Điều kiện người bán và nội dung đăng bán Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm."
+        },
+        {
+          "query": "T-Hexa thu thập dữ liệu cá nhân nào và sử dụng để làm gì?",
+          "gold_doc": "t-hexa-privacy-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-privacy-policy",
+          "top1_score": 0.4623,
+          "top1_preview": "# Chính sách quyền riêng tư  ## Dữ liệu được thu thập T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên",
+          "filter": null,
+          "agent_answer": "T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên và lịch sử hỗ trợ. T-Hexa không bán dữ liệu cá nhân cho nhà quảng cáo."
+        }
+      ]
+    },
+    {
+      "strategy": "SentenceChunker-2",
+      "chunks": 19,
+      "points": 10,
+      "rows": [
+        {
+          "query": "T-Hexa hỗ trợ những phương thức thanh toán nào?",
+          "gold_doc": "t-hexa-payment-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-payment-policy",
+          "top1_score": 0.5967,
+          "top1_preview": "# Chính sách thanh toán  ## Phương thức được hỗ trợ T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Khách hàng cần kiể",
+          "filter": null,
+          "agent_answer": "T-Hexa hỗ trợ ba phương thức thanh toán: ví T-Hexa, chuyển khoản trực tiếp và thanh toán khi nhận hàng (COD). Với ví T-Hexa hoặc chuyển khoản, đơn hàng được chuyển sang bước xử lý sau khi hệ thống ghi nhận thanh toán."
+        },
+        {
+          "query": "Khách hàng phải gửi yêu cầu đổi trả trong bao lâu và sản phẩm cần đáp ứng điều kiện gì?",
+          "gold_doc": "t-hexa-returns-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-returns-policy",
+          "top1_score": 0.3976,
+          "top1_preview": "Yêu cầu nên kèm mã đơn, ảnh sản phẩm và video mở gói nếu có. ## Điều kiện sản phẩm Sản phẩm cần chưa qua sử dụng, chưa giặt, không có mùi lạ và còn đầy đủ phụ kiện đi kèm.",
+          "filter": null,
+          "agent_answer": "Khách hàng cần gửi yêu cầu trong vòng 3 ngày kể từ thời điểm nhận hàng. Sản phẩm cần chưa qua sử dụng, chưa giặt, không có mùi lạ và còn đầy đủ phụ kiện đi kèm."
+        },
+        {
+          "query": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là bao lâu?",
+          "gold_doc": "t-hexa-shipping-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-shipping-policy",
+          "top1_score": 0.6598,
+          "top1_preview": "## Thời gian vận chuyển Sau khi bàn giao cho đơn vị vận chuyển, thời gian giao dự kiến là 1 đến 5 ngày làm việc tùy khu vực. Tổng thời gian thông thường từ khi xác nhận đơn đến khi",
+          "filter": null,
+          "agent_answer": "Tổng thời gian thông thường từ khi xác nhận đơn đến khi nhận hàng là khoảng 3 đến 9 ngày làm việc. Thời gian xử lý dự kiến là 2 đến 4 ngày làm việc sau khi đơn hàng được xác nhận."
+        },
+        {
+          "query": "Người bán cần đáp ứng điều kiện gì khi đăng hình ảnh và nội dung thiết kế?",
+          "gold_doc": "t-hexa-seller-listing-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-seller-listing-policy",
+          "top1_score": 0.5111,
+          "top1_preview": "# Điều kiện người bán và nội dung đăng bán  ## Quyền sử dụng thiết kế Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm. Không được đăng nội du",
+          "filter": {
+            "customer_role": "seller"
+          },
+          "agent_answer": "Điều kiện người bán và nội dung đăng bán Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm."
+        },
+        {
+          "query": "T-Hexa thu thập dữ liệu cá nhân nào và sử dụng để làm gì?",
+          "gold_doc": "t-hexa-privacy-policy",
+          "rank": 1,
+          "points": 2,
+          "top1_doc": "t-hexa-privacy-policy",
+          "top1_score": 0.385,
+          "top1_preview": "# Chính sách quyền riêng tư  ## Dữ liệu được thu thập T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên",
+          "filter": null,
+          "agent_answer": "T-Hexa có thể thu thập họ tên, email, số điện thoại, địa chỉ giao hàng, thông tin đơn hàng, mẫu thiết kế do người dùng tải lên và lịch sử hỗ trợ. T-Hexa không bán dữ liệu cá nhân cho nhà quảng cáo."
+        }
+      ]
+    }
+  ]
+}
