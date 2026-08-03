@@ -23,11 +23,17 @@
 
 | # | Tên tài liệu | Nguồn (Source URL) | Ngày lấy / Phiên bản | Số ký tự | Metadata đã gán |
 |---|--------------|------------|--------------------|----------|-----------------|
-| 1 | Chính sách đổi trả và hoàn tiền | https://example.com/chinh-sach/doi-tra | 2026-08-03 / v2026.2 | 1,120 | `customer_role: buyer`, `category: doi_tra` |
-| 2 | Quy định đăng bán và xử lý vi phạm | https://example.com/nguoi-ban/dang-ban | 2026-08-03 / v2026.2 | 1,280 | `customer_role: seller`, `category: dieu_kien_nguoi_ban` |
-| 3 | Chính sách giao nhận và đồng kiểm | https://example.com/chinh-sach/giao-hang | 2026-08-03 / v2026.2 | 1,050 | `customer_role: both`, `category: giao_hang` |
-| 4 | Phương thức thanh toán và quy trình đối soát | https://example.com/chinh-sach/thanh-toan | 2026-08-03 / v2026.2 | 980 | `customer_role: both`, `category: thanh_toan` |
-| 5 | Chính sách bảo mật thông tin cá nhân | https://example.com/chinh-sach/bao-mat | 2026-08-03 / v2026.2 | 920 | `customer_role: both`, `category: quyen_rieng_tu` |
+| 1 | Quy định chung về trả hàng hoàn tiền | https://help.shopee.vn/portal/4/article/188931 | 2026-08-03 / not-stated | 8,813 | `customer_role: buyer`, `category: doi_tra` |
+| 2 | Chính sách trả hàng và hoàn tiền | https://help.shopee.vn/portal/4/article/77251 | 2026-08-03 / not-stated | 26,171 | `customer_role: both`, `category: doi_tra` |
+| 3 | Chính sách vận chuyển Shopee | https://help.shopee.vn/portal/4/article/77250 | 2026-08-03 / not-stated | 32,754 | `customer_role: both`, `category: giao_hang` |
+| 4 | Điều khoản dịch vụ Shopee Mall | https://help.shopee.vn/portal/4/article/77262 | 2026-08-03 / not-stated | 44,441 | `customer_role: seller`, `category: shopee_mall` |
+| 5 | Quy trình Shopee xử lý yêu cầu trả hàng | https://help.shopee.vn/portal/4/article/190242 | 2026-08-03 / not-stated | 11,138 | `customer_role: both`, `category: quy_trinh` |
+| 6 | Cách đóng gói đơn hàng hoàn trả | https://help.shopee.vn/portal/4/article/79508 | 2026-08-03 / not-stated | 4,976 | `customer_role: buyer`, `category: dong_goi` |
+| 7 | Hướng dẫn gửi yêu cầu trả hàng hoàn tiền | https://help.shopee.vn/portal/4/article/79233 | 2026-08-03 / not-stated | 3,610 | `customer_role: buyer`, `category: huong_dan` |
+| 8 | Hướng dẫn thanh toán nhiều đơn hàng | https://help.shopee.vn/portal/4/article/79596 | 2026-08-03 / not-stated | 1,689 | `customer_role: buyer`, `category: thanh_toan` |
+| 9 | Hướng dẫn phản hồi đề xuất hoàn tiền ngay | https://help.shopee.vn/portal/4/article/190387 | 2026-08-03 / not-stated | 2,327 | `customer_role: buyer`, `category: phan_hoi` |
+| 10 | Shopee Đảm Bảo là gì | https://help.shopee.vn/portal/4/article/79314 | 2026-08-03 / not-stated | 2,124 | `customer_role: both`, `category: dam_bao` |
+
 
 **Danh sách kiểm tra quản trị dữ liệu (Data governance checklist):**
 - [x] Tập tài liệu (Corpus) chỉ chứa nguồn công khai/được phép dùng và không chứa dữ liệu cá nhân, thông tin đăng nhập hoặc tài liệu nội bộ.
