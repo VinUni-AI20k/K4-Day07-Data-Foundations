@@ -1,3 +1,7 @@
 # Optional local embedding demo; not required for coding checkpoints or pytest.
 # Install with: python -m pip install -r requirements-local.txt
+# Keep these transitive dependencies compatible with the PyTorch wheel selected
+# for Python 3.11 on Intel macOS.
+numpy<2
+transformers<5
 sentence-transformers==5.6.0

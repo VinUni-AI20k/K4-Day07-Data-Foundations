@@ -1,0 +1,1909 @@
+{
+  "run_date": "2026-08-03",
+  "corpus": "data/k4_ecommerce",
+  "embedding_backend": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "embedding_dimension": 384,
+  "selection_priority": [
+    "top3_relevant",
+    "top1_relevant",
+    "complete_evidence_in_top3",
+    "lower max_length",
+    "lower chunk_count"
+  ],
+  "configurations": [
+    {
+      "strategy": "fixed_size",
+      "parameters": {
+        "chunk_size": 500,
+        "overlap": 50
+      },
+      "configuration": "chunk_size=500, overlap=50",
+      "chunk_count": 311,
+      "avg_length": 494.23,
+      "max_length": 500,
+      "top1_relevant": 3,
+      "top3_relevant": 4,
+      "complete_evidence_in_top3": 4,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 0,
+              "score": 0.734612,
+              "relevant": true,
+              "preview": "# Tôi có thể hủy đơn hàng không?  ## 1. Các trường hợp có thể yêu cầu hủy đơn  - Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây).  - Đơn hàn"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 1,
+              "score": 0.565258,
+              "relevant": true,
+              "preview": "ần chờ phản hồi từ Người bán. Chấp nhận: được hủy ngay. Từ chối: đơn hàng không hủy và sẽ tiếp tục giao đến Người mua. | | Các trạng thái khác | Không thể yêu cầu hủy đơn |  (*) Trường hợp này chỉ áp dụng cho một số Người dùng nhất định. Nế"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 3,
+              "score": 0.563945,
+              "relevant": false,
+              "preview": "g tin’, nhập từ khóa 'Hủy đơn' để xem các đơn hàng có thể hủy.  ⚠️ Lưu ý:   - Người mua chỉ có thể hủy đơn hàng duy nhất 1 lần cho mỗi đơn hàng. - Nếu yêu cầu hủy đơn hàng của bạn bị từ chối, bạn sẽ không thể tiếp tục đưa ra yêu cầu hủy đơn"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 6,
+              "score": 0.693257,
+              "relevant": true,
+              "preview": "Mua trả hàng (tuy nhiên Shopee sẽ cần Người Bán xác nhận lại những thỏa thuận này).  Sản Phẩm ở trạng thái nguyên vẹn và nguyên bao bì nhưng Người Mua không còn nhu cầu (\"Trả hàng COM\"), theo yêu cầu tại Điều 4 dưới đây.  3.2. Người Mua có "
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 41,
+              "score": 0.683802,
+              "relevant": false,
+              "preview": "phải còn ít nhất 30% thời hạn sử dụng và còn ít nhất 30 ngày, tính từ thời điểm hiện tại đến ngày hết hạn.  b. Đối với mặt hàng thực phẩm, đặc biệt là thực phẩm có hạn sử dụng dưới 30 ngày, Người Bán cần ghi rõ hạn sử dụng trên mô tả sản ph"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 89,
+              "score": 0.640466,
+              "relevant": false,
+              "preview": "ới trường hợp Người Mua yêu cầu “Trả hàng/Hoàn tiền”:  i. Đối với các đơn hàng có phát sinh trả hàng/hoàn tiền trước khi Shopee thanh toán Khoản Tiền Thanh Toán từ Người Mua cho Người Bán và Shopee đồng ý hoàn tiền cho Người Mua: Khoản Tiền"
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 10,
+              "score": 0.861297,
+              "relevant": true,
+              "preview": "các thông tin liên quan phải thống nhất, đúng chính tả, đúng quy định về đăng tin của Shopee. Cụ thể như sau:   1. Hình ảnh sản phẩm  a. Hình ảnh sản phẩm phải là ảnh chụp rõ, chi tiết tình trạng sản phẩm. Không được để những hình ảnh hoặc "
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 18,
+              "score": 0.690264,
+              "relevant": false,
+              "preview": " xã hội, thuần phong mỹ tục.  3.4. Thời trang/Giày dép/Phụ kiện  - Nêu rõ chất liệu và kích thước của sản phẩm. Riêng đối với sản phẩm thuộc ngành hàng Thời trang phải có bảng quy đổi kích thước.  - Đối với các sản phẩm thời trang hoặc phụ "
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 25,
+              "score": 0.681194,
+              "relevant": false,
+              "preview": "n Trả về để làm bằng chứng đối chiếu/khiếu nại về sau. Shopee sẽ thông báo cho Người Mua về việc phải cung cấp video hay ảnh chụp trong từng trường hợp cụ thể.  ## 7. TRÁCH NHIỆM VỀ CHI PHÍ VẬN CHUYỂN HOÀN TRẢ SẢN PHẨM CỦA NGƯỜI BÁN  7.1.  "
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 44,
+              "score": 0.72065,
+              "relevant": false,
+              "preview": "và làm giảm uy tín của Người Bán thông qua việc đánh giá kém từ Người Mua trên đơn hàng.  ## E. XỬ LÝ VI PHẠM    Người Bán vi phạm một trong các quy định trên trong quá trình đăng bán sản phẩm, tùy theo mức độ vi phạm, Shopee sẽ tiến hành m"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 32,
+              "score": 0.667544,
+              "relevant": false,
+              "preview": "vi bất hợp pháp, lừa đảo, quấy rối, xâm phạm, đe dọa hoặc lạm dụng, (d) có nhiều tài khoản người dùng khác nhau, (e) mua sản phẩm trên Trang Shopee với mục đích kinh doanh, (f) mua hàng số lượng lớn từ một Người Bán hoặc một nhóm Người Bán "
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 3,
+              "score": 0.667224,
+              "relevant": false,
+              "preview": " Sách Xử Lý Gian Lận/Vi Phạm có hiệu lực trong từng thời điểm trên Sàn Shopee.  ## 4. DANH SÁCH SẢN PHẨM BỊ CẤM/HẠN CHẾ MUA BÁN TRÊN SHOPEE  4.1. Hàng vi phạm bản quyền: Hàng nhái, hàng giả, bản sao trái phép của một sản phẩm hay hiện vật m"
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": 2,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 89,
+              "score": 0.800593,
+              "relevant": false,
+              "preview": "ới trường hợp Người Mua yêu cầu “Trả hàng/Hoàn tiền”:  i. Đối với các đơn hàng có phát sinh trả hàng/hoàn tiền trước khi Shopee thanh toán Khoản Tiền Thanh Toán từ Người Mua cho Người Bán và Shopee đồng ý hoàn tiền cho Người Mua: Khoản Tiền"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 87,
+              "score": 0.784665,
+              "relevant": true,
+              "preview": "Tài Khoản Shopee như sau:  a) Đối với trường hợp Người Mua không nhấn “Đã nhận được hàng” hoặc “Trả hàng/Hoàn tiền”:   Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua (được định nghĩa bên dưới) nhanh nhất vào ngày thứ 04 (bốn) kể từ"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 88,
+              "score": 0.76326,
+              "relevant": false,
+              "preview": "ực hiện hành vi gian lận.   b) Đối với trường hợp Người Mua nhấn “Đã nhận được hàng”:  i. Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua ngay sau khi Người Mua xác nhận “Đã nhận được hàng” trên Trang Shopee;  ii. Không ảnh hưởng đế"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-terms-of-service",
+          "shopee-terms-of-service"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": 1,
+        "filtered_first_relevant_rank": 1
+      }
+    },
+    {
+      "strategy": "fixed_size",
+      "parameters": {
+        "chunk_size": 800,
+        "overlap": 100
+      },
+      "configuration": "chunk_size=800, overlap=100",
+      "chunk_count": 199,
+      "avg_length": 793.0,
+      "max_length": 800,
+      "top1_relevant": 3,
+      "top3_relevant": 5,
+      "complete_evidence_in_top3": 5,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 0,
+              "score": 0.734612,
+              "relevant": true,
+              "preview": "# Tôi có thể hủy đơn hàng không?  ## 1. Các trường hợp có thể yêu cầu hủy đơn  - Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây).  - Đơn hàn"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 2,
+              "score": 0.565913,
+              "relevant": false,
+              "preview": " có thể hủy.  ⚠️ Lưu ý:   - Người mua chỉ có thể hủy đơn hàng duy nhất 1 lần cho mỗi đơn hàng. - Nếu yêu cầu hủy đơn hàng của bạn bị từ chối, bạn sẽ không thể tiếp tục đưa ra yêu cầu hủy đơn cho đơn hàng này. - Sau khi đơn hàng được hủy thà"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 1,
+              "score": 0.416253,
+              "relevant": true,
+              "preview": "g thuộc nhóm Người dùng được áp dụng, yêu cầu hủy của bạn sẽ được xử lý như đơn hàng giao bởi đơn vị vận chuyển khác  ## 2. Thực hiện thao tác hủy đơn trên trang Đơn hàng  ### 2.1. Hủy đơn khi đơn hàng ở trạng thái Chờ xác nhận hoặc Chờ lấy"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 4,
+              "score": 0.802162,
+              "relevant": true,
+              "preview": "g thái nguyên vẹn và nguyên bao bì nhưng Người Mua không còn nhu cầu (\"Trả hàng COM\"), theo yêu cầu tại Điều 4 dưới đây.  3.2. Người Mua có thể gửi yêu cầu trả hàng/hoàn tiền trong vòng 15 (mười lăm) ngày kể từ lúc đơn hàng được cập nhật gi"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 20,
+              "score": 0.645478,
+              "relevant": false,
+              "preview": "chuyển cho việc trả hàng dưới hình thức Shopee Xu theo chính sách của Shopee khi Người Mua đáp ứng được các điều kiện để được hỗ trợ trả hàng trong thời hạn 03 – 05 ngày làm việc kể từ ngày Người Mua đã gửi Sản Phẩm Hoàn Trả cho đơn vị vận "
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 14,
+              "score": 0.612829,
+              "relevant": false,
+              "preview": "êu cầu trả hàng/hoàn tiền của Người Mua hoặc (ii) quyết định xử lý yêu cầu trả hàng/hoàn tiền của Shopee cho Người Bán trên Ứng Dụng Shopee và/hoặc thư điện tử và/hoặc tin nhắn điện thoại. Người Bán cần gửi phản hồi trong vòng 02 ngày lịch "
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 2,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 16,
+              "score": 0.685522,
+              "relevant": false,
+              "preview": "y khi nhận được và trong lúc đóng gói Sản Phẩm Hoàn Trả về để làm bằng chứng đối chiếu/khiếu nại về sau. Shopee sẽ thông báo cho Người Mua về việc phải cung cấp video hay ảnh chụp trong từng trường hợp cụ thể.  ## 7. TRÁCH NHIỆM VỀ CHI PHÍ "
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 7,
+              "score": 0.684522,
+              "relevant": true,
+              "preview": "sản phẩm do chính Người Bán tự chụp. Trong ảnh này, diện tích sản phẩm thật phải chiếm ít nhất 40% diện tích toàn ảnh.  c. Ngôn ngữ trên phông nền hình ảnh là tiếng Việt, không dùng ngôn ngữ nước ngoài.  d. Hình ảnh không chứa yếu tố ghê rợ"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 11,
+              "score": 0.678012,
+              "relevant": false,
+              "preview": "không được lạm dụng quảng cáo sai sự thật.  - Không đăng bán sản phẩm thực phẩm chức năng xách tay.  3.3. Thời trang/Đồ lót nữ - Đồ lót nam  - Ảnh đại diện sản phẩm nên là ảnh thực, chụp riêng sản phẩm;  - Trong các ảnh do người mẫu mặc, ph"
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 1,
+              "score": 0.774781,
+              "relevant": true,
+              "preview": "ẠM VÀ BIỆN PHÁP XỬ LÝ  Việc vi phạm Chính Sách Cấm/Hạn Chế Sản Phẩm có thể dẫn đến việc Người Bán phải chịu một loạt các chế tài, bao gồm nhưng không giới hạn các chế tài sau:    (i) Sản phẩm bị xóa;  (ii) Tài khoản bị giới hạn quyền;  (iii"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 78,
+              "score": 0.690947,
+              "relevant": false,
+              "preview": " nhà nước có thẩm quyền phục vụ công tác điều tra đối với những đơn hàng, hàng hóa vi phạm chính sách của Shopee hoặc có hành vi vi phạm pháp luật.  ## 14. HỦY ĐƠN HÀNG, TRẢ HÀNG VÀ HOÀN TIỀN  14.1. Theo Chính Sách Shopee vào từng thời điểm"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 6,
+              "score": 0.686344,
+              "relevant": false,
+              "preview": "m mục đích gian lận và/hoặc thực hiện các hành vi vi phạm pháp luật.  k. Tăng giá bán một cách bất hợp lý trước khuyến mãi.  l. Tạo giá bán sản phẩm quá cao hoặc quá thấp so với mặt bằng giá trị thị trường.  ## C. HƯỚNG DẪN ĐĂNG BÁN SẢN PHẨ"
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": 2,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 62,
+              "score": 0.797588,
+              "relevant": false,
+              "preview": " trong Tài Khoản Đảm Bảo Shopee cho đến khi:  (a) Trừ trường hợp quy định tại Điều 11.2(d), trong trường hợp Người Mua gửi xác nhận cho Shopee rằng Người Mua đã nhận được hàng, Shopee sẽ chuyển Tiền Thanh Toán từ Người Mua từ  Tài Khoản Đảm"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 56,
+              "score": 0.795756,
+              "relevant": true,
+              "preview": "gười Mua không nhấn “Đã nhận được hàng” hoặc “Trả hàng/Hoàn tiền”:   Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua (được định nghĩa bên dưới) nhanh nhất vào ngày thứ 04 (bốn) kể từ khi đơn hàng được cập nhật trạng thái Giao Hàng T"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 57,
+              "score": 0.759374,
+              "relevant": false,
+              "preview": " thêm thời gian để xem xét, kiểm tra đơn hàng, Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua sau khi hết Thời Gian Shopee Đảm Bảo.  c) Đối với trường hợp Người Mua yêu cầu “Trả hàng/Hoàn tiền”:  i. Đối với các đơn hàng có phát sin"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-terms-of-service",
+          "shopee-order-cancellation"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": 1,
+        "filtered_first_relevant_rank": 1
+      }
+    },
+    {
+      "strategy": "fixed_size",
+      "parameters": {
+        "chunk_size": 1200,
+        "overlap": 150
+      },
+      "configuration": "chunk_size=1200, overlap=150",
+      "chunk_count": 134,
+      "avg_length": 1177.29,
+      "max_length": 1200,
+      "top1_relevant": 1,
+      "top3_relevant": 2,
+      "complete_evidence_in_top3": 1,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 0,
+              "score": 0.734612,
+              "relevant": true,
+              "preview": "# Tôi có thể hủy đơn hàng không?  ## 1. Các trường hợp có thể yêu cầu hủy đơn  - Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây).  - Đơn hàn"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 1,
+              "score": 0.450059,
+              "relevant": false,
+              "preview": " đơn hàng > chọn lý do hủy đơn > bấm Đồng ý  ### 2.2. Hủy đơn khi đơn hàng ở trạng thái Chờ giao hàng  Hướng dẫn hủy đơn khi đơn hàng đang ở trạng thái Chờ giao hàng  ## 3. Thực hiện thao tác hủy đơn tại mục Trò chuyện cùng Shopee  Truy cập"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 3,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 38,
+              "score": 0.589669,
+              "relevant": false,
+              "preview": " thêm thời gian để xem xét, kiểm tra đơn hàng, Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua sau khi hết Thời Gian Shopee Đảm Bảo.  c) Đối với trường hợp Người Mua yêu cầu “Trả hàng/Hoàn tiền”:  i. Đối với các đơn hàng có phát sin"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 57,
+              "score": 0.57106,
+              "relevant": false,
+              "preview": "t sinh yêu cầu Trả hàng/hoàn tiền được Người bán/Shopee chấp nhận \"Hoàn tiền ngay\" (trừ lý do Chưa nhận được hàng). Trong mọi trường hợp, Người Bán chịu trách nhiệm chi trả Phí Xử Lý Giao Dịch.   Phí Xử Lý Giao Dịch được cấn trừ trực tiếp t"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 3,
+              "score": 0.567375,
+              "relevant": true,
+              "preview": "trả hàng/hoàn tiền trong vòng 24 giờ kể từ lúc đơn hàng được cập nhật giao hàng thành công. Một số trường hợp Người Mua có nhu cầu trả hàng/hoàn tiền sau thời hạn trên, Shopee sẽ xem xét và có thể hỗ trợ Người Mua được trả hàng/hoàn tiền tr"
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 6,
+              "score": 0.645298,
+              "relevant": false,
+              "preview": "Miễn phí vận chuyển” trong tên sản phẩm.  3. Quy định riêng với một số ngành hàng  3.1. Mỹ phẩm  - Hình ảnh sản phẩm phải rõ ràng (nhãn mác, bao bì, thương hiệu), thông tin mô tả sản phẩm có đầy đủ nguồn gốc, xuất xứ, tình trạng sản phẩm và"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 54,
+              "score": 0.626118,
+              "relevant": false,
+              "preview": "hạn liên quan đến giá cả và chi tiết sản phẩm, số lượng sản phẩm trong kho cũng như các điều khoản và điều kiện bán hàng được cập nhật trong danh mục sản phẩm của Người Bán và không được phép đăng tải các thông tin không chính xác hoặc gây "
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 9,
+              "score": 0.624151,
+              "relevant": false,
+              "preview": "ánh giá từ Shopee. Các thông tin sẽ được ghi chú rõ ràng tại trang chi tiết, hoặc hình ảnh sản phẩm, hoặc các nội dung đăng tải công khai khác của Shopee.  ## 5. QUYỀN CỦA NGƯỜI BÁN  Khi nhận được yêu cầu trả hàng và/hoặc hoàn tiền từ phía "
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 52,
+              "score": 0.690947,
+              "relevant": false,
+              "preview": " nhà nước có thẩm quyền phục vụ công tác điều tra đối với những đơn hàng, hàng hóa vi phạm chính sách của Shopee hoặc có hành vi vi phạm pháp luật.  ## 14. HỦY ĐƠN HÀNG, TRẢ HÀNG VÀ HOÀN TIỀN  14.1. Theo Chính Sách Shopee vào từng thời điểm"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 4,
+              "score": 0.686344,
+              "relevant": false,
+              "preview": "m mục đích gian lận và/hoặc thực hiện các hành vi vi phạm pháp luật.  k. Tăng giá bán một cách bất hợp lý trước khuyến mãi.  l. Tạo giá bán sản phẩm quá cao hoặc quá thấp so với mặt bằng giá trị thị trường.  ## C. HƯỚNG DẪN ĐĂNG BÁN SẢN PHẨ"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 14,
+              "score": 0.683657,
+              "relevant": false,
+              "preview": "ền lợi khuyến mại (bao gồm việc bán mã giảm giá cho các bên thứ ba cũng như lạm dụng mã giảm giá ở Trang Shopee), (h) có hành vi gây hại tới những Người Sử Dụng khác, các bên thứ ba hoặc các lợi ích kinh tế của Shopee, (i) sử dụng thông tin"
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 57,
+              "score": 0.759375,
+              "relevant": false,
+              "preview": "t sinh yêu cầu Trả hàng/hoàn tiền được Người bán/Shopee chấp nhận \"Hoàn tiền ngay\" (trừ lý do Chưa nhận được hàng). Trong mọi trường hợp, Người Bán chịu trách nhiệm chi trả Phí Xử Lý Giao Dịch.   Phí Xử Lý Giao Dịch được cấn trừ trực tiếp t"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 38,
+              "score": 0.759374,
+              "relevant": false,
+              "preview": " thêm thời gian để xem xét, kiểm tra đơn hàng, Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua sau khi hết Thời Gian Shopee Đảm Bảo.  c) Đối với trường hợp Người Mua yêu cầu “Trả hàng/Hoàn tiền”:  i. Đối với các đơn hàng có phát sin"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 14,
+              "score": 0.755245,
+              "relevant": false,
+              "preview": "ện được trả hàng/hoàn tiền và Shopee quyết định cho Người Mua được hoàn tiền khi Người Mua đã gửi trả Sản Phẩm cho đơn vị vận chuyển và đơn vị vận chuyển xác nhận đã nhận được Sản Phẩm Hoàn Trả.  9.2.  Trong trường hợp Người Mua không có lị"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-terms-of-service",
+          "shopee-terms-of-service"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": 1,
+        "filtered_first_relevant_rank": 1
+      }
+    },
+    {
+      "strategy": "sentence",
+      "parameters": {
+        "max_sentences": 3
+      },
+      "configuration": "max_sentences=3",
+      "chunk_count": 329,
+      "avg_length": 417.08,
+      "max_length": 3644,
+      "top1_relevant": 2,
+      "top3_relevant": 3,
+      "complete_evidence_in_top3": 3,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": 2,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 0,
+              "score": 0.657594,
+              "relevant": false,
+              "preview": "# Tôi có thể hủy đơn hàng không? ## 1. Các trường hợp có thể yêu cầu hủy đơn - Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây)."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 1,
+              "score": 0.638561,
+              "relevant": true,
+              "preview": "- Đơn hàng được giao bởi các đơn vị vận chuyển (ĐVVC) khác, tùy vào trạng thái đơn hàng hiện tại, cụ thể như sau: | Trạng thái đơn hàng | Xử lý yêu cầu hủy đơn | |---|---| | Chờ xác nhận | Hủy ngay | | Chờ lấy hàng | Cần chờ phản hồi từ Ngư"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 4,
+              "score": 0.525448,
+              "relevant": false,
+              "preview": "⚠️ Lưu ý: - Người mua chỉ có thể hủy đơn hàng duy nhất 1 lần cho mỗi đơn hàng. - Nếu yêu cầu hủy đơn hàng của bạn bị từ chối, bạn sẽ không thể tiếp tục đưa ra yêu cầu hủy đơn cho đơn hàng này. - Sau khi đơn hàng được hủy thành công, tiền hà"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 7,
+              "score": 0.781697,
+              "relevant": true,
+              "preview": "Người Mua có thể gửi yêu cầu trả hàng/hoàn tiền trong vòng 15 (mười lăm) ngày kể từ lúc đơn hàng được cập nhật giao hàng thành công. Riêng đối với các Sản Phẩm là thực phẩm tươi sống và đông lạnh, Người Mua cần gửi yêu cầu trả hàng/hoàn tiề"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 70,
+              "score": 0.655804,
+              "relevant": false,
+              "preview": "Đối với mặt hàng thực phẩm, đặc biệt là thực phẩm có hạn sử dụng dưới 30 ngày, Người Bán cần ghi rõ hạn sử dụng trên mô tả sản phẩm và tự sắp xếp vận chuyển khi có đơn hàng phát sinh. Mọi trường hợp Người Mua nhận được sản phẩm thực phẩm đã"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 69,
+              "score": 0.615065,
+              "relevant": false,
+              "preview": "Quy định về hạn sử dụng của sản phẩm chính a. Người Bán chỉ được phép bán các loại hàng hóa mà khi giao đi phải còn ít nhất 30% thời hạn sử dụng và còn ít nhất 30 ngày, tính từ thời điểm hiện tại đến ngày hết hạn. b."
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 20,
+              "score": 0.846587,
+              "relevant": true,
+              "preview": "b. Phải có ít nhất một hình ảnh thật của sản phẩm do chính Người Bán tự chụp. Trong ảnh này, diện tích sản phẩm thật phải chiếm ít nhất 40% diện tích toàn ảnh."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 19,
+              "score": 0.764282,
+              "relevant": false,
+              "preview": "Hình ảnh sản phẩm a. Hình ảnh sản phẩm phải là ảnh chụp rõ, chi tiết tình trạng sản phẩm. Không được để những hình ảnh hoặc thông tin không liên quan đến sản phẩm này như thông tin giới thiệu shop, thông tin liên hệ hay thông tin thanh toán"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 31,
+              "score": 0.677549,
+              "relevant": false,
+              "preview": "Thời trang/Đồ lót nữ - Đồ lót nam - Ảnh đại diện sản phẩm nên là ảnh thực, chụp riêng sản phẩm; - Trong các ảnh do người mẫu mặc, phần ảnh sản phẩm thực phải chiếm ít nhất 40-50% diện tích toàn ảnh; - Người mẫu tạo hình không gây phản cảm, "
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 16,
+              "score": 0.720384,
+              "relevant": false,
+              "preview": "j. Đăng bán không đúng ngành hàng, sử dụng hình ảnh minh họa không đúng về hàng hóa, dịch vụ được đăng bán nhằm mục đích gian lận và/hoặc thực hiện các hành vi vi phạm pháp luật. k."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 9,
+              "score": 0.708281,
+              "relevant": false,
+              "preview": "Vi phạm quyền sở hữu trí tuệ và/hoặc bất kỳ nhãn hiệu hàng hóa nào của bất kỳ bên thứ ba nào; m. Các sản phẩm nằm trong Danh sách sản phẩm bị cấm/hạn chế của Shopee. 3."
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 3,
+              "score": 0.658847,
+              "relevant": false,
+              "preview": "## 4. DANH SÁCH SẢN PHẨM BỊ CẤM/HẠN CHẾ MUA BÁN TRÊN SHOPEE 4.1. Hàng vi phạm bản quyền: Hàng nhái, hàng giả, bản sao trái phép của một sản phẩm hay hiện vật mà có thể vi phạm quyền tác giả, quyền thương hiệu, hoặc các quyền sở hữu trí tuệ "
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 66,
+              "score": 0.767155,
+              "relevant": false,
+              "preview": "Đối với đơn hàng phát sinh trả hàng/hoàn tiền sau khi Shopee đã thanh toán Khoản Tiền Thanh Toán từ Người Mua cho Người Bán và được Shopee đồng ý hoàn tiền cho Người Mua: Shopee sẽ điều chỉnh khoản Khoản Tiền Thanh Toán từ Người Mua cho Ngư"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 70,
+              "score": 0.740233,
+              "relevant": false,
+              "preview": "Tuy nhiên nếu thời gian trả hàng/hoàn tiền vẫn chưa kết thúc, và sau đó Người Mua gửi yêu cầu trả hàng/hoàn tiền và Shopee xác định được rằng yêu cầu trả hàng/hoàn tiền của Người Mua được chấp thuận, Shopee có quyền điều chỉnh Khoản Tiền Th"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 89,
+              "score": 0.739033,
+              "relevant": false,
+              "preview": "Trong trường hợp Người Mua không nhận được sản phẩm đã mua trong thời gian dự kiến mà theo đó sản phẩm đã mua lẽ ra phải được giao nhận theo Chính Sách Shopee và Chính Sách Đảm Bảo của Shopee, Người Mua phải thông báo cho Shopee thông qua d"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-terms-of-service"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": 2,
+        "filtered_first_relevant_rank": 2
+      }
+    },
+    {
+      "strategy": "sentence",
+      "parameters": {
+        "max_sentences": 5
+      },
+      "configuration": "max_sentences=5",
+      "chunk_count": 199,
+      "avg_length": 690.2,
+      "max_length": 5893,
+      "top1_relevant": 2,
+      "top3_relevant": 3,
+      "complete_evidence_in_top3": 3,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 0,
+              "score": 0.734612,
+              "relevant": true,
+              "preview": "# Tôi có thể hủy đơn hàng không? ## 1. Các trường hợp có thể yêu cầu hủy đơn - Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây). - Đơn hàng đ"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 2,
+              "score": 0.5015,
+              "relevant": false,
+              "preview": "Hủy đơn khi đơn hàng ở trạng thái Chờ giao hàng Hướng dẫn hủy đơn khi đơn hàng đang ở trạng thái Chờ giao hàng ## 3. Thực hiện thao tác hủy đơn tại mục Trò chuyện cùng Shopee Truy cập ‘Trò Chuyện Với Shopee’, phía cuối trang tại mục ‘Nhập t"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 1,
+              "score": 0.482869,
+              "relevant": true,
+              "preview": "Từ chối: đơn hàng không hủy và sẽ tiếp tục giao đến Người mua. | | Các trạng thái khác | Không thể yêu cầu hủy đơn | (*) Trường hợp này chỉ áp dụng cho một số Người dùng nhất định. Nếu bạn không thuộc nhóm Người dùng được áp dụng, yêu cầu h"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 4,
+              "score": 0.793646,
+              "relevant": true,
+              "preview": "3.2. Người Mua có thể gửi yêu cầu trả hàng/hoàn tiền trong vòng 15 (mười lăm) ngày kể từ lúc đơn hàng được cập nhật giao hàng thành công. Riêng đối với các Sản Phẩm là thực phẩm tươi sống và đông lạnh, Người Mua cần gửi yêu cầu trả hàng/hoà"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 42,
+              "score": 0.652214,
+              "relevant": false,
+              "preview": "Đối với mặt hàng thực phẩm, đặc biệt là thực phẩm có hạn sử dụng dưới 30 ngày, Người Bán cần ghi rõ hạn sử dụng trên mô tả sản phẩm và tự sắp xếp vận chuyển khi có đơn hàng phát sinh. Mọi trường hợp Người Mua nhận được sản phẩm thực phẩm đã"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 42,
+              "score": 0.581103,
+              "relevant": false,
+              "preview": "Tuy nhiên nếu thời gian trả hàng/hoàn tiền vẫn chưa kết thúc, và sau đó Người Mua gửi yêu cầu trả hàng/hoàn tiền và Shopee xác định được rằng yêu cầu trả hàng/hoàn tiền của Người Mua được chấp thuận, Shopee có quyền điều chỉnh Khoản Tiền Th"
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 2,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 11,
+              "score": 0.797042,
+              "relevant": false,
+              "preview": "HƯỚNG DẪN ĐĂNG BÁN SẢN PHẨM TRÊN SHOPEE Tiêu đề, hình ảnh, giá cả, mô tả sản phẩm và các thông tin liên quan phải thống nhất, đúng chính tả, đúng quy định về đăng tin của Shopee. Cụ thể như sau: 1. Hình ảnh sản phẩm a. Hình ảnh sản phẩm phả"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 12,
+              "score": 0.757162,
+              "relevant": true,
+              "preview": "b. Phải có ít nhất một hình ảnh thật của sản phẩm do chính Người Bán tự chụp. Trong ảnh này, diện tích sản phẩm thật phải chiếm ít nhất 40% diện tích toàn ảnh. c. Ngôn ngữ trên phông nền hình ảnh là tiếng Việt, không dùng ngôn ngữ nước ngoà"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 19,
+              "score": 0.686386,
+              "relevant": false,
+              "preview": "Thời trang/Giày dép/Phụ kiện - Nêu rõ chất liệu và kích thước của sản phẩm. Riêng đối với sản phẩm thuộc ngành hàng Thời trang phải có bảng quy đổi kích thước. - Đối với các sản phẩm thời trang hoặc phụ kiện làm bằng lụa tơ tằm, Người Bán p"
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 83,
+              "score": 0.666798,
+              "relevant": false,
+              "preview": "Người Bán phải đảm bảo tính tuân thủ khi thực hiện các chương trình khuyến mãi có liên quan theo quy định của pháp luật áp dụng hiện hành, cũng như các Chính Sách Shopee. ## 26. BỒI THƯỜNG Bạn đồng ý bồi thường, bảo vệ và không gây hại cho "
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 33,
+              "score": 0.661242,
+              "relevant": false,
+              "preview": "Trường hợp sản phẩm nằm ngoài những ngành hàng sẵn có, hãy chọn danh mục: Sản phẩm khác. c. Nếu Người Bán lựa chọn sai danh mục thì sản phẩm sẽ bị ẩn hiển thị cho đến khi sửa đổi và lựa chọn danh mục phù hợp. Nếu Người Bán chỉ bấm \"cập nhật"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 5,
+              "score": 0.652693,
+              "relevant": false,
+              "preview": "Những sản phẩm có tính chất phân biệt chủng tộc, xúc phạm đến dân tộc hoặc quốc gia nào đó; k. Hạn chế tối đa những sản phẩm mang tính cá nhân (như hình cá nhân, hình ảnh của gia đình, hình ảnh của con cái); l. Vi phạm quyền sở hữu trí tuệ "
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 42,
+              "score": 0.740233,
+              "relevant": false,
+              "preview": "Tuy nhiên nếu thời gian trả hàng/hoàn tiền vẫn chưa kết thúc, và sau đó Người Mua gửi yêu cầu trả hàng/hoàn tiền và Shopee xác định được rằng yêu cầu trả hàng/hoàn tiền của Người Mua được chấp thuận, Shopee có quyền điều chỉnh Khoản Tiền Th"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 39,
+              "score": 0.735867,
+              "relevant": false,
+              "preview": "Không ảnh hưởng đến Điểm b (i) nêu trên, trong trường hợp Shopee nhận thấy cần thêm thời gian để xem xét, kiểm tra đơn hàng, Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua sau khi hết Thời Gian Shopee Đảm Bảo. c) Đối với trường hợp"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 52,
+              "score": 0.725184,
+              "relevant": false,
+              "preview": "VẬN CHUYỂN 13.1. Khi vận chuyển thành công đơn hàng, Shopee sẽ thông báo đến Người Bán về việc đã nhận được tiền thanh toán từ phía Người Mua. Trừ trường hợp có thỏa thuận khác với Shopee, Người Bán có trách nhiệm cung cấp đầy đủ thông tin "
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-terms-of-service",
+          "shopee-terms-of-service"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": 1,
+        "filtered_first_relevant_rank": 1
+      }
+    },
+    {
+      "strategy": "sentence",
+      "parameters": {
+        "max_sentences": 8
+      },
+      "configuration": "max_sentences=8",
+      "chunk_count": 124,
+      "avg_length": 1108.27,
+      "max_length": 6301,
+      "top1_relevant": 4,
+      "top3_relevant": 4,
+      "complete_evidence_in_top3": 4,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 0,
+              "score": 0.734612,
+              "relevant": true,
+              "preview": "# Tôi có thể hủy đơn hàng không? ## 1. Các trường hợp có thể yêu cầu hủy đơn - Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây). - Đơn hàng đ"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 1,
+              "score": 0.278778,
+              "relevant": true,
+              "preview": "Thực hiện thao tác hủy đơn trên trang Đơn hàng ### 2.1. Hủy đơn khi đơn hàng ở trạng thái Chờ xác nhận hoặc Chờ lấy hàng Bước 1: Vào mục Tôi > chọn mục Chờ xác nhận hoặc Chờ lấy hàng > Chọn đơn hàng muốn hủy Bước 2: bấm Hủy đơn hàng > chọn "
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 26,
+              "score": 0.67279,
+              "relevant": false,
+              "preview": "Người Bán chỉ được phép bán các loại hàng hóa mà khi giao đi phải còn ít nhất 30% thời hạn sử dụng và còn ít nhất 30 ngày, tính từ thời điểm hiện tại đến ngày hết hạn. b. Đối với mặt hàng thực phẩm, đặc biệt là thực phẩm có hạn sử dụng dưới"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 24,
+              "score": 0.57858,
+              "relevant": false,
+              "preview": "10.3. Khoản tiền Người Mua thanh toán đơn hàng cho Người Bán, có sử dụng dịch vụ vận chuyển được hỗ trợ trên Trang Shopee (“Khoản Tiền Thanh Toán từ Người Mua”) sẽ được ghi nhận vào Số Dư Tài Khoản Shopee như sau: a) Đối với trường hợp Ngườ"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 27,
+              "score": 0.546968,
+              "relevant": false,
+              "preview": "Trường hợp tài khoản ngân hàng của Người Bán không thể ghi có và / hoặc không thể liên lạc được với Người Bán, Shopee sẽ nỗ lực liên lạc với Bên Bán bằng các thông tin do Người Bán cung cấp. Trong trường hợp Người Bán không thể liên lạc đượ"
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 7,
+              "score": 0.852447,
+              "relevant": true,
+              "preview": "Cụ thể như sau: 1. Hình ảnh sản phẩm a. Hình ảnh sản phẩm phải là ảnh chụp rõ, chi tiết tình trạng sản phẩm. Không được để những hình ảnh hoặc thông tin không liên quan đến sản phẩm này như thông tin giới thiệu shop, thông tin liên hệ hay t"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 12,
+              "score": 0.692608,
+              "relevant": false,
+              "preview": "Riêng đối với sản phẩm thuộc ngành hàng Thời trang phải có bảng quy đổi kích thước. - Đối với các sản phẩm thời trang hoặc phụ kiện làm bằng lụa tơ tằm, Người Bán phải đăng kèm chứng nhận nhãn hiệu ở phần hình ảnh sản phẩm. - Nên có ít nhất"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 24,
+              "score": 0.674796,
+              "relevant": false,
+              "preview": "Sản phẩm đăng bán trên Sàn Shopee cần có chất lượng tốt theo các tiêu chuẩn hiện hành, phản ánh đúng kỳ vọng Người mua. Trong trường hợp Người bán bị nhiều Người mua tố cáo, đánh giá tiêu cực về chất lượng sản phẩm, Shopee có quyền áp dụng "
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 1,
+              "score": 0.754894,
+              "relevant": true,
+              "preview": "HÀNH VI VI PHẠM VÀ BIỆN PHÁP XỬ LÝ Việc vi phạm Chính Sách Cấm/Hạn Chế Sản Phẩm có thể dẫn đến việc Người Bán phải chịu một loạt các chế tài, bao gồm nhưng không giới hạn các chế tài sau: (i) Sản phẩm bị xóa; (ii) Tài khoản bị giới hạn quyề"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 6,
+              "score": 0.703793,
+              "relevant": false,
+              "preview": "j. Đăng bán không đúng ngành hàng, sử dụng hình ảnh minh họa không đúng về hàng hóa, dịch vụ được đăng bán nhằm mục đích gian lận và/hoặc thực hiện các hành vi vi phạm pháp luật. k. Tăng giá bán một cách bất hợp lý trước khuyến mãi. l. Tạo "
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 22,
+              "score": 0.652874,
+              "relevant": false,
+              "preview": "d. Nghiêm cấm người bán tăng giá gốc của sản phẩm một cách bất hợp lý trước khi tham gia khuyến mãi để phóng đại tỷ lệ giảm giá. e. Giá sản phẩm không được thấp hoặc cao hơn một cách bất hợp lý so với mặt bằng giá của sản phẩm cùng loại trê"
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 24,
+              "score": 0.7086,
+              "relevant": true,
+              "preview": "10.3. Khoản tiền Người Mua thanh toán đơn hàng cho Người Bán, có sử dụng dịch vụ vận chuyển được hỗ trợ trên Trang Shopee (“Khoản Tiền Thanh Toán từ Người Mua”) sẽ được ghi nhận vào Số Dư Tài Khoản Shopee như sau: a) Đối với trường hợp Ngườ"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 11,
+              "score": 0.70191,
+              "relevant": false,
+              "preview": "7.2. Người Bán sẽ không phải chịu bất kỳ chi phí vận chuyển cho việc trả hàng chiều hoàn trả sản phẩm đối với: đơn yêu cầu trả hàng/hoàn tiền một phần (Người Mua chỉ nhấn yêu cầu trả hàng/hoàn tiền cho một hoặc một số sản phẩm trong đơn hàn"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 12,
+              "score": 0.689954,
+              "relevant": false,
+              "preview": "## 9. HOÀN TIỀN ĐỐI VỚI SẢN PHẨM HOÀN TRẢ 9.1. Shopee sẽ chỉ hoàn tiền cho Người Mua thuộc một trong các trường hợp sau: Người Bán xác nhận đã nhận được Sản Phẩm Hoàn Trả; hoặc Người Mua chấp nhận đề xuất hoàn tiền không cần trả Sản Phẩm củ"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-terms-of-service",
+          "shopee-return-refund-policy"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": 1,
+        "filtered_first_relevant_rank": 1
+      }
+    },
+    {
+      "strategy": "markdown_heading",
+      "parameters": {
+        "chunk_size": 500
+      },
+      "configuration": "chunk_size=500",
+      "chunk_count": 517,
+      "avg_length": 330.86,
+      "max_length": 500,
+      "top1_relevant": 3,
+      "top3_relevant": 3,
+      "complete_evidence_in_top3": 2,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 1,
+              "score": 0.718354,
+              "relevant": false,
+              "preview": "# Tôi có thể hủy đơn hàng không? ## 1. Các trường hợp có thể yêu cầu hủy đơn - Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây).  - Đơn hàng "
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 3,
+              "score": 0.540668,
+              "relevant": false,
+              "preview": "# Tôi có thể hủy đơn hàng không? ## 1. Các trường hợp có thể yêu cầu hủy đơn (*) Trường hợp này chỉ áp dụng cho một số Người dùng nhất định. Nếu bạn không thuộc nhóm Người dùng được áp dụng, yêu cầu hủy của bạn sẽ được xử lý như đơn hàng gi"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 7,
+              "score": 0.540587,
+              "relevant": false,
+              "preview": "# Tôi có thể hủy đơn hàng không? ## 3. Thực hiện thao tác hủy đơn tại mục Trò chuyện cùng Shopee - Người mua chỉ có thể hủy đơn hàng duy nhất 1 lần cho mỗi đơn hàng. - Nếu yêu cầu hủy đơn hàng của bạn bị từ chối, bạn sẽ không thể tiếp tục đ"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 11,
+              "score": 0.763205,
+              "relevant": true,
+              "preview": "# Chính sách trả hàng và hoàn tiền ## 3. ĐIỀU KIỆN YÊU CẦU TRẢ HÀNG/HOÀN TIỀN 3.2. Người Mua có thể gửi yêu cầu trả hàng/hoàn tiền trong vòng 15 (mười lăm) ngày kể từ lúc đơn hàng được cập nhật giao hàng thành công. Riêng đối với các Sản Ph"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 42,
+              "score": 0.640451,
+              "relevant": false,
+              "preview": "# Chính sách trả hàng và hoàn tiền ## 5. QUYỀN CỦA NGƯỜI BÁN Người Bán cần gửi phản hồi trong vòng 02 ngày lịch (hoặc thời hạn khác được quy định bởi Shopee trong từng thời điểm) kể từ ngày nhận được thông báo của Shopee nếu không đồng ý vớ"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 59,
+              "score": 0.628656,
+              "relevant": false,
+              "preview": "# Chính sách trả hàng và hoàn tiền ## 9. HOÀN TIỀN ĐỐI VỚI SẢN PHẨM HOÀN TRẢ 9.1. Đơn hàng của Người Mua đủ điều kiện được trả hàng/hoàn tiền và Shopee quyết định cho Người Mua được hoàn tiền khi Người Mua đã gửi trả Sản Phẩm cho đơn vị vận"
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 16,
+              "score": 0.850349,
+              "relevant": true,
+              "preview": "# Quy định về đăng bán sản phẩm trên Shopee ## C. HƯỚNG DẪN ĐĂNG BÁN SẢN PHẨM TRÊN SHOPEE 1. Hình ảnh sản phẩm  a. Hình ảnh sản phẩm phải là ảnh chụp rõ, chi tiết tình trạng sản phẩm. Không được để những hình ảnh hoặc thông tin không liên q"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 28,
+              "score": 0.727757,
+              "relevant": false,
+              "preview": "# Quy định về đăng bán sản phẩm trên Shopee ## C. HƯỚNG DẪN ĐĂNG BÁN SẢN PHẨM TRÊN SHOPEE 3. 3.3. Thời trang/Đồ lót nữ - Đồ lót nam  - Ảnh đại diện sản phẩm nên là ảnh thực, chụp riêng sản phẩm;  - Trong các ảnh do người mẫu mặc, phần ảnh s"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 45,
+              "score": 0.683827,
+              "relevant": false,
+              "preview": "# Chính sách trả hàng và hoàn tiền ## 6. YÊU CẦU ĐỐI VỚI SẢN PHẨM HOÀN TRẢ Người Mua bắt buộc phải quay video và/hoặc chụp lại ảnh Sản Phẩm ngay khi nhận được và trong lúc đóng gói Sản Phẩm Hoàn Trả về để làm bằng chứng đối chiếu/khiếu nại "
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 4,
+              "score": 0.764777,
+              "relevant": true,
+              "preview": "# Chính sách cấm/hạn chế sản phẩm ## 3. HÀNH VI VI PHẠM VÀ BIỆN PHÁP XỬ LÝ Việc vi phạm Chính Sách Cấm/Hạn Chế Sản Phẩm có thể dẫn đến việc Người Bán phải chịu một loạt các chế tài, bao gồm nhưng không giới hạn các chế tài sau:    (i) Sản p"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 102,
+              "score": 0.729834,
+              "relevant": false,
+              "preview": "# Điều khoản dịch vụ ## 8. BÁO CÁO HÀNH VI CÓ KHẢ NĂNG XÂM PHẠM QUYỀN SỞ HỮU TRÍ TUỆ 8.3. Shopee xác nhận rằng một nhãn hàng hoặc nhà sản xuất có thể, phù hợp với quy định pháp luật có liên quan, có quyền ký kết các thỏa thuận phân phối độc"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 6,
+              "score": 0.714553,
+              "relevant": false,
+              "preview": "# Chính sách cấm/hạn chế sản phẩm ## 4. DANH SÁCH SẢN PHẨM BỊ CẤM/HẠN CHẾ MUA BÁN TRÊN SHOPEE 4.1. Hàng vi phạm bản quyền: Hàng nhái, hàng giả, bản sao trái phép của một sản phẩm hay hiện vật mà có thể vi phạm quyền tác giả, quyền thương hi"
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 72,
+              "score": 0.757349,
+              "relevant": false,
+              "preview": "# Chính sách trả hàng và hoàn tiền ## 11. TRANH CHẤP GIỮA NGƯỜI MUA VÀ NGƯỜI BÁN 11.2. Trong trường hợp đó, Người Bán và Người Mua cùng đồng ý rằng một khi Shopee đã nhận được thông báo và các thông tin liên quan đến vụ việc tranh chấp, khi"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 155,
+              "score": 0.740589,
+              "relevant": false,
+              "preview": "# Điều khoản dịch vụ ## 11. CHÍNH SÁCH ĐẢM BẢO CỦA SHOPEE 11.2. Tuy nhiên nếu thời gian trả hàng/hoàn tiền vẫn chưa kết thúc, và sau đó Người Mua gửi yêu cầu trả hàng/hoàn tiền và Shopee xác định được rằng yêu cầu trả hàng/hoàn tiền của Ngư"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 186,
+              "score": 0.738862,
+              "relevant": false,
+              "preview": "# Điều khoản dịch vụ ## 13. VẬN CHUYỂN 13.2. Trong trường hợp Người Mua không nhận được sản phẩm đã mua trong thời gian dự kiến mà theo đó sản phẩm đã mua lẽ ra phải được giao nhận theo Chính Sách Shopee và Chính Sách Đảm Bảo của Shopee, Ng"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-terms-of-service",
+          "shopee-return-refund-policy"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": null,
+        "filtered_first_relevant_rank": null
+      }
+    },
+    {
+      "strategy": "long_recursive_commit",
+      "parameters": {
+        "chunk_size": 500
+      },
+      "configuration": "chunk_size=500",
+      "chunk_count": 2856,
+      "avg_length": 47.12,
+      "max_length": 500,
+      "top1_relevant": 2,
+      "top3_relevant": 2,
+      "complete_evidence_in_top3": 2,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 2,
+              "score": 0.665212,
+              "relevant": false,
+              "preview": "- Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây)."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 11,
+              "score": 0.633489,
+              "relevant": false,
+              "preview": "Hướng dẫn hủy đơn khi đơn hàng đang ở trạng thái Chờ giao hàng"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 3,
+              "score": 0.561862,
+              "relevant": false,
+              "preview": "- Đơn hàng được giao bởi các đơn vị vận chuyển (ĐVVC) khác, tùy vào trạng thái đơn hàng hiện tại, cụ thể như sau:"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 22,
+              "score": 0.772105,
+              "relevant": true,
+              "preview": "Riêng đối với các Sản Phẩm là thực phẩm tươi sống và đông lạnh, Người Mua cần gửi yêu cầu trả hàng/hoàn tiền trong vòng 24 giờ kể từ lúc đơn hàng được cập nhật giao hàng thành công"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 21,
+              "score": 0.671117,
+              "relevant": true,
+              "preview": "Người Mua có thể gửi yêu cầu trả hàng/hoàn tiền trong vòng 15 (mười lăm) ngày kể từ lúc đơn hàng được cập nhật giao hàng thành công"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 178,
+              "score": 0.665117,
+              "relevant": false,
+              "preview": "b. Đối với mặt hàng thực phẩm, đặc biệt là thực phẩm có hạn sử dụng dưới 30 ngày, Người Bán cần ghi rõ hạn sử dụng trên mô tả sản phẩm và tự sắp xếp vận chuyển khi có đơn hàng phát sinh. Mọi trường hợp Người Mua nhận được sản phẩm thực phẩm"
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 43,
+              "score": 0.846587,
+              "relevant": true,
+              "preview": "b. Phải có ít nhất một hình ảnh thật của sản phẩm do chính Người Bán tự chụp. Trong ảnh này, diện tích sản phẩm thật phải chiếm ít nhất 40% diện tích toàn ảnh."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 42,
+              "score": 0.765421,
+              "relevant": false,
+              "preview": "a. Hình ảnh sản phẩm phải là ảnh chụp rõ, chi tiết tình trạng sản phẩm. Không được để những hình ảnh hoặc thông tin không liên quan đến sản phẩm này như thông tin giới thiệu shop, thông tin liên hệ hay thông tin thanh toán."
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 74,
+              "score": 0.755029,
+              "relevant": false,
+              "preview": "- Trong các ảnh do người mẫu mặc, phần ảnh sản phẩm thực phải chiếm ít nhất 40-50% diện tích toàn ảnh;"
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 7,
+              "score": 0.828201,
+              "relevant": false,
+              "preview": "Việc vi phạm Chính Sách Cấm/Hạn Chế Sản Phẩm có thể dẫn đến việc Người Bán phải chịu một loạt các chế tài, bao gồm nhưng không giới hạn các chế tài sau:"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 1235,
+              "score": 0.741603,
+              "relevant": false,
+              "preview": "(vii) liên quan đến các sản phẩm bị cấm hoặc các sản phẩm bị cơ quan có thẩm quyền thu hồi;"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 24,
+              "score": 0.724407,
+              "relevant": false,
+              "preview": "l. Vi phạm quyền sở hữu trí tuệ và/hoặc bất kỳ nhãn hiệu hàng hóa nào của bất kỳ bên thứ ba nào;"
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 1241,
+              "score": 0.773491,
+              "relevant": false,
+              "preview": "(a) Trừ trường hợp quy định tại Điều 11.2(d), trong trường hợp Người Mua gửi xác nhận cho Shopee rằng Người Mua đã nhận được hàng, Shopee sẽ chuyển Tiền Thanh Toán từ Người Mua từ  Tài Khoản Đảm Bảo Shopee sang Số Dư Tài Khoản Shopee của Ng"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 1107,
+              "score": 0.766393,
+              "relevant": false,
+              "preview": "i. Đối với các đơn hàng có phát sinh trả hàng/hoàn tiền trước khi Shopee thanh toán Khoản Tiền Thanh Toán từ Người Mua cho Người Bán và Shopee đồng ý hoàn tiền cho Người Mua: Khoản Tiền Thanh Toán từ Người Mua còn lại (nếu có) sẽ được thanh"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 1242,
+              "score": 0.764607,
+              "relevant": false,
+              "preview": "Tuy nhiên nếu thời gian trả hàng/hoàn tiền vẫn chưa kết thúc, và sau đó Người Mua gửi yêu cầu trả hàng/hoàn tiền và Shopee xác định được rằng yêu cầu trả hàng/hoàn tiền của Người Mua được chấp thuận, Shopee có quyền điều chỉnh Khoản Tiền Th"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-terms-of-service"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": null,
+        "filtered_first_relevant_rank": null
+      }
+    },
+    {
+      "strategy": "long_recursive_commit",
+      "parameters": {
+        "chunk_size": 800
+      },
+      "configuration": "chunk_size=800",
+      "chunk_count": 1295,
+      "avg_length": 105.18,
+      "max_length": 785,
+      "top1_relevant": 2,
+      "top3_relevant": 2,
+      "complete_evidence_in_top3": 2,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 2,
+              "score": 0.665212,
+              "relevant": false,
+              "preview": "- Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây)."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 11,
+              "score": 0.633489,
+              "relevant": false,
+              "preview": "Hướng dẫn hủy đơn khi đơn hàng đang ở trạng thái Chờ giao hàng"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 3,
+              "score": 0.561862,
+              "relevant": false,
+              "preview": "- Đơn hàng được giao bởi các đơn vị vận chuyển (ĐVVC) khác, tùy vào trạng thái đơn hàng hiện tại, cụ thể như sau:"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 20,
+              "score": 0.793646,
+              "relevant": true,
+              "preview": "3.2. Người Mua có thể gửi yêu cầu trả hàng/hoàn tiền trong vòng 15 (mười lăm) ngày kể từ lúc đơn hàng được cập nhật giao hàng thành công. Riêng đối với các Sản Phẩm là thực phẩm tươi sống và đông lạnh, Người Mua cần gửi yêu cầu trả hàng/hoà"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 178,
+              "score": 0.665117,
+              "relevant": false,
+              "preview": "b. Đối với mặt hàng thực phẩm, đặc biệt là thực phẩm có hạn sử dụng dưới 30 ngày, Người Bán cần ghi rõ hạn sử dụng trên mô tả sản phẩm và tự sắp xếp vận chuyển khi có đơn hàng phát sinh. Mọi trường hợp Người Mua nhận được sản phẩm thực phẩm"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 399,
+              "score": 0.645555,
+              "relevant": false,
+              "preview": "i. Đối với các đơn hàng có phát sinh trả hàng/hoàn tiền trước khi Shopee thanh toán Khoản Tiền Thanh Toán từ Người Mua cho Người Bán và Shopee đồng ý hoàn tiền cho Người Mua: Khoản Tiền Thanh Toán từ Người Mua còn lại (nếu có) sẽ được thanh"
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 43,
+              "score": 0.846587,
+              "relevant": true,
+              "preview": "b. Phải có ít nhất một hình ảnh thật của sản phẩm do chính Người Bán tự chụp. Trong ảnh này, diện tích sản phẩm thật phải chiếm ít nhất 40% diện tích toàn ảnh."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 42,
+              "score": 0.765421,
+              "relevant": false,
+              "preview": "a. Hình ảnh sản phẩm phải là ảnh chụp rõ, chi tiết tình trạng sản phẩm. Không được để những hình ảnh hoặc thông tin không liên quan đến sản phẩm này như thông tin giới thiệu shop, thông tin liên hệ hay thông tin thanh toán."
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 74,
+              "score": 0.755029,
+              "relevant": false,
+              "preview": "- Trong các ảnh do người mẫu mặc, phần ảnh sản phẩm thực phải chiếm ít nhất 40-50% diện tích toàn ảnh;"
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 7,
+              "score": 0.828201,
+              "relevant": false,
+              "preview": "Việc vi phạm Chính Sách Cấm/Hạn Chế Sản Phẩm có thể dẫn đến việc Người Bán phải chịu một loạt các chế tài, bao gồm nhưng không giới hạn các chế tài sau:"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 410,
+              "score": 0.741603,
+              "relevant": false,
+              "preview": "(vii) liên quan đến các sản phẩm bị cấm hoặc các sản phẩm bị cơ quan có thẩm quyền thu hồi;"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 24,
+              "score": 0.724407,
+              "relevant": false,
+              "preview": "l. Vi phạm quyền sở hữu trí tuệ và/hoặc bất kỳ nhãn hiệu hàng hóa nào của bất kỳ bên thứ ba nào;"
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 416,
+              "score": 0.776269,
+              "relevant": false,
+              "preview": "(a) Trừ trường hợp quy định tại Điều 11.2(d), trong trường hợp Người Mua gửi xác nhận cho Shopee rằng Người Mua đã nhận được hàng, Shopee sẽ chuyển Tiền Thanh Toán từ Người Mua từ  Tài Khoản Đảm Bảo Shopee sang Số Dư Tài Khoản Shopee của Ng"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 399,
+              "score": 0.766393,
+              "relevant": false,
+              "preview": "i. Đối với các đơn hàng có phát sinh trả hàng/hoàn tiền trước khi Shopee thanh toán Khoản Tiền Thanh Toán từ Người Mua cho Người Bán và Shopee đồng ý hoàn tiền cho Người Mua: Khoản Tiền Thanh Toán từ Người Mua còn lại (nếu có) sẽ được thanh"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 396,
+              "score": 0.763654,
+              "relevant": false,
+              "preview": "i. Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua ngay sau khi Người Mua xác nhận “Đã nhận được hàng” trên Trang Shopee;"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-terms-of-service"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": null,
+        "filtered_first_relevant_rank": null
+      }
+    },
+    {
+      "strategy": "long_recursive_commit",
+      "parameters": {
+        "chunk_size": 1200
+      },
+      "configuration": "chunk_size=1200",
+      "chunk_count": 790,
+      "avg_length": 173.1,
+      "max_length": 1195,
+      "top1_relevant": 2,
+      "top3_relevant": 2,
+      "complete_evidence_in_top3": 2,
+      "queries": [
+        {
+          "query_id": 1,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 2,
+              "score": 0.665212,
+              "relevant": false,
+              "preview": "- Đơn hàng được giao bởi SPX Express (*): có thể hủy ngay khi Người mua nhấn Hủy đơn hàng nếu đơn hàng chưa đến trạm giao hàng (Xem chi tiết tại đây)."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 11,
+              "score": 0.633489,
+              "relevant": false,
+              "preview": "Hướng dẫn hủy đơn khi đơn hàng đang ở trạng thái Chờ giao hàng"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-order-cancellation",
+              "chunk_index": 3,
+              "score": 0.561862,
+              "relevant": false,
+              "preview": "- Đơn hàng được giao bởi các đơn vị vận chuyển (ĐVVC) khác, tùy vào trạng thái đơn hàng hiện tại, cụ thể như sau:"
+            }
+          ]
+        },
+        {
+          "query_id": 2,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-return-refund-policy",
+              "chunk_index": 20,
+              "score": 0.793646,
+              "relevant": true,
+              "preview": "3.2. Người Mua có thể gửi yêu cầu trả hàng/hoàn tiền trong vòng 15 (mười lăm) ngày kể từ lúc đơn hàng được cập nhật giao hàng thành công. Riêng đối với các Sản Phẩm là thực phẩm tươi sống và đông lạnh, Người Mua cần gửi yêu cầu trả hàng/hoà"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 178,
+              "score": 0.665117,
+              "relevant": false,
+              "preview": "b. Đối với mặt hàng thực phẩm, đặc biệt là thực phẩm có hạn sử dụng dưới 30 ngày, Người Bán cần ghi rõ hạn sử dụng trên mô tả sản phẩm và tự sắp xếp vận chuyển khi có đơn hàng phát sinh. Mọi trường hợp Người Mua nhận được sản phẩm thực phẩm"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 161,
+              "score": 0.645555,
+              "relevant": false,
+              "preview": "i. Đối với các đơn hàng có phát sinh trả hàng/hoàn tiền trước khi Shopee thanh toán Khoản Tiền Thanh Toán từ Người Mua cho Người Bán và Shopee đồng ý hoàn tiền cho Người Mua: Khoản Tiền Thanh Toán từ Người Mua còn lại (nếu có) sẽ được thanh"
+            }
+          ]
+        },
+        {
+          "query_id": 3,
+          "first_relevant_rank": 1,
+          "complete_evidence_in_top3": true,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 43,
+              "score": 0.846587,
+              "relevant": true,
+              "preview": "b. Phải có ít nhất một hình ảnh thật của sản phẩm do chính Người Bán tự chụp. Trong ảnh này, diện tích sản phẩm thật phải chiếm ít nhất 40% diện tích toàn ảnh."
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 42,
+              "score": 0.765421,
+              "relevant": false,
+              "preview": "a. Hình ảnh sản phẩm phải là ảnh chụp rõ, chi tiết tình trạng sản phẩm. Không được để những hình ảnh hoặc thông tin không liên quan đến sản phẩm này như thông tin giới thiệu shop, thông tin liên hệ hay thông tin thanh toán."
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 74,
+              "score": 0.755029,
+              "relevant": false,
+              "preview": "- Trong các ảnh do người mẫu mặc, phần ảnh sản phẩm thực phải chiếm ít nhất 40-50% diện tích toàn ảnh;"
+            }
+          ]
+        },
+        {
+          "query_id": 4,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-prohibited-products-policy",
+              "chunk_index": 7,
+              "score": 0.828201,
+              "relevant": false,
+              "preview": "Việc vi phạm Chính Sách Cấm/Hạn Chế Sản Phẩm có thể dẫn đến việc Người Bán phải chịu một loạt các chế tài, bao gồm nhưng không giới hạn các chế tài sau:"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 172,
+              "score": 0.741603,
+              "relevant": false,
+              "preview": "(vii) liên quan đến các sản phẩm bị cấm hoặc các sản phẩm bị cơ quan có thẩm quyền thu hồi;"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-product-listing-rules",
+              "chunk_index": 24,
+              "score": 0.724407,
+              "relevant": false,
+              "preview": "l. Vi phạm quyền sở hữu trí tuệ và/hoặc bất kỳ nhãn hiệu hàng hóa nào của bất kỳ bên thứ ba nào;"
+            }
+          ]
+        },
+        {
+          "query_id": 5,
+          "first_relevant_rank": null,
+          "complete_evidence_in_top3": false,
+          "top3": [
+            {
+              "rank": 1,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 178,
+              "score": 0.776269,
+              "relevant": false,
+              "preview": "(a) Trừ trường hợp quy định tại Điều 11.2(d), trong trường hợp Người Mua gửi xác nhận cho Shopee rằng Người Mua đã nhận được hàng, Shopee sẽ chuyển Tiền Thanh Toán từ Người Mua từ  Tài Khoản Đảm Bảo Shopee sang Số Dư Tài Khoản Shopee của Ng"
+            },
+            {
+              "rank": 2,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 161,
+              "score": 0.766393,
+              "relevant": false,
+              "preview": "i. Đối với các đơn hàng có phát sinh trả hàng/hoàn tiền trước khi Shopee thanh toán Khoản Tiền Thanh Toán từ Người Mua cho Người Bán và Shopee đồng ý hoàn tiền cho Người Mua: Khoản Tiền Thanh Toán từ Người Mua còn lại (nếu có) sẽ được thanh"
+            },
+            {
+              "rank": 3,
+              "doc_id": "shopee-terms-of-service",
+              "chunk_index": 158,
+              "score": 0.763654,
+              "relevant": false,
+              "preview": "i. Shopee sẽ thanh toán Khoản Tiền Thanh Toán từ Người Mua ngay sau khi Người Mua xác nhận “Đã nhận được hàng” trên Trang Shopee;"
+            }
+          ]
+        }
+      ],
+      "filter_impact": {
+        "unfiltered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-terms-of-service"
+        ],
+        "filtered_doc_ids": [
+          "shopee-order-cancellation",
+          "shopee-order-cancellation",
+          "shopee-order-cancellation"
+        ],
+        "unfiltered_first_relevant_rank": null,
+        "filtered_first_relevant_rank": null
+      }
+    }
+  ],
+  "selected_by_strategy": {
+    "fixed_size": {
+      "strategy": "fixed_size",
+      "parameters": {
+        "chunk_size": 800,
+        "overlap": 100
+      },
+      "configuration": "chunk_size=800, overlap=100",
+      "chunk_count": 199,
+      "avg_length": 793.0,
+      "max_length": 800,
+      "top1_relevant": 3,
+      "top3_relevant": 5,
+      "complete_evidence_in_top3": 5
+    },
+    "sentence": {
+      "strategy": "sentence",
+      "parameters": {
+        "max_sentences": 8
+      },
+      "configuration": "max_sentences=8",
+      "chunk_count": 124,
+      "avg_length": 1108.27,
+      "max_length": 6301,
+      "top1_relevant": 4,
+      "top3_relevant": 4,
+      "complete_evidence_in_top3": 4
+    },
+    "markdown_heading": {
+      "strategy": "markdown_heading",
+      "parameters": {
+        "chunk_size": 500
+      },
+      "configuration": "chunk_size=500",
+      "chunk_count": 517,
+      "avg_length": 330.86,
+      "max_length": 500,
+      "top1_relevant": 3,
+      "top3_relevant": 3,
+      "complete_evidence_in_top3": 2
+    },
+    "long_recursive_commit": {
+      "strategy": "long_recursive_commit",
+      "parameters": {
+        "chunk_size": 500
+      },
+      "configuration": "chunk_size=500",
+      "chunk_count": 2856,
+      "avg_length": 47.12,
+      "max_length": 500,
+      "top1_relevant": 2,
+      "top3_relevant": 2,
+      "complete_evidence_in_top3": 2
+    }
+  },
+  "overall_selected": {
+    "strategy": "fixed_size",
+    "parameters": {
+      "chunk_size": 800,
+      "overlap": 100
+    },
+    "configuration": "chunk_size=800, overlap=100",
+    "chunk_count": 199,
+    "avg_length": 793.0,
+    "max_length": 800,
+    "top1_relevant": 3,
+    "top3_relevant": 5,
+    "complete_evidence_in_top3": 5
+  }
+}
