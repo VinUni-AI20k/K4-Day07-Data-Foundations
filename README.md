@@ -2,6 +2,16 @@
 
 > Bản K4 của Lab 07. Hướng dẫn Codelabs được phát riêng trên lớp/LMS (không kèm trong repo); yêu cầu Giai đoạn 2 riêng xem [K4_VARIANT.md](K4_VARIANT.md).
 
+## Thành viên nhóm K4
+
+| Thành viên | Mã sinh viên |
+|---|---|
+| Nguyễn Đăng Long | 2A202601934 |
+| Đào Minh Chiến | 2A202601184 |
+| Lương Minh Quân | 2A202601308 |
+| Lê Đăng Tấn | 2A202601916 |
+| Vũ Hữu An | 2A202601078 |
+
 ---
 
 ## Mục Tiêu
