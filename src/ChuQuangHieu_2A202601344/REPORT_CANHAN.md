@@ -187,18 +187,26 @@ tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_tr
 
 Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân của bạn trong gói `src`. **5 câu hỏi này phải trùng với các thành viên cùng nhóm** (xem `REPORT_NHOM.md`).
 
+> **Cấu hình chạy:** `RecursiveChunker(chunk_size=500)` + `MockEmbedder` trên `data/k4_ecommerce` (10 tài liệu → **139 chunk**). Câu 4 chạy bằng `search_with_filter(metadata_filter={"customer_role": "seller"})`, 4 câu còn lại dùng `search` thường. `llm_fn` là hàm giả lập trả về nguyên khối ngữ cảnh đầu tiên (chưa gắn LLM thật).
+
 | # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
 |---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | Bao nhiêu ngày để gửi yêu cầu Trả hàng/Hoàn tiền? | `chinh-sach-tra-hang-hoan-tien` — "Shopee khuyến khích Người Mua chủ động liên hệ với Người Bán để thương lượng…" | +0.3215 | ❌ Sai tài liệu (cần `quy-dinh-chung-tra-hang-hoan-tien`), top-3 cũng không có | Lặp lại đoạn thương lượng với Người Bán — không trả lời được mốc 15 ngày |
+| 2 | Thẻ tín dụng bao lâu nhận được tiền hoàn? | `quan-ly-don-tra-hang-hoan-tien` — "Nhấn chọn Nhập tồn kho nhanh để hoàn tất quá trình nhập hàng…" | +0.3402 | ❌ Sai tài liệu (cần `thoi-gian-nhan-tien-hoan`), top-3 cũng không có | Nói về nhập tồn kho — lạc đề hoàn toàn |
+| 3 | Cây cảnh / thực phẩm đông lạnh còn nguyên vẹn có trả được không? | `phuong-thuc-gui-hang-va-phi-hoan-tra` — "Sau khi bạn đã gửi yêu cầu hoàn tiền và chọn hình thức trả hàng…" | +0.3162 | ⚠️ Top-1 sai, nhưng `san-pham-han-che-tra-hang` **có** ở hạng 3 | Nói về hình thức gửi trả tại bưu cục — không trả lời được câu hỏi |
+| 4 | **(lọc `customer_role: seller`)** Người bán phải phản hồi trong bao lâu? | `quan-ly-don-tra-hang-hoan-tien` — "Nhấn chọn Nhập tồn kho nhanh…" | +0.1357 | ⚠️ Đúng tài liệu nhưng **hiển nhiên**: bộ lọc chỉ còn đúng 1 tài liệu nên mọi kết quả đều là nó; sai đoạn (cần mục C, mốc 2 ngày) | Trả về đoạn về các loại bể vỡ — sai đoạn, và **không dùng bộ lọc** (xem ghi chú dưới) |
+| 5 | Hình thức trả hàng nào phải tự trả phí trước? | `phuong-thuc-gui-hang-va-phi-hoan-tra` — "Bước 4: Đơn vị vận chuyển sẽ đến lấy hàng… Trả hàng tại bưu cục (Miễn phí…)" | +0.3359 | ⚠️ Đúng tài liệu, sai đoạn (cần mục "Tự sắp xếp") | Nói về ĐVVC đến lấy hàng — gần chủ đề nhưng không nêu được "Tự sắp xếp" |
 
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** __ / 5
+**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** **3 / 5** (đúng ở mức *tài liệu*: câu 3, 4, 5). Chặt hơn: top-1 đúng tài liệu chỉ **2/5**, và **0/5** nếu tính ở mức *đoạn văn thực sự chứa câu trả lời chuẩn*.
+
+**Phân tích kết quả:**
+- **Điểm số dồn cục quanh 0.32** cho cả kết quả đúng lẫn sai (0.3162 vs 0.3215 vs 0.3402) — score **không phân biệt được** tín hiệu với nhiễu, đúng như dự đoán ở Phần 4 về `MockEmbedder`.
+- **Câu 4 cho thấy metadata filter thật sự có tác dụng**: chỉ 1 trong 10 tài liệu có `customer_role: seller`, nên bộ lọc loại sạch nhiễu và ép top-3 về đúng tài liệu — đây là trường hợp duy nhất mà việc "trúng" không phụ thuộc vào chất lượng embedding.
+- **Hạn chế phát hiện được ở `KnowledgeBaseAgent`:** `answer()` chỉ gọi `store.search()`, chưa có đường truyền `metadata_filter` xuống. Vì vậy ở câu 4, phần truy xuất có lọc nhưng câu trả lời của agent thì không — hai con số trong bảng lệch nhau. Nếu làm tiếp, tôi sẽ thêm tham số `metadata_filter` cho `answer()`.
+- **Kết luận:** con số 3/5 ở trên **không** phản ánh chất lượng chiến lược chunking. Muốn đánh giá thật phải cài `requirements-local.txt` rồi chạy lại với `EMBEDDING_PROVIDER=local`, đúng như `README.md` cảnh báo.
 
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> *Viết 2-3 câu:*
+> *Viết 2-3 câu sau buổi demo:*
 
 ---
 
