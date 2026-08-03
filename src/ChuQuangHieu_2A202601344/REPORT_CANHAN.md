@@ -164,16 +164,22 @@ tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_tr
 
 ## 4. Dự đoán độ tương tự (Similarity Predictions) — Cá nhân (5 điểm)
 
+> **Backend đo:** `MockEmbedder` (mặc định của lab, 64 chiều, băm MD5). Máy chưa cài `requirements-local.txt` nên chưa chạy được `LocalEmbedder`; ngưỡng phân loại đặt ở `score >= 0.5` là "cao".
+
 | Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
 |------|-----------|-----------|---------|--------------|-------|
-| 1 | | | cao / thấp | | |
-| 2 | | | cao / thấp | | |
-| 3 | | | cao / thấp | | |
-| 4 | | | cao / thấp | | |
-| 5 | | | cao / thấp | | |
+| 1 | Tôi muốn trả lại đôi giày đã mua tuần trước. | Làm thế nào để gửi yêu cầu hoàn trả sản phẩm đã đặt? | cao | +0.117 | ❌ Sai |
+| 2 | Bao lâu thì tôi nhận được tiền hoàn? | Thời gian nhận tiền hoàn là 7 - 14 ngày làm việc tùy theo ngân hàng. | cao | −0.094 | ❌ Sai |
+| 3 | Thời hạn gửi yêu cầu Trả hàng/Hoàn tiền là 15 ngày. | Thời hạn yêu cầu trả hàng hoàn tiền là mười lăm ngày. | cao | −0.047 | ❌ Sai |
+| 4 | Phí trả hàng do ai chịu? | Sản phẩm nào không được phép trả hàng? | thấp | +0.072 | ✅ Đúng (nhưng trùng hợp) |
+| 5 | Cách đóng gói hàng hoàn trả đúng quy định. | Python là ngôn ngữ lập trình thông dịch, kiểu động. | thấp | +0.044 | ✅ Đúng (nhưng trùng hợp) |
+
+**Số dự đoán đúng: 2/5** — và cả 2 lần đúng đều không phải vì mô hình hiểu ngữ nghĩa, mà vì mọi cặp đều ra điểm quanh 0.
 
 **Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
-> *Viết 2-3 câu:*
+> Bất ngờ nhất là cặp 3: hai câu diễn đạt **cùng một quy định** ("15 ngày" và "mười lăm ngày") lại cho điểm **âm** (−0.047), thấp hơn cả cặp 5 vốn hoàn toàn khác chủ đề (+0.044). Kiểm tra thêm còn thấy `"trả hàng hoàn tiền"` với `"trả hàng hoàn tiền."` — chỉ khác đúng một dấu chấm — cho điểm **−0.263**, trong khi một chuỗi so với chính nó cho đúng 1.0.
+> Điều này cho thấy `MockEmbedder` **không biểu diễn ý nghĩa gì cả**: nó băm MD5 toàn bộ chuỗi rồi sinh vector giả ngẫu nhiên, nên chỉ có tính **xác định** (cùng input thì cùng output) chứ không có tính **liên tục về ngữ nghĩa** — đổi một ký tự là ra một vector hoàn toàn khác. Vì vậy điểm số ở bảng trên chỉ dùng để kiểm chứng công thức cosine đã cài đúng, tuyệt đối không dùng để kết luận chiến lược chunking nào tốt hơn (đúng như cảnh báo trong `README.md`).
+> Bài học rút ra: embedding thật (như `paraphrase-multilingual-MiniLM-L12-v2`) đặt các câu cùng ý định gần nhau vì được huấn luyện trên ngữ cảnh sử dụng của từ, chứ bản thân phép cosine không hề tạo ra ngữ nghĩa. Chất lượng truy xuất phụ thuộc vào mô hình nhúng trước, rồi mới tới độ đo.
 
 ---
 
