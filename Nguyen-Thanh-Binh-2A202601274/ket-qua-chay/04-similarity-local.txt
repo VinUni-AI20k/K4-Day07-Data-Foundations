@@ -1,0 +1,22 @@
+Backend nhúng: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+EMBEDDING_PROVIDER=local
+
+#  Dự đoán       Điểm thật   Cặp câu
+----------------------------------------------------------------------------------------------------
+1  CAO           0.7623      A: Người mua có thể trả lại hàng trong vòng 7 ngày kể từ khi nhận.
+                             B: Khách hàng được hoàn trả sản phẩm trong thời hạn một tuần sau khi nhận hàng.
+2  CAO           0.7823      A: Người bán phải cung cấp mô tả sản phẩm chính xác.
+                             B: Thông tin sản phẩm do người bán đăng tải phải đúng sự thật.
+3  THẤP          -0.0705     A: Chính sách đổi trả chỉ áp dụng cho hàng bị lỗi hoặc không đúng mô tả.
+                             B: Con mèo đang nằm ngủ trên mái nhà vào buổi trưa.
+4  CAO           0.4768      A: Đơn hàng này được hoàn tiền.
+                             B: Đơn hàng này không được hoàn tiền.
+5  TRUNG BÌNH    0.3574      A: Phí vận chuyển được tính theo khối lượng đơn hàng.
+                             B: Thời gian giao hàng dự kiến là 3-5 ngày làm việc.
+
+--- Xếp hạng thực tế (cao -> thấp) ---
+1. Cặp 2: 0.7823 (dự đoán: CAO)
+2. Cặp 1: 0.7623 (dự đoán: CAO)
+3. Cặp 4: 0.4768 (dự đoán: CAO)
+4. Cặp 5: 0.3574 (dự đoán: TRUNG BÌNH)
+5. Cặp 3: -0.0705 (dự đoán: THẤP)

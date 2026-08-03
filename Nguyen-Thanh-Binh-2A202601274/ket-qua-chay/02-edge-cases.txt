@@ -1,0 +1,37 @@
+--- 1. Ca biên của chunker (không lỗi, không vượt chunk_size) ---
+Input                       chunk_size  #chunk   max len   vượt ngưỡng
+chuỗi rỗng                  10          0        0         0
+chuỗi rỗng                  50          0        0         0
+chuỗi rỗng                  400         0        0         0
+chỉ khoảng trắng            10          0        0         0
+chỉ khoảng trắng            50          0        0         0
+chỉ khoảng trắng            400         0        0         0
+một từ dài 1000 ký tự       10          100      10        0
+một từ dài 1000 ký tự       50          20       50        0
+một từ dài 1000 ký tự       400         3        400       0
+không có separator nào      10          30       10        0
+không có separator nào      50          6        50        0
+không có separator nào      400         1        300       0
+kết thúc bằng separator     10          1        8         0
+kết thúc bằng separator     50          1        8         0
+kết thúc bằng separator     400         1        8         0
+nhiều separator liên tiếp   10          1        8         0
+nhiều separator liên tiếp   50          1        8         0
+nhiều separator liên tiếp   400         1        8         0
+tiếng Việt có dấu           10          180      9         0
+tiếng Việt có dấu           50          30       49        0
+tiếng Việt có dấu           400         4        399       0
+Các trường hợp separator rỗng / SentenceChunker rỗng: OK
+
+--- 2. RecursiveChunker có nuốt dấu kết câu không? ---
+RecursiveChunker(chunk_size=4).chunk('aaa. bbb') -> ['aaa.', 'bbb']
+Tổng dấu chấm trong corpus = 108 | bị mất sau khi chunk = 0
+
+--- 3. compute_similarity với vector suy biến ---
+hai vector rỗng         kỳ vọng=0.0    thực tế=0.000000  OK
+một vector rỗng         kỳ vọng=0.0    thực tế=0.000000  OK
+vector toàn 0           kỳ vọng=0.0    thực tế=0.000000  OK
+hai vector giống hệt    kỳ vọng=1.0    thực tế=1.000000  OK
+hai vector ngược nhau   kỳ vọng=-1.0   thực tế=-1.000000 OK
+
+TẤT CẢ KIỂM CHỨNG BIÊN ĐỀU ĐẠT

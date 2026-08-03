@@ -1,0 +1,17 @@
+Backend nhúng: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+Chiến lược          #chunk   Q1    Q2    Q3    Q4    Q5    Agent đúng   Điểm
+----------------------------------------------------------------------------
+clause(1 câu)       10       #1    #1    #1    #1    #1    ✔✔✔✔✔        10/10
+clause(2 câu)       6        #1    #1    #1    #1    #1    ✔✔✔✔✔        10/10
+clause(1,drop-qt)   7        #1    #1    #1    #1    #1    ✔✔✔✔✔        10/10
+by_sentences(3)     4        #2    #1    #1    #1    #1    ✔✔✔✔✔        9/10
+by_sentences(2)     5        #1    #1    #1    #1    #2    ✔✔✔✔✘        9/10
+by_sentences(1)     10       #1    #2    #1    #1    #1    ✔✘✔✔✔        9/10
+recursive(200)      8        #1    #1    #1    #1    #2    ✔✔✔✔✘        9/10
+recursive(120)      14       #1    #2    #1    #1    #1    ✔✘✔✔✔        9/10
+clause(1,no-head)   10       #1    #2    #1    #1    #1    ✔✘✔✔✔        9/10
+fixed_size(500,50)  3        #3    #2    #1    #1    #1    ✔✔✔✔✔        8/10
+recursive(400)      4        #1    #1    #1    #2    #1    ✔✔✔✘✘        8/10
+fixed_size(200,40)  7        #2    #1    #1    #1    trượt ✘✔✔✔✘        7/10
+
+Cao nhất: clause(1 câu) — 10/10
