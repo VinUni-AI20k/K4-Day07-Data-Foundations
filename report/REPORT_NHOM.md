@@ -1,8 +1,8 @@
 # Báo Cáo Nhóm — Lab 7: Embedding & Vector Store
 
-**Nhóm:** [Tên nhóm]
-**Thành viên:** [Họ tên từng thành viên]
-**Ngày:** [Ngày nộp]
+**Nhóm:** MicroGenius
+**Thành viên:** Nguyễn Thị Thương, Phạm Tuấn Anh, Nguyễn Đức Anh, Mai Tiến Dũng
+**Ngày:** 03/08/2026
 
 > **Nộp 1 bản / nhóm.** Phần cá nhân (hướng tiếp cận, kết quả riêng, dự đoán…) mỗi thành viên nộp riêng trong `REPORT_CANHAN.md`. Chi tiết thang điểm: `docs/SCORING.md`.
 
@@ -116,12 +116,12 @@ chunks = chunker.chunk(text)
 |-----------|----------|----------------------|-----------|----------|
 | Nguyễn Thị Thương | Recursive (tinh chỉnh: bỏ separator từ đơn, chunk_size=400) | **8/10** — chạy thật với `EMBEDDING_PROVIDER=local`: 5/5 câu có gold doc trong top-3, 3/5 câu đúng ngay top-1 (chi tiết: `REPORT_NGUYENTHITHUONG_2A202601226.md` Phần 5) | Giữ trọn heading + đoạn văn/gạch đầu dòng thay vì vỡ thành từ đơn; số chunk (29) hợp lý hơn nhiều so với bản mặc định (167); 3/5 câu trúng top-1 | Câu hỏi về số liệu/phần trăm (vd. hạn sử dụng, mức bồi thường) dễ bị nhầm giữa các tài liệu khác nhau cùng chứa nhiều con số|
 | Phạm Tuấn Anh | Custom — `StatisticalChunker` (`semantic_chunkers`) | **10/10** — benchmark K4: 5/5 câu có gold doc trong top-3 | Ngưỡng động theo embedding giúp gom đúng các câu cùng chủ đề vào một chunk; trên K4 đạt top-3 cho cả 5 câu | Tốn thời gian/tài nguyên tính embedding cho từng câu; phụ thuộc thư viện ngoài |
-| Nguyễn Đức Anh | `SentenceChunker` (có sẵn) | *Chưa chạy benchmark* | Giữ trọn ranh giới câu, chunk dễ đọc, ngữ cảnh mạch lạc cho agent | Không nhận biết chủ đề/ý — nếu 1 chủ đề trải dài nhiều câu vẫn có thể bị cắt rời qua nhiều chunk |
+| Nguyễn Đức Anh | `SentenceChunker` (có sẵn) | **7/10** — 4/5 câu có gold doc trong top-3; q2-q4 đúng top-1, q5 đúng ở top-3 | Giữ trọn ranh giới câu, chunk dễ đọc, ngữ cảnh mạch lạc cho agent | Không nhận biết chủ đề/ý; q1 bị xếp sai tài liệu, q5 không đúng top-1 |
 | Mai Tiến Dũng | Custom — `MarkdownBlockChunker` | 10/10 | Giữ heading cùng block nội dung, đạt 5/5 chunk liên quan trong top-3 và 4/5 ở top-1 | Tạo nhiều chunk hơn baseline, làm tăng chi phí embedding và lưu trữ |
 
 
 **Chiến lược nào tốt nhất cho chủ đề này? Tại sao?**
-> *...*
+> `MarkdownBlockChunker` là lựa chọn phù hợp nhất cho bộ tài liệu này vì nó giữ heading cùng block chính sách chứa số liệu, điều kiện và ngoại lệ; kết quả đạt 5/5 query có chunk liên quan trong top-3 và 4/5 ngay top-1. `StatisticalChunker` cũng đạt 10/10, nhưng phụ thuộc thêm thư viện và phải tính embedding trong lúc chunking. Vì vậy, MarkdownBlockChunker là lựa chọn cân bằng hơn giữa chất lượng truy xuất, khả năng giải thích và chi phí triển khai.
 
 ---
 
@@ -147,27 +147,29 @@ chunks = chunker.chunk(text)
 
 | # | Câu hỏi | Chiến lược tốt nhất cho câu này | Có chunk liên quan trong top-3? | Ghi chú |
 |---|---------|-------------------------------|-------------------------------|---------|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+| 1 | Thời hạn trả hàng/hoàn tiền | MarkdownBlockChunker | Có | Chunk trả hàng chứa trọn mốc 15 ngày và ngoại lệ 24 giờ, đúng top-1. |
+| 2 | Khoảng giá trị Apple Pay | MarkdownBlockChunker | Có | Heading Apple Pay và khoảng 10.000-25.000.000 VNĐ nằm cùng block, đúng top-1. |
+| 3 | Liên hệ truy cập/xóa dữ liệu | StatisticalChunker | Có | StatisticalChunker đưa chunk về Data Protection Officer lên top-1; MarkdownBlockChunker cũng có gold chunk ở top-3. |
+| 4 | Hạn sử dụng khi đăng bán | MarkdownBlockChunker | Có | Điều kiện 30% thời hạn sử dụng và 30 ngày được giữ trọn, đúng top-1. |
+| 5 | Bồi thường mất hàng hoàn toàn | MarkdownBlockChunker | Có | Block bồi thường chứa trực tiếp mức 70%, đúng top-1. |
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
-> *Viết 2-3 câu:*
+> Có. Bộ lọc `customer_role=buyer` giúp thu hẹp kết quả cho câu hỏi về đổi trả và Apple Pay; `customer_role=seller` đặc biệt hữu ích ở câu hỏi về quy định hạn sử dụng khi đăng bán. Tuy nhiên, filter không thay thế chunking: với câu hỏi đổi trả, chiến lược SentenceChunker vẫn không đưa đúng tài liệu vào top-3, cho thấy chất lượng và cấu trúc chunk vẫn quyết định thứ hạng cuối cùng.
 
 ---
 
 ## 4. Thuyết trình (Demo) & Bài học nhóm — Nhóm (5 điểm)
 
 **Những phân tích (insights) hay nhất nhóm sẽ trình bày:**
-> *Liệt kê 2-3 ý:*
+> - Cùng một corpus và embedding model, cách chia chunk khác nhau có thể thay đổi đáng kể tài liệu/chunk ở top-1.
+> - Với tài liệu chính sách dạng Markdown, giữ heading cùng block nội dung giúp truy xuất tốt các mốc số liệu, điều kiện và ngoại lệ.
+> - Đánh giá cần kết hợp gold chunk trong top-3 với khả năng trả lời từ context, thay vì chỉ nhìn cosine score.
 
 **Bài học rút ra khi so sánh trong nhóm:**
-> *Viết 2-3 câu — cùng tài liệu nhưng chiến lược khác nhau dẫn tới khác biệt gì?*
+> Trên cùng sáu tài liệu và năm query, MarkdownBlockChunker và StatisticalChunker đạt 10/10, Recursive tinh chỉnh đạt 8/10, còn SentenceChunker đạt 7/10. Điều này cho thấy ranh giới câu giúp context dễ đọc nhưng chưa đủ khi thông tin cần giữ gắn với heading, danh sách hoặc block điều khoản. Chunking theo cấu trúc hoặc ngữ nghĩa giúp giảm nguy cơ tách rời phần điều kiện và con số quan trọng.
 
 **Nếu làm lại, nhóm sẽ thay đổi gì trong chiến lược dữ liệu (data strategy)?**
-> *Viết 2-3 câu:*
+> Nhóm sẽ bổ sung nhiều câu hỏi về ngoại lệ, mốc thời gian và tình huống gần nghĩa để benchmark phân biệt rõ hơn giữa các chiến lược. Metadata vai trò cũng nên hỗ trợ ngữ nghĩa `both`, để filter cho buyer hoặc seller vẫn xem được các chính sách áp dụng cho cả hai. Cuối cùng, nhóm sẽ lưu hạng top-k và câu trả lời Agent ở cùng một log tái lập được thay vì tổng hợp thủ công.
 
 ---
 
@@ -175,8 +177,8 @@ chunks = chunker.chunk(text)
 
 | Tiêu chí | Điểm tự đánh giá |
 |----------|-------------------|
-| Lựa chọn tài liệu (Document Set Quality) | / 10 |
-| Thiết kế chiến lược (Strategy Design) | / 15 |
-| Chất lượng truy xuất (Retrieval Quality) | / 10 |
-| Thuyết trình (Demo) | / 5 |
-| **Tổng phần nhóm** | **/ 40** |
+| Lựa chọn tài liệu (Document Set Quality) | 10 / 10 |
+| Thiết kế chiến lược (Strategy Design) | 15 / 15 |
+| Chất lượng truy xuất (Retrieval Quality) | 10 / 10 |
+| Thuyết trình (Demo) | 5 / 5 |
+| **Tổng phần nhóm** | **40 / 40** |
