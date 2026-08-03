@@ -1,22 +1,37 @@
-from typing import Callable
-
+from .agent import KnowledgeBaseAgent
+from .chunking import (
+    ChunkingStrategyComparator,
+    FixedSizeChunker,
+    RecursiveChunker,
+    SentenceChunker,
+    compute_similarity,
+)
+from .embeddings import (
+    EMBEDDING_PROVIDER_ENV,
+    LOCAL_EMBEDDING_MODEL,
+    OPENAI_EMBEDDING_MODEL,
+    LocalEmbedder,
+    MockEmbedder,
+    OpenAIEmbedder,
+    _mock_embed,
+)
+from .models import Document
 from .store import EmbeddingStore
 
-
-class KnowledgeBaseAgent:
-    """
-    An agent that answers questions using a vector knowledge base.
-
-    Retrieval-augmented generation (RAG) pattern:
-        1. Retrieve top-k relevant chunks from the store.
-        2. Build a prompt with the chunks as context.
-        3. Call the LLM to generate an answer.
-    """
-
-    def __init__(self, store: EmbeddingStore, llm_fn: Callable[[str], str]) -> None:
-        # TODO: store references to store and llm_fn
-        pass
-
-    def answer(self, question: str, top_k: int = 3) -> str:
-        # TODO: retrieve chunks, build prompt, call llm_fn
-        raise NotImplementedError("Implement KnowledgeBaseAgent.answer")
+__all__ = [
+    "Document",
+    "FixedSizeChunker",
+    "SentenceChunker",
+    "RecursiveChunker",
+    "ChunkingStrategyComparator",
+    "compute_similarity",
+    "EmbeddingStore",
+    "KnowledgeBaseAgent",
+    "MockEmbedder",
+    "LocalEmbedder",
+    "OpenAIEmbedder",
+    "_mock_embed",
+    "LOCAL_EMBEDDING_MODEL",
+    "OPENAI_EMBEDDING_MODEL",
+    "EMBEDDING_PROVIDER_ENV",
+]
