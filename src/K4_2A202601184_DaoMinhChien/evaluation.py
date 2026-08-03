@@ -121,6 +121,14 @@ def run_evaluation() -> dict:
             top_k=3,
             metadata_filter=metadata_filter,
         )
+        top_doc_ids = [result["metadata"].get("doc_id") for result in results]
+        expected_doc_ids = set(item["expected_doc_ids"])
+        if len(expected_doc_ids) > 1:
+            document_match_top_3 = expected_doc_ids.issubset(set(top_doc_ids[:3]))
+        else:
+            document_match_top_3 = any(
+                doc_id in expected_doc_ids for doc_id in top_doc_ids[:3]
+            )
         retrieval_results.append(
             {
                 "id": item["id"],
@@ -129,12 +137,9 @@ def run_evaluation() -> dict:
                 "metadata_filter": metadata_filter,
                 "top_1_score": round(results[0]["score"], 4) if results else None,
                 "top_1_doc_id": results[0]["metadata"].get("doc_id") if results else None,
-                "top_3_doc_ids": [result["metadata"].get("doc_id") for result in results],
+                "top_3_doc_ids": top_doc_ids,
                 "expected_doc_ids": item["expected_doc_ids"],
-                "hit_top_3": any(
-                    result["metadata"].get("doc_id") in item["expected_doc_ids"]
-                    for result in results
-                ),
+                "document_match_top_3": document_match_top_3,
                 "agent_answer": agent.answer(
                     query,
                     top_k=3,

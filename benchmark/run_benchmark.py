@@ -15,7 +15,8 @@ Ví dụ:
     python benchmark/run_benchmark.py --data-dir data/k4_asos_products --chunker recursive
 
     # In bảng Markdown để dán vào REPORT_NHOM.md
-    python benchmark/run_benchmark.py --data-dir data/k4_asos_products --markdown
+    python benchmark/run_benchmark.py --package src.K4_2A202601184_DaoMinhChien \
+        --data-dir data/k4_asos_products --markdown
 
 LƯU Ý: với embedder `mock`, điểm tương tự là NHIỄU nên top-3 vô nghĩa — chỉ dùng để
 kiểm tra pipeline. Chấm điểm thật cần EMBEDDING_PROVIDER=local (hoặc openai).

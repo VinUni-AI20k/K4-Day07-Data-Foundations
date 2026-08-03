@@ -195,7 +195,8 @@ Tôi chạy đúng năm câu hỏi chung trong `benchmark/queries.py` trên corp
 `RecursiveChunker(chunk_size=500)`, tạo 76 chunk, và vector tần suất từ vựng đã
 chuẩn hóa để kết quả có thể tái lập offline mà không dùng mock embedding ngẫu
 nhiên. Câu 3 sử dụng metadata filter
-`{"category_group": "outerwear"}` theo benchmark chung.
+`{"category_group": "outerwear", "customer_role": "buyer"}` theo yêu cầu biến
+thể K4.
 
 Script `src/K4_2A202601184_DaoMinhChien/evaluation.py` lưu cố định năm cặp câu,
 năm truy vấn, vectorizer, cấu hình chunking, Top-3 và Agent stub trích xuất; vì
@@ -207,9 +208,12 @@ vậy các số liệu trong hai bảng có thể được kiểm tra lại đ�
 | 2 | Đầm maxi ASOS EDITION satin cami giá bao nhiêu? | `asos-asos-edition-satin-cami-maxi-dress-with-full-skirt-in-dusky-blue` | 0,4706 | Có | Truy xuất đúng tài liệu nhưng context đầu mới chứa nguồn, chưa trích được giá £110. |
 | 3 | Trong nhóm outerwear, áo nào làm từ faux fur? | `asos-daisy-street-mid-length-faux-fur-coat-in-wavy-checkerboard-print` | 0,1896 | Có | Filter đưa đúng tài liệu Daisy Street lên Top-1; context đầu vẫn thiên về nguồn thay vì câu trả lời. |
 | 4 | Món màu đen, cổ yếm để đi biển có lựa chọn nào? | `asos-new-look-ruched-button-vest-in-brown` | 0,2378 | Không | Context không liên quan nên Agent chưa trả lời được hai lựa chọn chuẩn. |
-| 5 | Có đầm bầu không và được thiết kế vừa vặn thế nào? | `asos-asos-design-maternity-cami-wrap-midi-dress-with-lace-up-back` | 0,3115 | Có | Đúng tài liệu maternity ở Top-1 nhưng context đầu chưa chứa đủ chi tiết “bump to baby”, wrap front và shirred back. |
+| 5 | Có đầm bầu không và được thiết kế vừa vặn thế nào? | `asos-asos-design-maternity-cami-wrap-midi-dress-with-lace-up-back` | 0,3115 | Không | Đúng tài liệu maternity ở Top-1 nhưng chunk trả về chưa chứa các bằng chứng “bump to baby”, wrap front và shirred back. |
 
-**Số câu có chunk liên quan trong Top-3:** **3 / 5** (câu 2, 3 và 5).
+Script tự động ghi nhận **3 / 5 document match trong Top-3** (câu 2, 3 và 5).
+Sau khi đọc nội dung từng chunk, **số câu có chunk chứa bằng chứng liên quan trong
+Top-3 là 2 / 5** (câu 2 và 3); câu 5 chỉ đúng `doc_id`, chưa đủ bằng chứng để
+Agent trả lời gold answer.
 
 Metadata filter ở câu 3 có tác dụng rõ: nó giới hạn ứng viên về nhóm
 `outerwear` và đưa tài liệu Daisy Street faux-fur lên Top-1. Hai failure case là
@@ -232,9 +236,10 @@ chunk Top-1 còn phải chứa đúng bằng chứng để Agent trả lời kh�
 | Hướng tiếp cận của tôi | 10 / 10 |
 | Hoàn thiện code — 42/42 tests | 30 / 30 |
 | Dự đoán độ tương tự | 5 / 5 |
-| Kết quả truy xuất trên benchmark chung | 3 / 10 |
-| **Tổng phần cá nhân hiện tại** | **53 / 60** |
+| Kết quả truy xuất trên benchmark chung | 2 / 10 |
+| **Tổng phần cá nhân hiện tại** | **52 / 60** |
 
-Phần retrieval tự đánh giá 3/10: ba câu có đúng tài liệu trong Top-3 nhưng Agent
-stub chưa trích đủ gold answer; hai câu còn lại miss. Đây là kết quả offline có
-thể tái lập, chưa phải điểm cuối khi dùng local multilingual embedder.
+Phần retrieval tự đánh giá 2/10: ba câu có đúng tài liệu trong Top-3, nhưng chỉ
+hai câu có chunk chứa bằng chứng liên quan; Agent stub vẫn chưa trích đủ gold
+answer. Đây là kết quả offline có thể tái lập, chưa phải điểm cuối khi dùng local
+multilingual embedder.
