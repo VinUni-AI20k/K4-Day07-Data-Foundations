@@ -16,6 +16,10 @@ Ví dụ:
     # In bảng Markdown để dán vào REPORT_NHOM.md
     python benchmark/run_benchmark.py --data-dir data/k4_asos_products --markdown
 
+    # Benchmark chính thức của nhóm với BGE-M3
+    LOCAL_EMBEDDING_MODEL=BAAI/bge-m3 EMBEDDING_PROVIDER=local \
+    python benchmark/run_benchmark.py --data-dir data/k4_asos_products --chunker heading --markdown
+
 LƯU Ý: với embedder `mock`, điểm tương tự là NHIỄU nên top-3 vô nghĩa — chỉ dùng để
 kiểm tra pipeline. Chấm điểm thật cần EMBEDDING_PROVIDER=local (hoặc openai).
 """
@@ -40,7 +44,8 @@ def select_embedder(package, provider: str):
     """Chọn backend nhúng từ chính solution package (mock | local | openai)."""
     provider = (provider or "mock").strip().lower()
     if provider == "local":
-        return package.LocalEmbedder()
+        model_name = os.getenv("LOCAL_EMBEDDING_MODEL", "").strip()
+        return package.LocalEmbedder(model_name=model_name) if model_name else package.LocalEmbedder()
     if provider == "openai":
         return package.OpenAIEmbedder()
     return package._mock_embed

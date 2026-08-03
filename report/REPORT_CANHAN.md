@@ -91,30 +91,27 @@ Kết quả này xác nhận benchmark semantic phải dùng local multilingual 
 
 ## 4. Kết quả truy xuất của tôi (Competition Results) - 10 điểm
 
-Tôi chạy đúng năm golden queries trong `benchmark/queries.py` với package cá nhân, `HeadingRecursiveChunker`, `chunk_size=400`, `top_k=3` và model `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`.
+Tôi chạy đúng năm golden queries trong `benchmark/queries.py` với package cá nhân, `HeadingRecursiveChunker`, `chunk_size=400`, `top_k=3` và model `BAAI/bge-m3`.
 Kết quả đầy đủ được lưu tại `src/K4_2A202601934_NguyenDangLong/benchmark_results.json`.
 
 | # | Câu hỏi | Top-1 | Score | Relevant | Agent answer |
 |---|---|---|---:|---|---|
-| 1 | Sản phẩm nào phải giặt khô và làm từ gì? | ASOS LUXE cotton corset top | 0.502600 | Không, MISS | Chưa xác nhận |
-| 2 | Đầm maxi ASOS EDITION satin giá bao nhiêu? | Đúng ASOS EDITION satin cami maxi dress | 0.755084 | Có, TOP-1 | Chưa xác nhận |
-| 3 | Áo khoác nào làm từ lông giả? | Đúng Daisy Street faux fur coat | 0.576306 | Có, TOP-1 | Chưa xác nhận |
-| 4 | Sản phẩm đen, cổ yếm để đi biển? | Đúng Public Desire beach dress | 0.530698 | Có, TOP-1 | Chưa xác nhận |
-| 5 | Có maternity dress không và fit thế nào? | Đúng ASOS DESIGN maternity dress | 0.703586 | Có, TOP-1 | Chưa xác nhận |
+| 1 | Sản phẩm nào phải giặt khô và làm từ gì? | Đúng adidas Originals bralet | 0.532 | Có, TOP-1 | Chưa xác nhận |
+| 2 | Đầm maxi ASOS EDITION satin giá bao nhiêu? | Đúng ASOS EDITION satin cami maxi dress | 0.747 | Có, TOP-1 | Chưa xác nhận |
+| 3 | Áo khoác nào làm từ lông giả? | Đúng Daisy Street faux fur coat | 0.607 | Có, TOP-1 | Chưa xác nhận |
+| 4 | Sản phẩm đen, cổ yếm để đi biển? | Đúng Hollister halterneck bikini top | 0.626 | Có, TOP-1 | Chưa xác nhận |
+| 5 | Có maternity dress không và fit thế nào? | Đúng ASOS DESIGN maternity dress | 0.642 | Có, TOP-1 | Chưa xác nhận |
 
-**Số query có chunk liên quan trong top-3:** 4 / 5.
+**Số query có chunk liên quan trong top-3:** 5 / 5.
 
-Golden runner tính retrieval tự động là 8/10.
+Golden runner tính retrieval tự động là 10/10.
 Tôi chưa nhận điểm cuối cho mục này vì agent answers chưa được chạy và đối chiếu với gold answers.
 
 ### Failure analysis
 
-Q1 hỏi đồng thời về hướng dẫn chăm sóc và chất liệu của cùng một sản phẩm.
-Trong tài liệu đúng, `Dry clean only` nằm dưới heading `Look After Me`, còn `100% Cotton` nằm dưới heading `About Me`; strategy heading tạo hai chunk riêng nên không có chunk nào chứa trọn hai bằng chứng.
-
-Tôi đã thử tạo thêm một compact window cho hai sibling sections liền nhau, giữ product title một lần và không thay golden query.
-Kết quả vẫn là 8/10 và Q1 vẫn MISS, vì vậy thử nghiệm không được giữ trong implementation cuối.
-Hướng cải thiện tiếp theo là so sánh structured-field retrieval hoặc hybrid lexical-semantic reranking, thay vì tiếp tục tăng số chunk trùng lặp.
+Với MiniLM baseline, Q1 từng MISS vì `Dry clean only` và `100% Cotton` nằm ở hai subsection khác nhau.
+Khi giữ nguyên strategy và chuyển sang BGE-M3, Q1 vào TOP-1 với score 0.532.
+Điều này cho thấy embedding model có ảnh hưởng trực tiếp đến retrieval quality; không nên sửa chunker chỉ để bù cho một embedding model yếu hơn.
 
 ## Tự Đánh Giá (Phần Cá Nhân)
 

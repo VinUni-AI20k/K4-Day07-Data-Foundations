@@ -75,7 +75,7 @@ print(len(embedder("embedding smoke test")))
 PY
 ```
 
-- Gói `src` hỗ trợ mô hình `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, phù hợp với kho ngữ liệu tiếng Việt, thông qua thư viện `sentence-transformers`.
+- Gói `src` hỗ trợ mô hình multilingual `BAAI/bge-m3`, phù hợp với kho ngữ liệu product đa ngôn ngữ, thông qua thư viện `sentence-transformers`.
 - Lần chạy đầu tiên, mô hình và thư viện phụ thuộc PyTorch sẽ được tải về; đây là phần **tùy chọn**, không cần thiết để làm các TODO hoặc chạy bài kiểm thử.
 
 ### 3) Tùy chọn: Trình nhúng OpenAI (OpenAI embedder)

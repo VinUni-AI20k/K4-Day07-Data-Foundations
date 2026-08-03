@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import math
 
-LOCAL_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+LOCAL_EMBEDDING_MODEL = "BAAI/bge-m3"
 OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
 
 
