@@ -51,18 +51,12 @@ class SentenceChunker:
         self.max_sentences_per_chunk = max(1, max_sentences_per_chunk)
 
     def chunk(self, text: str) -> list[str]:
-        if not text or not text.strip():
-            return []
+        # TODO: split into sentences, group into chunks
+        
+        # Use regex to split text into sentences
+        sentences = re.split(r'(?<=[.!?])\s+', text.strip())
 
-        sentences = [
-            sentence.strip()
-            for sentence in re.split(r"(?<=[.!?])(?:[ \t]+|\n+)", text.strip())
-            if sentence.strip()
-        ]
-        return [
-            " ".join(sentences[start : start + self.max_sentences_per_chunk])
-            for start in range(0, len(sentences), self.max_sentences_per_chunk)
-        ]
+        
 
 
 class RecursiveChunker:
