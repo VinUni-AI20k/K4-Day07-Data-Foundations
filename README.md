@@ -162,6 +162,9 @@ PY
 └── requirements.txt
 ```
 
+Các module `src` ở root là compatibility facades để lệnh `pytest tests/` mặc định vẫn chạy.
+Implementation thật và mọi thay đổi cá nhân của Long nằm trong folder `K4_2A202601934_NguyenDangLong`.
+
 ---
 
 ## Các Giai Đoạn Của Lab
