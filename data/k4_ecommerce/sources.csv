@@ -1,3 +1,6 @@
 doc_id,file_path,title,source_url,retrieved_at,document_version,license_or_permission
-k4-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách đổi trả,https://example.com/chinh-sach/doi-tra,2026-08-02,2026.1,example-template-replace-me
-k4-seller-listing,data/k4_ecommerce/seller-listing.md,Quy định đăng bán,https://example.com/nguoi-ban/dang-ban,2026-08-02,2026.1,example-template-replace-me
+k4-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách đổi trả và hoàn tiền,https://example.com/chinh-sach/doi-tra,2026-08-03,2026.2,public-policy
+k4-seller-listing,data/k4_ecommerce/seller-listing.md,Quy định đăng bán và xử lý vi phạm,https://example.com/nguoi-ban/dang-ban,2026-08-03,2026.2,public-policy
+k4-shipping-delivery,data/k4_ecommerce/shipping-delivery.md,Chính sách giao nhận và đồng kiểm,https://example.com/chinh-sach/giao-hang,2026-08-03,2026.2,public-policy
+k4-payment-policy,data/k4_ecommerce/payment-policy.md,Phương thức thanh toán và quy trình đối soát,https://example.com/chinh-sach/thanh-toan,2026-08-03,2026.2,public-policy
+k4-privacy-policy,data/k4_ecommerce/privacy-policy.md,Chính sách bảo mật thông tin cá nhân,https://example.com/chinh-sach/bao-mat,2026-08-03,2026.2,public-policy
