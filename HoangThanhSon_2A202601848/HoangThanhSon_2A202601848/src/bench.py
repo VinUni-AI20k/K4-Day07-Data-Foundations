@@ -21,10 +21,11 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 from dotenv import load_dotenv
-from ingest import build_knowledge_base
+from ingest import load_documents, chunk_document
 
 from src.chunking import SentenceChunker
 from src.agent import KnowledgeBaseAgent
+from src.store import EmbeddingStore
 from src.embeddings import (
     EMBEDDING_PROVIDER_ENV,
     LOCAL_EMBEDDING_MODEL,
@@ -74,9 +75,15 @@ def run_benchmark():
     chunker = SentenceChunker(max_sentences_per_chunk=3)
 
     # =========================================================================
-    # STEP 2. Nạp cả thư mục corpus. embedding_fn là tham số bắt buộc thứ hai.
+    # STEP 2. Nạp file chính sách Shopee chuẩn (shopee-returns-policy.md)
     # =========================================================================
-    store = build_knowledge_base(data_dir, embedding_fn=embedding_fn, chunker=chunker)
+    raw_docs = [doc for doc in load_documents(data_dir) if doc.id == "shopee-returns-policy"]
+    chunk_docs = []
+    for doc in raw_docs:
+        chunk_docs.extend(chunk_document(doc, chunker))
+
+    store = EmbeddingStore(embedding_fn=embedding_fn)
+    store.add_documents(chunk_docs)
 
     # In thông tin Strategy, Tham số và Số chunk đã nạp
     strategy_name = chunker.__class__.__name__
@@ -95,27 +102,27 @@ def run_benchmark():
     queries = [
         {
             "id": 1,
-            "query": "Trên Shopee, người mua có bao nhiêu ngày để gửi yêu cầu trả hàng/hoàn tiền đối với sản phẩm thông thường?",
+            "query": "Với sản phẩm thông thường, người mua có bao nhiêu ngày để gửi yêu cầu Trả hàng/Hoàn tiền sau khi đơn được cập nhật giao thành công? Thực phẩm tươi sống/đông lạnh có thời hạn nào?",
             "filter": None
         },
         {
             "id": 2,
-            "query": "Thời hạn gửi yêu cầu trả hàng đối với thực phẩm tươi sống và đông lạnh trên Shopee là bao lâu?",
+            "query": "Đơn COD/chuyển khoản chưa liên kết thành công phương thức nhận hoàn tiền hợp lệ có gửi yêu cầu Trả hàng/Hoàn tiền được không?",
             "filter": None
         },
         {
             "id": 3,
-            "query": "Đơn thanh toán COD chưa liên kết phương thức nhận hoàn tiền hợp lệ thì có được gửi yêu cầu trả hàng không?",
+            "query": "Người mua có gói ShopeeVIP được Trả hàng COM tối đa bao nhiêu lần mỗi tháng?",
             "filter": None
         },
         {
             "id": 4,
-            "query": "Người mua dùng Gói ShopeeVIP được Trả hàng COM tối đa bao nhiêu lần mỗi tháng?",
-            "filter": None
+            "query": "Người bán phải phản hồi yêu cầu Trả hàng/Hoàn tiền trong bao lâu kể từ khi nhận thông báo? Nếu quá hạn không phản hồi, Shopee hiểu như thế nào?",
+            "filter": {"customer_role": "both"}
         },
         {
             "id": 5,
-            "query": "Với metadata_filter customer_role=seller/both, Người Bán có bao lâu để phản hồi và nếu quá hạn Shopee hiểu như thế nào?",
+            "query": "Người bán phải chịu phí vận chuyển chiều hoàn trả sản phẩm trong những trường hợp nào?",
             "filter": {"customer_role": "both"}
         }
     ]
