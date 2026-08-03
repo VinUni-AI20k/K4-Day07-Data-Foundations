@@ -142,9 +142,11 @@ src/K4_2A202601184_DaoMinhChien/
 Lệnh kiểm thử:
 
 ```powershell
-$env:LAB_SOLUTION_PACKAGE='src.K4_2A202601184_DaoMinhChien'
 python -m pytest tests -v
 ```
+
+File `conftest.py` đặt package cá nhân làm lựa chọn mặc định khi chạy pytest;
+biến `LAB_SOLUTION_PACKAGE` vẫn có thể được đặt thủ công để kiểm tra package khác.
 
 Kết quả:
 
