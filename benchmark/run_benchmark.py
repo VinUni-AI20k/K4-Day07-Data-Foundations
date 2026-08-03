@@ -43,11 +43,15 @@ from ingest import load_documents  # noqa: E402  (chỉ dùng để parse front 
 
 
 def select_embedder(package, provider: str):
-    """Chọn backend nhúng từ chính solution package (mock | local | openai)."""
+    """Chọn backend nhúng từ chính solution package (mock | local | bgem3 | openai)."""
     provider = (provider or "mock").strip().lower()
     if provider == "local":
-        model_name = os.getenv("LOCAL_EMBEDDING_MODEL", "").strip()
-        return package.LocalEmbedder(model_name=model_name) if model_name else package.LocalEmbedder()
+        return package.LocalEmbedder()
+    if provider in ("bgem3", "bge-m3"):
+        embedder_cls = getattr(package, "BGEM3Embedder", None)
+        if embedder_cls is None:
+            raise SystemExit(f"Package '{package.__name__}' chưa có BGEM3Embedder.")
+        return embedder_cls()
     if provider == "openai":
         return package.OpenAIEmbedder()
     return package._mock_embed
@@ -62,10 +66,10 @@ def make_chunker(package, name: str, chunk_size: int):
     if name == "recursive":
         return package.RecursiveChunker(chunk_size=chunk_size)
     if name == "heading":
-        chunker_class = getattr(package, "HeadingRecursiveChunker", None)
-        if chunker_class is None:
-            raise SystemExit(f"Package '{package.__name__}' không cung cấp HeadingRecursiveChunker")
-        return chunker_class(chunk_size=chunk_size)
+        chunker_cls = getattr(package, "HeadingChunker", None)
+        if chunker_cls is None:
+            raise SystemExit(f"Package '{package.__name__}' chưa có HeadingChunker.")
+        return chunker_cls(max_chars=chunk_size)
     raise SystemExit(f"Unknown --chunker '{name}' (dùng: fixed | sentence | recursive | heading)")
 
 
@@ -191,13 +195,8 @@ def _print_markdown(package_name, chunker, backend, rows, total):
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Chấm bộ benchmark 5 câu trên 1 solution package/chiến lược.")
     p.add_argument("--data-dir", default="data/k4_asos_products", help="Thư mục corpus (mặc định data/k4_asos_products)")
-<<<<<<< HEAD
-    p.add_argument("--package", default="src", help="Solution package (ghi đè bằng env LAB_SOLUTION_PACKAGE)")
-    p.add_argument("--chunker", default="recursive", help="fixed | sentence | recursive | heading")
-=======
     p.add_argument("--package", help="Solution package; cũng có thể đặt bằng env LAB_SOLUTION_PACKAGE")
     p.add_argument("--chunker", default="recursive", help="fixed | sentence | recursive")
->>>>>>> d1b69550a0c6e68e5d4accdb1ca374febfffddac
     p.add_argument("--chunk-size", type=int, default=400, help="chunk_size cho fixed/recursive")
     p.add_argument("--provider", default="mock", help="mock | local | openai (ghi đè bằng env EMBEDDING_PROVIDER)")
     p.add_argument("--top-k", type=int, default=3, help="Số kết quả top-k (mặc định 3 theo rubric)")

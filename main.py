@@ -12,6 +12,7 @@ from src.embeddings import (
     EMBEDDING_PROVIDER_ENV,
     LOCAL_EMBEDDING_MODEL,
     OPENAI_EMBEDDING_MODEL,
+    BGEM3Embedder,
     LocalEmbedder,
     OpenAIEmbedder,
     _mock_embed,
@@ -31,6 +32,12 @@ def _select_embedder():
             return LocalEmbedder(model_name=os.getenv("LOCAL_EMBEDDING_MODEL", LOCAL_EMBEDDING_MODEL))
         except Exception:
             print("Local embedder không sẵn sàng; tạm dùng mock.")
+            return _mock_embed
+    if provider in ("bgem3", "bge-m3"):
+        try:
+            return BGEM3Embedder(model_name=os.getenv("BGE_M3_MODEL", "BAAI/bge-m3"))
+        except Exception:
+            print("BGE-M3 embedder không sẵn sàng; tạm dùng mock.")
             return _mock_embed
     if provider == "openai":
         try:

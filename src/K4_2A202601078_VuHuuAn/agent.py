@@ -1,6 +1,6 @@
-"""Compatibility facade for the active personal implementation."""
+from typing import Callable
 
-from .K4_2A202601934_NguyenDangLong.agent import KnowledgeBaseAgent
+from .store import EmbeddingStore
 
 
 class KnowledgeBaseAgent:

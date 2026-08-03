@@ -9,6 +9,11 @@ const metrics = document.querySelector("#metrics");
 const retrieveWhere = document.querySelector("#retrieve-where");
 const strategy = document.querySelector("#retrieval-strategy");
 const runState = document.querySelector("#run-state");
+const topK = document.querySelector("#top-k");
+const originalQuery = document.querySelector("#original-query");
+const rewrittenQuery = document.querySelector("#rewritten-query");
+const activeTopK = document.querySelector("#active-top-k");
+const guardrailStatus = document.querySelector("#guardrail-status");
 
 let conversations = JSON.parse(localStorage.getItem("product-intelligence-chats") || "[]");
 let activeId = null;
@@ -31,7 +36,7 @@ function renderHistory() {
 
 function renderTrace(trace) {
   if (!trace.products.length) return `<section class="trace-card empty-trace"><strong>Retrieval result</strong><span>Không có product listing phù hợp trong corpus.</span></section>`;
-  return `<section class="trace-card"><div class="trace-title"><strong>Retrieved context</strong><span>${trace.products.length} product listing</span></div>${trace.products.map((item) => `<div class="trace-row"><span class="trace-score">${item.score}</span><div><strong>${escapeHtml(item.name)}</strong><p>Matched: ${escapeHtml(item.matched_fields.join(", "))}</p></div></div>`).join("")}</section>`;
+  return `<section class="trace-card"><div class="trace-title"><strong>Retrieved context</strong><span>${trace.products.length} product listing</span></div>${trace.products.map((item) => `<div class="trace-row"><span class="trace-score">${item.score}</span><div><strong>${escapeHtml(item.name)}</strong><p>Matched: ${escapeHtml(item.matched_fields.join(", "))}</p><code>[${escapeHtml(item.citation.chunk_id)} | ${escapeHtml(item.citation.document_id)}]</code></div></div>`).join("")}</section>`;
 }
 
 function createMessage(role, content, trace = null) {
@@ -71,10 +76,14 @@ function updateInspector(data, products) {
   metrics.innerHTML = [["LATENCY", `${data.latency_ms} ms`], ["TOKENS", data.total_tokens || "not returned"], ["COST", formatCost(data.cost_usd)], ["RETRIEVED", data.retrieve_count]].map(([label, value]) => `<div class="metric"><span>${label}</span><strong>${value}</strong></div>`).join("");
   retrieveWhere.textContent = data.retrieve_where;
   strategy.textContent = data.retrieval_strategy;
+  originalQuery.textContent = data.query || "—";
+  rewrittenQuery.textContent = data.rewritten_query || "—";
+  activeTopK.textContent = data.top_k ?? "—";
+  guardrailStatus.textContent = data.guardrail || "—";
   resultCount.textContent = products.length;
-  retrievedProducts.innerHTML = products.map((item) => `<article class="inspector-product"><div class="product-top"><span>${escapeHtml(item.category_group)}</span><b>score ${item.score}</b></div><h4>${escapeHtml(item.name)}</h4><p>${escapeHtml(item.brand)} · ${escapeHtml(item.color)}</p><strong>${formatGbp(item.price_gbp)}</strong><div class="tag-list">${item.matched_fields.map((field) => `<span>${escapeHtml(field)}</span>`).join("")}</div><a href="${escapeHtml(item.source_url)}" target="_blank" rel="noreferrer">View source ↗</a></article>`).join("") || `<p class="empty-state">Không có product phù hợp.</p>`;
+  retrievedProducts.innerHTML = products.map((item) => `<article class="inspector-product"><div class="product-top"><span>${escapeHtml(item.category_group)}</span><b>score ${item.score}</b></div><h4>${escapeHtml(item.name)}</h4><p>${escapeHtml(item.brand)} · ${escapeHtml(item.color)}</p><strong>${formatGbp(item.price_gbp)}</strong><div class="tag-list">${item.matched_fields.map((field) => `<span>${escapeHtml(field)}</span>`).join("")}</div><code class="citation">[${escapeHtml(item.citation.chunk_id)} | ${escapeHtml(item.citation.document_id)}]</code><a href="${escapeHtml(item.source_url)}" target="_blank" rel="noreferrer">View source ↗</a></article>`).join("") || `<p class="empty-state">Không có product phù hợp.</p>`;
 }
-function resetInspector() { metrics.innerHTML = ["LATENCY", "TOKENS", "COST", "RETRIEVED"].map((label) => `<div class="metric"><span>${label}</span><strong>—</strong></div>`).join(""); retrieveWhere.textContent = "Chờ truy vấn đầu tiên"; strategy.textContent = "—"; resultCount.textContent = "0"; retrievedProducts.innerHTML = `<p class="empty-state">Các product card sẽ hiện ở đây sau khi truy vấn.</p>`; runState.textContent = "Idle"; }
+function resetInspector() { metrics.innerHTML = ["LATENCY", "TOKENS", "COST", "RETRIEVED"].map((label) => `<div class="metric"><span>${label}</span><strong>—</strong></div>`).join(""); retrieveWhere.textContent = "Chờ truy vấn đầu tiên"; strategy.textContent = "—"; originalQuery.textContent = "Chờ truy vấn đầu tiên"; rewrittenQuery.textContent = "—"; activeTopK.textContent = "—"; guardrailStatus.textContent = "—"; resultCount.textContent = "0"; retrievedProducts.innerHTML = `<p class="empty-state">Các product card sẽ hiện ở đây sau khi truy vấn.</p>`; runState.textContent = "Idle"; }
 
 async function consumeSse(response, onEvent) {
   if (!response.ok || !response.body) throw new Error("Không thể mở luồng phản hồi.");
@@ -99,11 +108,12 @@ async function sendMessage(message) {
   if (chat.title === "Cuộc trò chuyện mới") chat.title = message.slice(0, 34);
   chat.messages.push({ role: "user", content: message }); save(); render(); input.value = ""; input.style.height = "auto";
   sendButton.disabled = true; runState.textContent = "Streaming"; runState.classList.add("running");
-  const assistant = createMessage("assistant", ""); let output = ""; let trace = { products: [] }; let receivedDone = false;
+  const assistant = createMessage("assistant", ""); let output = ""; let trace = { products: [] }; let receivedDone = false; const selectedTopK = Number(topK.value);
   try {
-    const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json", "Accept": "text/event-stream" }, body: JSON.stringify({ message, history: priorHistory }) });
+    const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json", "Accept": "text/event-stream" }, body: JSON.stringify({ message, history: priorHistory, top_k: selectedTopK }) });
     await consumeSse(response, (event, data) => {
-      if (event === "retrieval") { trace = { products: data.products }; assistant.item.querySelector(".message-body").insertAdjacentHTML("beforeend", renderTrace(trace)); updateInspector({ latency_ms: "…", total_tokens: "…", cost_usd: null, retrieve_count: trace.products.length, retrieve_where: "data/k4_asos_products", retrieval_strategy: "weighted lexical metadata search" }, trace.products); }
+      if (event === "guardrail") { guardrailStatus.textContent = `${data.status}: ${data.reason}`; }
+      if (event === "retrieval") { trace = { products: data.products }; assistant.item.querySelector(".message-body").insertAdjacentHTML("beforeend", renderTrace(trace)); updateInspector({ latency_ms: "…", total_tokens: "…", cost_usd: null, retrieve_count: trace.products.length, query: data.query, rewritten_query: data.rewritten_query, top_k: data.top_k, guardrail: "passed", retrieve_where: "data/k4_asos_products", retrieval_strategy: "weighted lexical metadata search" }, trace.products); }
       if (event === "delta") { const shouldStick = nearBottom(); output += data.text; assistant.textElement.innerHTML = renderMarkdown(output); if (shouldStick) scrollMessages(true); }
       if (event === "done") { chat.messages.push({ role: "assistant", content: output, trace, metrics: data.metrics }); save(); updateInspector(data.metrics, trace.products); runState.textContent = "Complete"; runState.classList.remove("running"); receivedDone = true; }
       if (event === "error") throw new Error(data.error);

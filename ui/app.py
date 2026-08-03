@@ -36,13 +36,15 @@ def create_app(llm: ChatClient | None = None, data_dir: Path = DATA_DIR) -> Flas
     @app.post("/api/chat")
     def chat():
         payload: dict[str, Any] = request.get_json(silent=True) or {}
-        message, history = payload.get("message"), payload.get("history", [])
+        message, history, top_k = payload.get("message"), payload.get("history", []), payload.get("top_k", 3)
         if not isinstance(message, str) or not message.strip():
             return jsonify({"error": "message phải là chuỗi không rỗng"}), 400
         if len(message) > 1000:
             return jsonify({"error": "message tối đa 1000 ký tự"}), 400
         if not isinstance(history, list):
             return jsonify({"error": "history phải là danh sách"}), 400
+        if isinstance(top_k, bool) or not isinstance(top_k, int) or not 1 <= top_k <= 10:
+            return jsonify({"error": "top_k phải là số nguyên từ 1 đến 10"}), 400
         def sse_event(event: dict[str, Any]) -> str:
             event_type = event.pop("type")
             return f"event: {event_type}\ndata: {json.dumps(event, ensure_ascii=False)}\n\n"
@@ -50,7 +52,7 @@ def create_app(llm: ChatClient | None = None, data_dir: Path = DATA_DIR) -> Flas
         @stream_with_context
         def event_stream():
             try:
-                for event in service.stream_answer(message, history):
+                for event in service.stream_answer(message, history, top_k):
                     yield sse_event(event)
             except (ConfigurationError, LLMError) as error:
                 yield sse_event({"type": "error", "error": str(error)})

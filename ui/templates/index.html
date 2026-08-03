@@ -19,7 +19,7 @@
     <section class="chat-panel">
       <header class="chat-header">
         <div><p class="eyebrow">GROUNDED PRODUCT CHAT</p><h1>ASOS catalog assistant</h1></div>
-        <span class="data-badge">● Catalog loaded</span>
+        <div class="header-controls"><label for="top-k">Top-k <select id="top-k" aria-label="Số lượng sản phẩm truy xuất"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label><span class="data-badge">● Catalog loaded</span></div>
       </header>
       {% if startup_error %}<p class="warning">{{ startup_error }}</p>{% endif %}
       <div id="messages" class="messages" aria-live="polite">
@@ -53,6 +53,7 @@
           <div class="metric"><span>RETRIEVED</span><strong>—</strong></div>
         </div>
       </section>
+      <section class="query-section"><h3>Query agent</h3><dl class="query-details"><div><dt>Original</dt><dd id="original-query">Chờ truy vấn đầu tiên</dd></div><div><dt>Rewritten</dt><dd id="rewritten-query">—</dd></div><div><dt>Top-k</dt><dd id="active-top-k">—</dd></div><div><dt>Guardrails</dt><dd id="guardrail-status">—</dd></div></dl></section>
       <section class="trace-section"><h3>Retrieve where</h3><code id="retrieve-where">Chờ truy vấn đầu tiên</code><p id="retrieval-strategy" class="strategy">—</p></section>
       <section class="products-section"><div class="section-title"><h3>Retrieved products</h3><span id="result-count">0</span></div><div id="retrieved-products" class="retrieved-products"><p class="empty-state">Các product card sẽ hiện ở đây sau khi truy vấn.</p></div></section>
     </aside>

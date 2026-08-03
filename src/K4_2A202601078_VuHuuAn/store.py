@@ -1,6 +1,6 @@
-"""Compatibility facade for the active personal implementation."""
+from __future__ import annotations
 
-from .K4_2A202601934_NguyenDangLong.store import EmbeddingStore
+from typing import Any, Callable
 
 from .chunking import _dot
 from .embeddings import _mock_embed
