@@ -147,7 +147,11 @@ PY
 │   ├── chunking.py       ← Các lớp Chunking + hàm hỗ trợ tính độ tương tự
 │   ├── store.py          ← Lớp EmbeddingStore
 │   ├── agent.py          ← Lớp KnowledgeBaseAgent
-│   └── ...               ← Các module nhỏ hơn
+│   ├── K4_2A202601934_NguyenDangLong/ ← Chiến lược của Nguyễn Đăng Long
+│   ├── K4_2A202601184_DaoMinhChien/   ← Chiến lược của Đào Minh Chiến
+│   ├── K4_2A202601308_LuongMinhQuan/  ← Chiến lược của Lương Minh Quân
+│   ├── K4_2A202601916_LeDangTan/      ← Chiến lược của Lê Đăng Tấn
+│   └── K4_2A202601078_VuHuuAn/        ← Chiến lược của Vũ Hữu An
 ├── data/                  ← Tài liệu mẫu + tài liệu do nhóm thu thập (.txt/.md)
 ├── tests/
 │   └── test_solution.py   ← Bộ kiểm thử (42 tests)
