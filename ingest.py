@@ -25,6 +25,7 @@ chạy được cả trước khi bạn hoàn thành Giai đoạn 2).
 """
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Callable
 
@@ -165,4 +166,6 @@ def _self_check() -> int:
 
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     raise SystemExit(_self_check())
