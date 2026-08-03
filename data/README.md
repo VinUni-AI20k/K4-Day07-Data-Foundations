@@ -5,6 +5,7 @@ Chạy từ thư mục gốc repository:
 ```bash
 uv sync
 uv run python data/crawl_data.py
+uv run python data/preprocess.py
 ```
 
 Mặc định, script tải 7 bài viết công khai về chính sách Trả hàng / Hoàn tiền từ Trung tâm trợ giúp Shopee Việt Nam.
