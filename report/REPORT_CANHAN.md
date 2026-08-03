@@ -1,128 +1,114 @@
 # Báo Cáo Cá Nhân — Lab 7: Embedding & Vector Store
 
-**Họ tên:** [Tên sinh viên]
-**Nhóm:** [Tên nhóm]
-**Ngày:** [Ngày nộp]
+**Họ tên:** Điền Mạnh Hùng
 
-> **Nộp 1 bản / sinh viên.** Phần nhóm (lựa chọn tài liệu, thiết kế chiến lược, bộ câu hỏi đánh giá, demo) nộp chung 1 bản trong `REPORT_NHOM.md`. Chi tiết thang điểm: `docs/SCORING.md`.
+**Nhóm:** B4.1
+**Ngày:** 2026-08-03
 
-**Tổng điểm phần cá nhân: 60** = Khởi động (5) + Hướng tiếp cận (10) + Hoàn thiện code (30) + Dự đoán độ tương tự (5) + Kết quả truy xuất của tôi (10).
+> Các kết quả retrieval bên dưới dùng corpus `data/shopee_policy/`, OpenAI
+> `text-embedding-3-small`, và cùng bộ benchmark trong
+> `docs/SHOPEE_POLICY_BENCHMARKS.md`.
 
----
+## 1. Khởi động (Warm-up)
 
-## 1. Khởi động (Warm-up) — Cá nhân (5 điểm)
+### Độ tương tự cosine
 
-### Độ tương tự Cosine (Cosine Similarity) (Bài tập 1.1)
+Cosine cao nghĩa là hai embedding cùng hướng, thường biểu diễn hai đoạn văn có
+ý nghĩa gần nhau. Cosine đo hướng thay vì độ dài vector nên phù hợp với text
+embedding hơn khoảng cách Euclid, vốn dễ bị ảnh hưởng bởi độ lớn vector.
 
-**Độ tương tự cosine cao (High cosine similarity) nghĩa là gì?**
-> *Viết 1-2 câu:*
+- **Ví dụ cao:** “Người mua có thể yêu cầu hoàn tiền.” và “Khách hàng được trả
+  hàng và nhận lại tiền.” Cả hai cùng nói về quyền trả hàng/hoàn tiền.
+- **Ví dụ thấp:** “Người mua có 15 ngày để trả hàng.” và “Máy học sử dụng dữ
+  liệu để học quy luật.” Hai câu thuộc hai chủ đề khác nhau.
 
-**Ví dụ có độ tương tự CAO:**
-- Câu A:
-- Câu B:
-- Tại sao tương đồng:
+### Bài toán chunking
 
-**Ví dụ có độ tương tự THẤP:**
-- Câu A:
-- Câu B:
-- Tại sao khác:
+- `chunk_size=500`, `overlap=50`: `ceil((10000 - 50) / (500 - 50))`
+  = `ceil(22.11)` = **23 chunks**.
+- `overlap=100`: `ceil((10000 - 100) / (500 - 100))`
+  = `ceil(24.75)` = **25 chunks**. Overlap lớn hơn tạo thêm chunk nhưng giữ
+  được ngữ cảnh ở ranh giới, giảm nguy cơ một ý bị cắt rời.
 
-**Tại sao độ tương tự cosine (cosine similarity) được ưu tiên hơn khoảng cách Euclid (Euclidean distance) cho text embeddings?**
-> *Viết 1-2 câu:*
+## 2. Hướng tiếp cận của tôi
 
-### Bài toán tính toán Chunking (Bài tập 1.2)
+### Chunking functions
 
-**Tài liệu 10,000 ký tự, chunk_size=500, overlap=50. Bao nhiêu chunks?**
-> *Trình bày phép tính:*
-> *Đáp án:*
+- **`SentenceChunker.chunk`:** dùng regex tách sau `.`, `!`, `?` khi tiếp theo
+  là whitespace/kết thúc chuỗi; giữ dấu câu và gom tối đa số câu cấu hình.
+  Chuỗi rỗng hoặc chỉ có whitespace trả về danh sách rỗng.
+- **`RecursiveChunker.chunk` / `_split`:** ưu tiên `\n\n`, `\n`, `. `, khoảng
+  trắng, rồi cắt cứng. Khi một mảnh vượt kích thước, nó được xử lý đệ quy với
+  separator ưu tiên thấp hơn; khi không còn separator, cắt theo `chunk_size`.
+- **`compute_similarity`:** tính `dot(a,b) / (||a|| * ||b||)` và trả `0.0`
+  nếu một vector có độ lớn bằng 0. `ChunkingStrategyComparator` trả số chunk,
+  độ dài trung bình và danh sách chunk cho cả ba chiến lược.
 
-**Nếu độ chồng chéo (overlap) tăng lên 100, số lượng chunk thay đổi thế nào? Tại sao muốn độ chồng chéo nhiều hơn?**
-> *Viết 1-2 câu:*
+### EmbeddingStore và agent
 
----
+- **Store:** mỗi record gồm id, content, metadata, embedding; `doc_id` được
+  bổ sung nếu thiếu. `search` xếp hạng dot product giảm dần; filter metadata
+  chạy trước khi xếp hạng; `delete_document` xóa tất cả record cùng `doc_id`.
+- **Agent:** lấy top-k chunk, đưa source/score/content vào context và yêu cầu
+  LLM chỉ trả lời theo context hoặc nêu thiếu dữ liệu. Điều này giúp kiểm tra
+  grounding và truy vết nguồn.
 
-## 2. Hướng tiếp cận của tôi (My Approach) — Cá nhân (10 điểm)
+## 3. Hoàn thiện code
 
-Giải thích cách tiếp cận của bạn khi lập trình (implement) các phần chính trong gói `src`.
-
-### Các hàm chia nhỏ (Chunking Functions)
-
-**`SentenceChunker.chunk`** — hướng tiếp cận:
-> *Viết 2-3 câu: dùng biểu thức chính quy (regex) gì để phát hiện câu? Xử lý trường hợp ngoại lệ (edge case) nào?*
-
-**`RecursiveChunker.chunk` / `_split`** — hướng tiếp cận:
-> *Viết 2-3 câu: thuật toán hoạt động thế nào? Base case (trường hợp cơ sở) là gì?*
-
-### Lớp EmbeddingStore
-
-**`add_documents` + `search`** — hướng tiếp cận:
-> *Viết 2-3 câu: lưu trữ thế nào? Tính độ tương tự ra sao?*
-
-**`search_with_filter` + `delete_document`** — hướng tiếp cận:
-> *Viết 2-3 câu: lọc (filter) trước hay sau? Xóa bằng cách nào?*
-
-### Tác tử KnowledgeBaseAgent
-
-**`answer`** — hướng tiếp cận:
-> *Viết 2-3 câu: cấu trúc prompt? Cách đưa ngữ cảnh (inject context) vào thế nào?*
-
----
-
-## 3. Hoàn thiện code (Core Implementation) — Cá nhân (30 điểm)
-
-Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
-
-### Kết Quả Kiểm Thử (Test Results)
-
-```
-# Dán kết quả (output) của: pytest tests/ -v
+```text
+.venv/bin/python -m pytest tests/ -v
+42 passed in 0.02s
 ```
 
-**Số lượng bài test vượt qua (pass):** __ / 42
+**Số lượng bài test vượt qua:** **42 / 42**
 
----
+## 4. Dự đoán độ tương tự
 
-## 4. Dự đoán độ tương tự (Similarity Predictions) — Cá nhân (5 điểm)
+Các score được tạo bằng `text-embedding-3-small` rồi gọi
+`compute_similarity()`.
 
 | Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
-|------|-----------|-----------|---------|--------------|-------|
-| 1 | | | cao / thấp | | |
-| 2 | | | cao / thấp | | |
-| 3 | | | cao / thấp | | |
-| 4 | | | cao / thấp | | |
-| 5 | | | cao / thấp | | |
+|---|---|---|---|---:|---|
+| 1 | Người mua có thể yêu cầu hoàn tiền. | Khách hàng được trả hàng và nhận lại tiền. | cao | 0.582 | Có |
+| 2 | Người bán phải đăng ảnh thật của sản phẩm. | Ảnh sản phẩm do người bán tự chụp là bắt buộc. | cao | 0.700 | Có |
+| 3 | Phí hoàn hàng cùng tỉnh là 25.000 Xu. | Đơn khác tỉnh được hỗ trợ 40.000 Xu. | cao | 0.651 | Có |
+| 4 | Người mua có 15 ngày để trả hàng. | Máy học sử dụng dữ liệu để học quy luật. | thấp | 0.212 | Có |
+| 5 | Tài khoản đảm bảo giữ tiền thanh toán. | Tiền được lưu trước khi chuyển cho người bán. | cao | 0.485 | Có |
 
-**Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
-> *Viết 2-3 câu:*
+Điều đáng chú ý là cặp 5 chỉ ở mức trung bình dù cùng ý chính; cách diễn đạt
+và chi tiết “tài khoản đảm bảo” vẫn tác động đến embedding. Vì vậy benchmark
+cần kiểm tra trực tiếp chunk, không chỉ nhìn score.
 
----
+## 5. Kết quả truy xuất của tôi
 
-## 5. Kết quả truy xuất của tôi (Competition Results) — Cá nhân (10 điểm)
+**Chiến lược:** `SentenceChunker(max_sentences_per_chunk=5)`; 218 chunks,
+độ dài trung bình 755 ký tự. Query 3 dùng filter `buyer`, query 4 dùng filter
+`seller`.
 
-Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân của bạn trong gói `src`. **5 câu hỏi này phải trùng với các thành viên cùng nhóm** (xem `REPORT_NHOM.md`).
+| # | Query | Top-1 (tóm tắt) | Score | Đủ evidence trong top-3? | Agent answer (tóm tắt) |
+|---|---|---|---:|---|---|
+| 1 | Hạn trả hàng và ngoại lệ thực phẩm | `returns`, mục 3.2 | 0.719 | Có | 15 ngày; thực phẩm tươi sống/đông lạnh: 24 giờ |
+| 2 | Thời hạn phản hồi của người bán | `guarantee` là nhiễu; evidence đúng ở top-3 | 0.566 | Có | Phản hồi trong 2 ngày lịch |
+| 3 | Mức hỗ trợ phí tự gửi hàng hoàn | `return-shipping`, nhưng chunk top-3 thiếu mức Xu | 0.660 | Không đủ | Failure case: không trả được đủ 25.000/40.000 Xu |
+| 4 | Điều kiện ảnh thật khi đăng bán | `listing`, evidence chính xác trong top-3 | 0.641 | Có | Ảnh tự chụp, sản phẩm chiếm ít nhất 40% ảnh |
+| 5 | Nơi giữ tiền và trường hợp hoàn tiền | `terms`, mục Tài Khoản Đảm Bảo | 0.610 | Có | Tài Khoản Đảm Bảo; hoàn khi yêu cầu được chấp thuận |
 
-| # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
-|---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+**Evidence đầy đủ trong top-3:** **4 / 5**. Theo rubric, điểm retrieval/agent
+ước tính là **7 / 10**: Q1, Q4, Q5 đạt 2 điểm; Q2 đạt 1 điểm vì evidence đúng
+không ở top-1; Q3 đạt 0 điểm vì thiếu chi tiết định lượng.
 
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** __ / 5
+Điều học được: chunk theo câu giữ trọn điều kiện và số liệu tốt hơn trong phần
+lớn benchmark, nhưng một chủ đề có nhiều mức phí liền nhau vẫn có thể bị tách
+khỏi nhau. Cần thử chunk theo heading/bảng hoặc gom FAQ pair cho dữ liệu chính
+sách ở lần tiếp theo.
 
-**Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> *Viết 2-3 câu:*
-
----
-
-## Tự Đánh Giá (Phần Cá Nhân)
+## Tự đánh giá
 
 | Tiêu chí | Điểm tự đánh giá |
-|----------|-------------------|
-| Khởi động (Warm-up) | / 5 |
-| Hướng tiếp cận của tôi (My Approach) | / 10 |
-| Hoàn thiện code (Core Implementation — tests) | / 30 |
-| Dự đoán độ tương tự (Similarity Predictions) | / 5 |
-| Kết quả truy xuất của tôi (Competition Results) | / 10 |
-| **Tổng phần cá nhân** | **/ 60** |
+|---|---:|
+| Khởi động | 5 / 5 |
+| Hướng tiếp cận | 10 / 10 |
+| Hoàn thiện code | 30 / 30 |
+| Dự đoán độ tương tự | 5 / 5 |
+| Kết quả truy xuất | 7 / 10 |
+| **Tổng phần cá nhân** | **57 / 60** |
