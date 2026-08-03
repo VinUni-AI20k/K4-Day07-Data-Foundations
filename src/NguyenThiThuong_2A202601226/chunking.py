@@ -50,16 +50,13 @@ class SentenceChunker:
         if not text:
             return []
 
-        sentences = [
-            sentence.strip()
-            for sentence in re.split(r"(?<=[.!?])(?:\s+|\n+)", text.strip())
-            if sentence.strip()
-        ]
+        sentences = re.split(r"(?<=[.!?])\s+|(?<=\.)\n", text)
+        sentences = [s.strip() for s in sentences if s.strip()]
+
         chunks: list[str] = []
         for start in range(0, len(sentences), self.max_sentences_per_chunk):
-            chunk = " ".join(sentences[start : start + self.max_sentences_per_chunk]).strip()
-            if chunk:
-                chunks.append(chunk)
+            group = sentences[start : start + self.max_sentences_per_chunk]
+            chunks.append(" ".join(group).strip())
         return chunks
 
 
@@ -80,55 +77,37 @@ class RecursiveChunker:
     def chunk(self, text: str) -> list[str]:
         if not text:
             return []
-        return [chunk for chunk in self._split(text.strip(), self.separators) if chunk]
+        return self._split(text, self.separators)
 
     def _split(self, current_text: str, remaining_separators: list[str]) -> list[str]:
-        current_text = current_text.strip()
-        if not current_text:
-            return []
         if len(current_text) <= self.chunk_size:
             return [current_text]
 
         if not remaining_separators:
             return [
-                current_text[start : start + self.chunk_size].strip()
-                for start in range(0, len(current_text), self.chunk_size)
-                if current_text[start : start + self.chunk_size].strip()
+                current_text[i : i + self.chunk_size]
+                for i in range(0, len(current_text), self.chunk_size)
             ]
 
-        separator = remaining_separators[0]
-        if separator == "":
-            return [
-                current_text[start : start + self.chunk_size].strip()
-                for start in range(0, len(current_text), self.chunk_size)
-                if current_text[start : start + self.chunk_size].strip()
-            ]
+        sep = remaining_separators[0]
+        rest = remaining_separators[1:]
 
-        parts = [part.strip() for part in current_text.split(separator) if part.strip()]
-        if len(parts) <= 1:
-            return self._split(current_text, remaining_separators[1:])
+        if sep == "":
+            parts = list(current_text)
+        else:
+            parts = current_text.split(sep)
 
-        chunks: list[str] = []
-        buffer = ""
-        for part in parts:
-            piece = part
-            candidate = piece if not buffer else f"{buffer}{separator}{piece}"
-            if len(candidate) <= self.chunk_size:
-                buffer = candidate
+        pieces: list[str] = []
+        for i, part in enumerate(parts):
+            if sep != "" and i < len(parts) - 1:
+                part = part + sep
+            if not part:
                 continue
-
-            if buffer:
-                chunks.append(buffer.strip())
-                buffer = ""
-
-            if len(piece) <= self.chunk_size:
-                buffer = piece
+            if len(part) > self.chunk_size:
+                pieces.extend(self._split(part, rest))
             else:
-                chunks.extend(self._split(piece, remaining_separators[1:]))
-
-        if buffer:
-            chunks.append(buffer.strip())
-        return chunks
+                pieces.append(part)
+        return pieces
 
 
 def _dot(a: list[float], b: list[float]) -> float:
@@ -143,9 +122,9 @@ def compute_similarity(vec_a: list[float], vec_b: list[float]) -> float:
 
     Returns 0.0 if either vector has zero magnitude.
     """
-    norm_a = math.sqrt(sum(value * value for value in vec_a))
-    norm_b = math.sqrt(sum(value * value for value in vec_b))
-    if norm_a == 0.0 or norm_b == 0.0:
+    norm_a = math.sqrt(sum(x * x for x in vec_a))
+    norm_b = math.sqrt(sum(x * x for x in vec_b))
+    if norm_a == 0 or norm_b == 0:
         return 0.0
     return _dot(vec_a, vec_b) / (norm_a * norm_b)
 
@@ -155,17 +134,18 @@ class ChunkingStrategyComparator:
 
     def compare(self, text: str, chunk_size: int = 200) -> dict:
         strategies = {
-            "fixed_size": FixedSizeChunker(chunk_size=chunk_size, overlap=0),
-            "by_sentences": SentenceChunker(max_sentences_per_chunk=3),
+            "fixed_size": FixedSizeChunker(chunk_size=chunk_size),
+            "by_sentences": SentenceChunker(),
             "recursive": RecursiveChunker(chunk_size=chunk_size),
         }
 
-        comparison = {}
+        result: dict = {}
         for name, chunker in strategies.items():
             chunks = chunker.chunk(text)
-            comparison[name] = {
+            avg_length = sum(len(c) for c in chunks) / len(chunks) if chunks else 0
+            result[name] = {
                 "count": len(chunks),
-                "avg_length": sum(len(chunk) for chunk in chunks) / len(chunks) if chunks else 0,
+                "avg_length": avg_length,
                 "chunks": chunks,
             }
-        return comparison
+        return result

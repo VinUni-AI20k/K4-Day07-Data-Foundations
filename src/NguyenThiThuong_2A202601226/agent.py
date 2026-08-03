@@ -18,15 +18,7 @@ class KnowledgeBaseAgent:
         self.llm_fn = llm_fn
 
     def answer(self, question: str, top_k: int = 3) -> str:
-        results = self.store.search(question, top_k=top_k)
-        context = "\n\n".join(
-            f"[{index}] {result['content']}"
-            for index, result in enumerate(results, start=1)
-        )
-        prompt = (
-            "Answer the question using only the context below.\n\n"
-            f"Context:\n{context}\n\n"
-            f"Question: {question}\n"
-            "Answer:"
-        )
+        results = self.store.search(question, top_k)
+        context = "\n\n".join(r["content"] for r in results)
+        prompt = f"Context:\n{context}\n\nQuestion: {question}"
         return self.llm_fn(prompt)

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "q1",
+    "query": "Người mua có bao nhiêu ngày để yêu cầu trả hàng và hoàn tiền sau khi nhận hàng?",
+    "gold_answer": "Trong vòng 15 ngày kể từ khi giao hàng thành công; riêng thực phẩm tươi/đông lạnh là 24 giờ.",
+    "gold_doc_id": "k4-returns-policy",
+    "metadata_filter": {"customer_role": "buyer"}
+  },
+  {
+    "id": "q2",
+    "query": "Đơn hàng thanh toán bằng Apple Pay trên Shopee cần nằm trong khoảng giá trị nào?",
+    "gold_answer": "Từ 10.000 VNĐ đến 25.000.000 VNĐ.",
+    "gold_doc_id": "k4-payment-methods",
+    "metadata_filter": {"customer_role": "buyer"}
+  },
+  {
+    "id": "q3",
+    "query": "Người dùng liên hệ ai để yêu cầu truy cập hoặc xóa dữ liệu cá nhân trên Shopee?",
+    "gold_answer": "Liên hệ Cán bộ bảo vệ dữ liệu (Data Protection Officer) qua email dpo.vn@shopee.com.",
+    "gold_doc_id": "k4-privacy-policy",
+    "metadata_filter": {"customer_role": "buyer"}
+  },
+  {
+    "id": "q4",
+    "query": "Người bán phải đảm bảo hạn sử dụng còn lại tối thiểu bao nhiêu khi đăng bán sản phẩm có hạn dùng?",
+    "gold_answer": "Chỉ được bán khi giao đi sản phẩm còn ít nhất 30% thời hạn sử dụng và ít nhất 30 ngày.",
+    "gold_doc_id": "k4-seller-listing",
+    "metadata_filter": {"customer_role": "seller"}
+  },
+  {
+    "id": "q5",
+    "query": "Mức bồi thường tối đa khi kiện hàng bị mất hoàn toàn trong quá trình vận chuyển là bao nhiêu?",
+    "gold_answer": "70% giá trị sản phẩm, áp dụng khi đơn vị vận chuyển không bồi thường.",
+    "gold_doc_id": "k4-shipping-policy",
+    "metadata_filter": null
+  }
+]
