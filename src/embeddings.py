@@ -60,4 +60,52 @@ class OpenAIEmbedder:
         return [float(value) for value in response.data[0].embedding]
 
 
+class HuggingFaceEmbedder:
+    """Hugging Face API-backed embedder using huggingface_hub InferenceClient."""
+
+    def __init__(
+        self,
+        model_name: str = LOCAL_EMBEDDING_MODEL,
+        token: str | None = None,
+    ) -> None:
+        import os
+        from huggingface_hub import InferenceClient
+
+        self.model_name = model_name
+        self._backend_name = f"huggingface: {model_name}"
+        api_token = token or os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACEHUB_API_TOKEN")
+        self.client = InferenceClient(token=api_token)
+        self._cache: dict[str, list[float]] = {}
+
+    def __call__(self, text: str) -> list[float]:
+        if text in self._cache:
+            return self._cache[text]
+        try:
+            res = self.client.feature_extraction(text, model=self.model_name)
+            if hasattr(res, "tolist"):
+                res = res.tolist()
+            if isinstance(res, list):
+                if res and isinstance(res[0], list):
+                    dim = len(res[0])
+                    res = [sum(res[i][d] for i in range(len(res))) / len(res) for d in range(dim)]
+                vec = [float(x) for x in res]
+                import math
+                norm = math.sqrt(sum(x * x for x in vec))
+                if norm > 1e-9:
+                    vec = [x / norm for x in vec]
+                self._cache[text] = vec
+                return vec
+            vec = [float(x) for x in res]
+            import math
+            norm = math.sqrt(sum(x * x for x in vec))
+            if norm > 1e-9:
+                vec = [x / norm for x in vec]
+            self._cache[text] = vec
+            return vec
+        except Exception as e:
+            print(f"HuggingFace API embedder notice: {e}, falling back to mock embedder.")
+            return _mock_embed(text)
+
+
 _mock_embed = MockEmbedder()
+

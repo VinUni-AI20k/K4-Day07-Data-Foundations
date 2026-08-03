@@ -12,6 +12,7 @@ from src.embeddings import (
     EMBEDDING_PROVIDER_ENV,
     LOCAL_EMBEDDING_MODEL,
     OPENAI_EMBEDDING_MODEL,
+    HuggingFaceEmbedder,
     LocalEmbedder,
     OpenAIEmbedder,
     _mock_embed,
@@ -23,9 +24,15 @@ DEFAULT_DATA_DIR = "data/k4_ecommerce"
 
 
 def _select_embedder():
-    """Chọn backend nhúng theo biến môi trường EMBEDDING_PROVIDER (mock | local | openai)."""
+    """Chọn backend nhúng theo biến môi trường EMBEDDING_PROVIDER (mock | local | openai | huggingface)."""
     load_dotenv(override=False)
     provider = os.getenv(EMBEDDING_PROVIDER_ENV, "mock").strip().lower()
+    if provider == "huggingface":
+        try:
+            return HuggingFaceEmbedder(model_name=os.getenv("HF_EMBEDDING_MODEL", LOCAL_EMBEDDING_MODEL))
+        except Exception:
+            print("Hugging Face embedder không sẵn sàng; tạm dùng mock.")
+            return _mock_embed
     if provider == "local":
         try:
             return LocalEmbedder(model_name=os.getenv("LOCAL_EMBEDDING_MODEL", LOCAL_EMBEDDING_MODEL))
@@ -41,10 +48,36 @@ def _select_embedder():
     return _mock_embed
 
 
-def demo_llm(prompt: str) -> str:
-    """LLM giả lập đơn giản để thử RAG thủ công."""
-    preview = prompt[:400].replace("\n", " ")
-    return f"[DEMO LLM] Generated answer from prompt preview: {preview}..."
+def _select_llm():
+    """Chọn LLM thực tế (Nvidia/OpenAI) nếu có API KEY trong environment, fallback sang demo_llm."""
+    load_dotenv(override=False)
+    nvidia_key = os.getenv("NVIDIA_API_KEY")
+    if nvidia_key:
+        try:
+            from openai import OpenAI
+
+            client = OpenAI(
+                base_url="https://integrate.api.nvidia.com/v1",
+                api_key=nvidia_key,
+                timeout=60.0,
+            )
+            model_name = os.getenv("NVIDIA_LLM_MODEL", "meta/llama-3.1-8b-instruct")
+
+            def nvidia_llm_fn(prompt: str) -> str:
+                response = client.chat.completions.create(
+                    model=model_name,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.1,
+                    max_tokens=512,
+                )
+                return response.choices[0].message.content
+
+            print(f"Backend LLM: Nvidia API ({model_name})")
+            return nvidia_llm_fn
+        except Exception as e:
+            print(f"Không thể khởi tạo Nvidia LLM ({e}), dùng LLM giả lập.")
+
+    return demo_llm
 
 
 def run_manual_demo(question: str | None = None, data_dir: str | None = None) -> int:
@@ -65,7 +98,7 @@ def run_manual_demo(question: str | None = None, data_dir: str | None = None) ->
     if backend == "mock embeddings fallback":
         print(
             "Lưu ý: mock chỉ để chạy thử/unit test và KHÔNG phản ánh chất lượng ngữ nghĩa. "
-            "Ở Giai đoạn 2, đặt EMBEDDING_PROVIDER=local để so sánh retrieval có ý nghĩa."
+            "Ở Giai đoạn 2, đặt EMBEDDING_PROVIDER=local hoặc huggingface để so sánh retrieval có ý nghĩa."
         )
 
     # Pipeline cung cấp sẵn: parse front matter -> chunk -> gắn metadata -> nạp store.
@@ -79,7 +112,8 @@ def run_manual_demo(question: str | None = None, data_dir: str | None = None) ->
         print(f"   {result['content'][:120].replace(chr(10), ' ')}...")
 
     print("\n=== KnowledgeBaseAgent ===")
-    agent = KnowledgeBaseAgent(store=store, llm_fn=demo_llm)
+    llm_fn = _select_llm()
+    agent = KnowledgeBaseAgent(store=store, llm_fn=llm_fn)
     print(agent.answer(query, top_k=3))
     return 0
 
