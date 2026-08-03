@@ -136,6 +136,62 @@ class RecursiveChunker:
         return chunks
 
 
+class MarkdownBlockChunker:
+    """Split Markdown by meaningful blocks while preserving section context.
+
+    A heading is prefixed to the following paragraph/list block. Oversized
+    blocks are split at sentence boundaries, so answer-bearing Markdown
+    sections stay together instead of being cut at arbitrary characters.
+    This is a custom strategy for the e-commerce benchmark; it is not part of
+    the three-strategy baseline comparator.
+    """
+
+    def __init__(self, chunk_size: int = 500) -> None:
+        if chunk_size <= 0:
+            raise ValueError("chunk_size must be greater than zero")
+        self.chunk_size = chunk_size
+
+    def chunk(self, text: str) -> list[str]:
+        if not text or not text.strip():
+            return []
+
+        blocks = [
+            block.strip()
+            for block in re.split(r"\n\s*\n", text.strip())
+            if block.strip()
+        ]
+        chunks: list[str] = []
+        heading = ""
+
+        for block in blocks:
+            headings = re.findall(r"^#{1,6}\s+.+$", block, flags=re.MULTILINE)
+            if headings:
+                heading = headings[-1].strip()
+
+            value = block if block.startswith(heading) else f"{heading} {block}".strip()
+            if len(value) <= self.chunk_size:
+                chunks.append(value)
+                continue
+
+            sentences = [
+                sentence.strip()
+                for sentence in re.split(r"(?<=[.!?])\s+", value)
+                if sentence.strip()
+            ]
+            current = ""
+            for sentence in sentences:
+                candidate = f"{current} {sentence}".strip()
+                if current and len(candidate) > self.chunk_size:
+                    chunks.append(current.strip())
+                    current = sentence
+                else:
+                    current = candidate
+            if current:
+                chunks.append(current.strip())
+
+        return chunks
+
+
 def _dot(a: list[float], b: list[float]) -> float:
     return sum(x * y for x, y in zip(a, b))
 
