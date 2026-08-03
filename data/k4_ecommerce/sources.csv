@@ -1,3 +1,8 @@
 doc_id,file_path,title,source_url,retrieved_at,document_version,license_or_permission
-k4-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách đổi trả,https://example.com/chinh-sach/doi-tra,2026-08-02,2026.1,example-template-replace-me
-k4-seller-listing,data/k4_ecommerce/seller-listing.md,Quy định đăng bán,https://example.com/nguoi-ban/dang-ban,2026-08-02,2026.1,example-template-replace-me
+t-hexa-payment-policy,data/k4_ecommerce/payment-policy.md,Chính sách thanh toán T-Hexa,https://www.t-hexa.vn/,2026-08-03,2026.08,owner-approved-lab-corpus
+t-hexa-shipping-policy,data/k4_ecommerce/shipping-policy.md,Chính sách giao hàng T-Hexa,https://www.t-hexa.vn/,2026-08-03,2026.08,owner-approved-lab-corpus
+t-hexa-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách đổi trả T-Hexa,https://www.t-hexa.vn/,2026-08-03,2026.08,owner-approved-lab-corpus
+t-hexa-privacy-policy,data/k4_ecommerce/privacy-policy.md,Chính sách quyền riêng tư T-Hexa,https://www.t-hexa.vn/,2026-08-03,2026.08,owner-approved-lab-corpus
+t-hexa-seller-listing-policy,data/k4_ecommerce/seller-listing.md,Điều kiện người bán và nội dung đăng bán,https://www.t-hexa.vn/,2026-08-03,2026.08,owner-approved-lab-corpus
+t-hexa-design-order-guide,data/k4_ecommerce/design-guide.md,Hướng dẫn thiết kế và đặt áo,https://www.t-hexa.vn/,2026-08-03,2026.08,owner-approved-lab-corpus
+t-hexa-bulk-order-support,data/k4_ecommerce/bulk-order-support.md,Hỗ trợ đơn hàng số lượng lớn,https://www.t-hexa.vn/,2026-08-03,2026.08,owner-approved-lab-corpus
