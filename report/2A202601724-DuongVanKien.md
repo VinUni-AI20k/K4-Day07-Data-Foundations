@@ -134,14 +134,14 @@ tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_tr
 
 | Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
 |------|-----------|-----------|---------|--------------|-------|
-| 1 | | | cao / thấp | | |
-| 2 | | | cao / thấp | | |
-| 3 | | | cao / thấp | | |
-| 4 | | | cao / thấp | | |
-| 5 | | | cao / thấp | | |
+| 1 | "Bạn có thể hoàn trả sản phẩm trong 14 ngày." | "Thời hạn đổi trả là 14 ngày kể từ ngày nhận hàng." | cao | 0.5987 | Đúng |
+| 2 | "Apple không bảo hành pin bị chai theo thời gian." | "Linh kiện tiêu hao như pin không nằm trong diện bảo hành." | cao | 0.3528 | **Sai** |
+| 3 | "Apple sẽ không bao giờ hỏi số thẻ tín dụng qua email." | "Trẻ em dưới 15 tuổi cần được cha mẹ đồng ý mới tạo được Apple ID." | thấp | 0.6366 | **Sai** |
+| 4 | "Chính sách quyền riêng tư của Apple." | "Hôm nay trời rất đẹp và nắng." | thấp | 0.4334 | Đúng (nhưng cao hơn kỳ vọng) |
+| 5 | "Kích hoạt xác thực hai yếu tố để bảo mật tài khoản." | "Bật 2FA giúp Apple ID an toàn hơn." | cao | 0.2315 | **Sai** |
 
 **Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
-> *Viết 2-3 câu:*
+> Bất ngờ nhất là **cặp 5** (0.2315 — thấp nhất trong 5 cặp) dù về mặt ý nghĩa hai câu gần như đồng nhất ("xác thực hai yếu tố" = "2FA", cùng nói về bảo mật Apple ID). Điều này cho thấy embedding không đơn thuần "hiểu nghĩa" như con người mà nhạy cảm với **bề mặt từ vựng và cấu trúc câu** — viết tắt "2FA" và cụm đầy đủ "xác thực hai yếu tố" có thể được biểu diễn khác xa nhau trong không gian vector nếu mô hình không được huấn luyện đủ với các viết tắt tiếng Anh trong ngữ cảnh tiếng Việt. Ngược lại, cặp 3 (hai câu nói về hai chủ đề khác nhau: bảo mật email vs. quy định độ tuổi) lại có score cao bất thường (0.6366) — có thể vì cả hai đều thuộc "văn phong chính sách Apple" (nhắc đến "Apple", "Apple ID", cấu trúc câu quy định), khiến mô hình multilingual MiniLM bắt được sự tương đồng về *thể loại văn bản* hơn là về *nội dung cụ thể*. Bài học: cosine similarity phản ánh sự gần gũi trong không gian embedding của mô hình cụ thể, không phải một chuẩn mực tuyệt đối về "ý nghĩa giống nhau" theo trực giác con người.
 
 ---
 
@@ -151,16 +151,16 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 | # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
 |---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | Bao nhiêu ngày để hoàn trả sản phẩm? | sales-refund: "...hoàn trả trong vòng 14 ngày kể từ ngày nhận sản phẩm..." | 0.6966 | Có, đúng top-1 | Đúng, trích được "14 ngày" |
+| 2 | Pin/lớp bảo vệ chai theo thời gian có được bảo hành? | warranty: "...không áp dụng cho: (a) linh kiện tiêu hao như pin..." | 0.3531 | Có, đúng top-1 | Đúng, trích được lý do loại trừ |
+| 3 | Trẻ dưới 15 tuổi có tự do tạo Apple ID? | privacy: "...tôn trọng quyền biết, truy cập, sửa chữa dữ liệu cá nhân..." | 0.5085 | **Không** — chunk đúng (media-terms, "trẻ dưới 15 tuổi cần cha mẹ chấp thuận") chỉ đứng top-2 | Sai/lạc đề vì context top-1 không liên quan đến câu hỏi |
+| 4 | Có hoàn tiền khi lỡ mua app trên App Store? | sales-refund: "...phần mềm có giấy phép... không thể hoàn trả khi tem niêm phong bị rách..." | 0.4707 | **Không** — thông tin đúng (giao dịch App Store là "final, non-refundable") nằm ở `media-terms`, không xuất hiện trong top-3 | Sai — agent sẽ trả lời dựa trên chính sách hoàn trả sản phẩm vật lý, không phải chính sách App Store |
+| 5 | Email đòi số thẻ tín dụng, có nên làm theo? | phishing: "...Apple sẽ không bao giờ yêu cầu cung cấp số thẻ tín dụng qua email..." | 0.4012 | Có, đúng top-1 | Đúng, trích được khuyến cáo và hướng dẫn báo cáo |
 
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** __ / 5
+**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** 3 / 5 (câu 3, 4 retrieve nhầm tài liệu dù embedding score vẫn cao)
 
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> *Viết 2-3 câu:*
+> Chunker của tôi (`BulletPointChunker`) tốt ở việc giữ trọn từng điều khoản không bị vỡ vụn, nhưng thất bại ở các câu hỏi cần thông tin nằm rải rác ở nhiều tài liệu khác chủ đề gần nhau (ví dụ câu 4: "App Store" vs "sản phẩm vật lý" đều thuộc phạm trù "mua hàng/hoàn tiền" nên embedding dễ nhầm). Điều này cho thấy chunking tốt chỉ giải quyết được vấn đề *coherence*, còn vấn đề *độ đặc thù chủ đề giữa các tài liệu* cần thêm metadata filtering (`category`) mới xử lý triệt để — đúng như phần "Tiện ích Metadata" trong `docs/EVALUATION.md`.
 
 ---
 

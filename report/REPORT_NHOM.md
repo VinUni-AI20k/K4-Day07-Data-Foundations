@@ -52,9 +52,17 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 | Tài liệu | Chiến lược (Strategy) | Số lượng Chunk | Độ dài trung bình | Giữ được ngữ cảnh không? |
 |-----------|----------|-------------|------------|-------------------|
-| | FixedSizeChunker (`fixed_size`) | | | |
-| | SentenceChunker (`by_sentences`) | | | |
-| | RecursiveChunker (`recursive`) | | | |
+| k4-apple-sales-refund | FixedSizeChunker (`fixed_size`) | 4 | 177.2 | Tương đối — cắt theo ký tự cố định (chunk_size=200) nên có thể chia đôi một câu/điều khoản |
+| k4-apple-sales-refund | SentenceChunker (`by_sentences`) | 2 | 278.0 | Tốt — mỗi chunk gồm trọn câu, không bị cắt giữa ý |
+| k4-apple-sales-refund | RecursiveChunker (`recursive`) | 6 | 91.7 | Khá — tách theo `\n`/`. ` nên chunk ngắn hơn nhưng vẫn trọn câu/điều khoản |
+| k4-apple-warranty | FixedSizeChunker (`fixed_size`) | 5 | 174.4 | Tương đối — như trên, có nguy cơ cắt giữa câu dài |
+| k4-apple-warranty | SentenceChunker (`by_sentences`) | 1 | 670.0 | Kém — toàn bộ tài liệu gộp thành 1 chunk duy nhất vì `max_sentences_per_chunk` mặc định gộp hết các câu ngắn, mất khả năng truy xuất chi tiết theo điều khoản |
+| k4-apple-warranty | RecursiveChunker (`recursive`) | 78 | 7.6 | **Rất kém — xem Failure Case bên dưới** |
+| k4-apple-privacy | FixedSizeChunker (`fixed_size`) | 4 | 173.8 | Tương đối — tương tự các tài liệu khác |
+| k4-apple-privacy | SentenceChunker (`by_sentences`) | 2 | 271.0 | Tốt — mỗi chunk trọn câu |
+| k4-apple-privacy | RecursiveChunker (`recursive`) | 5 | 107.6 | Khá — chunk ngắn nhưng vẫn giữ trọn ý |
+
+> **Failure case đáng chú ý (RecursiveChunker trên `k4-apple-warranty`):** văn bản này có câu mở đầu rất dài (~370 ký tự) và không chứa dấu `. ` ở giữa câu (chỉ có 1 câu duy nhất, dài, không dấu chấm giữa câu). Vì `RecursiveChunker` thử tách theo thứ tự ưu tiên `\n\n → \n → ". " → " " → ""`, khi không tìm thấy `\n\n`, `\n`, hay `". "` để chia nhỏ câu dài này xuống dưới `chunk_size`, nó rơi xuống tách theo dấu cách `" "` — bẻ câu thành từng cụm 2-3 từ (78 chunk, trung bình chỉ 7.6 ký tự/chunk). Kết quả: ngữ nghĩa bị vỡ vụn hoàn toàn, không chunk nào còn đủ thông tin để trả lời câu hỏi liên quan đến bảo hành. Đây là lý do `BulletPointChunker` (chunker tùy chỉnh, xem mục "Chiến lược của từng thành viên") được thiết kế để giữ trọn câu chủ đề + từng điều khoản thay vì cắt theo ký tự/khoảng trắng mù quáng.
 
 ### Chiến lược của từng thành viên
 
@@ -73,18 +81,65 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 - **Mô tả & lý do chọn:**
 - **Code snippet (nếu custom):**
 
-**Thành viên 3 — [Tên]**
-- **Loại chiến lược:**
-- **Mô tả & lý do chọn:**
+**Thành viên 3 — Dương Văn Kiên (2A202601724)**
+- **Loại chiến lược:** Custom — `BulletPointChunker` (chunk theo điều/khoản)
+- **Mô tả & lý do chọn cho chủ đề này:** Cả 5 tài liệu Apple VN đều có cấu trúc cố định: 1 câu chủ đề (nêu quy định chung) + các dòng gạch đầu dòng `-` (mỗi dòng là MỘT điều khoản/ngoại lệ độc lập, đã trọn nghĩa). `BulletPointChunker` giữ mỗi điều khoản đi kèm câu chủ đề thành 1 chunk riêng, đảm bảo mỗi chunk tự đủ nghĩa để trả lời câu hỏi mà không cần chunk khác — khắc phục đúng lỗi mà `RecursiveChunker` gặp phải trên tài liệu `k4-apple-warranty` (xem Failure Case ở trên).
 - **Code snippet (nếu custom):**
+```python
+class BulletPointChunker:
+    """Chiến lược chia nhỏ tùy chỉnh cho chính sách TMĐT dạng "câu chủ đề + gạch đầu dòng".
+
+    Lý do thiết kế: các tài liệu chính sách Apple VN đều có cấu trúc cố định: một đoạn
+    mở đầu (câu chủ đề nêu quy định chung), theo sau bởi các dòng bắt đầu bằng "-" (mỗi
+    dòng là MỘT điều khoản/ngoại lệ độc lập, đã trọn nghĩa). Chunker này giữ mỗi điều
+    khoản đi kèm câu chủ đề, đảm bảo mỗi chunk luôn tự đủ nghĩa.
+    """
+
+    def chunk(self, text: str) -> list[str]:
+        if not text:
+            return []
+
+        lines = [line.strip() for line in text.strip().splitlines() if line.strip()]
+
+        heading = ""
+        intro = ""
+        bullets: list[str] = []
+        for line in lines:
+            if line.startswith("#"):
+                heading = line.lstrip("#").strip()
+            elif line.startswith("-"):
+                bullets.append(line.lstrip("-").strip())
+            else:
+                intro = f"{intro} {line}".strip() if intro else line
+
+        if not bullets:
+            return [" ".join(filter(None, [heading, intro]))] if (heading or intro) else []
+
+        return [
+            " ".join(filter(None, [heading, intro, bullet])).strip()
+            for bullet in bullets
+        ]
+```
+
+**Kết quả benchmark (5 câu hỏi, `EMBEDDING_PROVIDER=local`, 13 chunk từ 5 tài liệu):**
+
+| # | Top-1 đúng tài liệu? | Ghi chú |
+|---|---|---|
+| 1 | Đúng (sales-refund, "14 ngày") | 2/2 |
+| 2 | Đúng (warranty, đúng câu loại trừ pin/lớp bảo vệ) | 2/2 |
+| 3 | Sai — top-1 lấy nhầm `privacy`, chunk đúng (`media-terms`, "trẻ dưới 15 tuổi") rơi xuống top-2 | 1/2 |
+| 4 | Retrieve nhầm tài liệu — cả top-3 đều thuộc `sales-refund`, không chunk nào nói về "App Store"/nội dung số; thông tin đúng nằm ở `media-terms` | 0/2 |
+| 5 | Đúng (phishing, đúng câu cảnh báo số thẻ tín dụng) | 2/2 |
+
+**Tổng điểm truy xuất của tôi: 7/10**
 
 ### So Sánh Giữa Các Thành Viên
 
 | Thành viên | Chiến lược (Strategy) | Điểm truy xuất (/10) | Điểm mạnh | Điểm yếu |
 |-----------|----------|----------------------|-----------|----------|
-| | | | | |
-| | | | | |
-| | | | | |
+| Thành viên 1 | RecursiveChunker(chunk_size=400) | | | |
+| Thành viên 2 | SentenceChunker(max_sentences_per_chunk=2) | | | |
+| Dương Văn Kiên | BulletPointChunker (custom) | 7 | Mỗi chunk tự đủ nghĩa (câu chủ đề + 1 điều khoản), tránh vỡ vụn như RecursiveChunker trên văn bản không có dấu chấm giữa câu | Câu hỏi đa-tài-liệu (câu 4) vẫn retrieve nhầm vì embedding đánh giá cả `sales-refund` liên quan đến "hoàn tiền/mua hàng" dù nội dung đúng nằm ở tài liệu khác — cần thêm metadata `category` để lọc mới xử lý được |
 
 **Chiến lược nào tốt nhất cho chủ đề này? Tại sao?**
 > *Viết 2-3 câu — đây là phần được đánh giá cao nhất (khả năng suy nghĩ & giải thích):*

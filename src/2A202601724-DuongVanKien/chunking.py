@@ -128,6 +128,44 @@ def compute_similarity(vec_a: list[float], vec_b: list[float]) -> float:
     return _dot(vec_a, vec_b) / (norm_a * norm_b)
 
 
+class BulletPointChunker:
+    """Chiến lược chia nhỏ tùy chỉnh cho chính sách TMĐT dạng "câu chủ đề + gạch đầu dòng".
+
+    Lý do thiết kế: các tài liệu chính sách Apple VN trong data/k4_ecommerce/ đều có
+    cấu trúc cố định: một đoạn mở đầu (câu chủ đề nêu quy định chung), theo sau bởi các
+    dòng bắt đầu bằng "-" (mỗi dòng là MỘT điều khoản/ngoại lệ độc lập, đã trọn nghĩa).
+    FixedSizeChunker/RecursiveChunker cắt theo ký tự nên có thể cắt đứt giữa một điều
+    khoản; SentenceChunker cắt theo câu nên tách rời điều khoản khỏi câu chủ đề cho nó
+    ý nghĩa. Chunker này giữ mỗi điều khoản đi kèm câu chủ đề, đảm bảo mỗi chunk luôn
+    trả lời được "áp dụng cho ai, trong trường hợp nào" mà không cần chunk khác.
+    """
+
+    def chunk(self, text: str) -> list[str]:
+        if not text:
+            return []
+
+        lines = [line.strip() for line in text.strip().splitlines() if line.strip()]
+
+        heading = ""
+        intro = ""
+        bullets: list[str] = []
+        for line in lines:
+            if line.startswith("#"):
+                heading = line.lstrip("#").strip()
+            elif line.startswith("-"):
+                bullets.append(line.lstrip("-").strip())
+            else:
+                intro = f"{intro} {line}".strip() if intro else line
+
+        if not bullets:
+            return [" ".join(filter(None, [heading, intro]))] if (heading or intro) else []
+
+        return [
+            " ".join(filter(None, [heading, intro, bullet])).strip()
+            for bullet in bullets
+        ]
+
+
 class ChunkingStrategyComparator:
     """Run all built-in chunking strategies and compare their results."""
 
