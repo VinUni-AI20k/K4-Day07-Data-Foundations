@@ -52,23 +52,28 @@ Giải thích cách tiếp cận của bạn khi lập trình (implement) các p
 ### Các hàm chia nhỏ (Chunking Functions)
 
 **`SentenceChunker.chunk`** — hướng tiếp cận:
-> *Viết 2-3 câu: dùng biểu thức chính quy (regex) gì để phát hiện câu? Xử lý trường hợp ngoại lệ (edge case) nào?*
+> Dùng `re.split(r"(?<=[.!?])\s+", text)`: **lookbehind** `(?<=...)` chỉ *khớp vị trí* khoảng trắng đứng sau dấu câu chứ không nuốt dấu câu, nên `"Câu một. Câu hai."` cho `["Câu một.", "Câu hai."]` — giữ nguyên `.`/`!`/`?` ở cuối câu trước. `\s+` gộp luôn trường hợp `".\n"` và nhiều khoảng trắng liên tiếp nên không cần liệt kê riêng `". "`, `"! "`, `"? "`.
+> Edge case đã xử lý: text rỗng → `[]`; `strip()` từng câu rồi loại câu rỗng (tránh chunk chỉ chứa khoảng trắng khi text có dấu câu ở cuối); text không có dấu câu nào → regex không tách được, trả về đúng 1 chunk là cả đoạn; `max_sentences_per_chunk` được ép `max(1, ...)` trong `__init__` để `range(0, n, limit)` không bao giờ nhận step = 0 (vòng lặp vô hạn).
 
 **`RecursiveChunker.chunk` / `_split`** — hướng tiếp cận:
-> *Viết 2-3 câu: thuật toán hoạt động thế nào? Base case (trường hợp cơ sở) là gì?*
+> `_split(text, separators)` thử separator theo **thứ tự ưu tiên** `["\n\n", "\n", ". ", " ", ""]` — tách theo ranh giới ngữ nghĩa lớn trước, chỉ hạ xuống ranh giới nhỏ hơn khi buộc phải làm. Với separator hiện tại, hàm cắt text rồi **gộp các phần liền kề vào một buffer** chừng nào chưa vượt `chunk_size` (nhờ vậy 3 câu ngắn nằm chung 1 chunk thay vì thành 3 chunk vụn); phần nào tự nó vẫn dài quá thì **đệ quy** với danh sách separator còn lại.
+> Ba nhánh dừng, bảo đảm đệ quy luôn tiến và không lặp vô hạn: (1) `len(text) <= chunk_size` → trả `[text]`; (2) hết separator **hoặc** separator là `""` → `_fixed_cut` cắt cứng theo `chunk_size` (lối thoát cuối); (3) separator không xuất hiện trong text → gọi lại với `separators[1:]`, text giữ nguyên — không tách nhưng danh sách separator ngắn đi 1 nên vẫn hội tụ về (1) hoặc (2).
 
 ### Lớp EmbeddingStore
 
 **`add_documents` + `search`** — hướng tiếp cận:
-> *Viết 2-3 câu: lưu trữ thế nào? Tính độ tương tự ra sao?*
+> **Lưu trữ:** backend in-memory (`self._store` là `list[dict]`, `_use_chroma = False` — Chroma là phần bonus, không làm). `_make_record(doc)` chuẩn hoá mọi Document về đúng một schema `{id, content, metadata, embedding}`; metadata được **copy** (`dict(doc.metadata)`) để store không sửa nhầm dict của người gọi, và luôn có khóa `doc_id` (`setdefault(doc_id, doc.id)`) vì `delete_document` lọc theo chính khóa này. `id` ghép `doc.id` với `self._next_index` nên thêm cùng một `doc.id` nhiều lần vẫn không đụng id.
+> **Tính độ tương tự:** `_search_records` nhúng query **đúng một lần** (ngoài vòng lặp — nhúng lại trong loop là N lần gọi embedding thừa), tính **dot product** với từng embedding đã lưu, sort giảm dần theo `score` rồi cắt `[:top_k]`. Dùng dot thay vì cosine đầy đủ là hợp lệ ở đây vì `MockEmbedder` đã L2-normalize vector đầu ra, nên dot ≡ cosine.
 
 **`search_with_filter` + `delete_document`** — hướng tiếp cận:
-> *Viết 2-3 câu: lọc (filter) trước hay sau? Xóa bằng cách nào?*
+> **Lọc TRƯỚC, xếp hạng SAU.** Làm ngược lại (lấy top-k rồi mới bỏ record lệch metadata) có thể trả về **0 kết quả dù store vẫn còn tài liệu hợp lệ**: nếu 3 chunk `department=marketing` tình cờ chiếm trọn top-3 thì lọc-sau sẽ vứt sạch cả 3 và không còn gì để trả, trong khi lọc-trước vẫn xếp hạng trong nhóm `engineering` và trả về đủ `top_k`. Một record chỉ đi tiếp khi khớp **mọi** cặp key/value trong `metadata_filter` (`all(...)`).
+> `search()` và `search_with_filter()` **dùng chung `_search_records`**, nên khi `metadata_filter=None` hai hàm chắc chắn cho cùng kết quả thay vì lệch nhau do trùng lặp logic. `delete_document(doc_id)` dựng lại danh sách chỉ gồm record có `metadata['doc_id'] != doc_id`, so sánh độ dài trước/sau để biết có xoá được gì không → `True` nếu ít nhất 1 record biến mất, `False` nếu không khớp record nào. Cách này xoá **tất cả** chunk của cùng một file gốc trong một lần, đúng với việc `ingest.py` sinh nhiều chunk (`<doc_id>::chunk_0`, `::chunk_1`, ...) từ một tài liệu.
 
 ### Tác tử KnowledgeBaseAgent
 
 **`answer`** — hướng tiếp cận:
-> *Viết 2-3 câu: cấu trúc prompt? Cách đưa ngữ cảnh (inject context) vào thế nào?*
+> Agent **không tự nhúng gì cả**: nó gọi `self.store.search(question, top_k=top_k)` và tái sử dụng toàn bộ phần retrieval đã hoàn thành. Store rỗng / không có kết quả → trả thẳng thông báo thiếu căn cứ, **không gọi LLM** (gọi lúc đó chỉ tạo cơ hội cho model bịa).
+> **Cấu trúc prompt** gồm 4 phần: *instruction* (chỉ dùng Context, nói rõ khi không đủ thông tin, trích dẫn bằng `[n]`) → *Context* → *Question* → nhãn `Answer:` để model biết chỗ bắt đầu sinh. **Inject context** bằng cách đánh số từng chunk `[1] (nguồn: <doc_id>) <nội dung>` ngăn cách bởi dòng trống — nhờ số hiệu + `doc_id` mà mỗi ý trong câu trả lời truy vết được về đúng chunk và đúng file gốc, đây chính là tiêu chí *grounding* trong `docs/EVALUATION.md`.
 
 ---
 
@@ -79,10 +84,70 @@ Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
 ### Kết Quả Kiểm Thử (Test Results)
 
 ```
-# Dán kết quả (output) của: pytest tests/ -v
+$ python -m pytest tests/ -v
+============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-8.4.2, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: E:\Labs\DAY07-2A202601934-NGUYENDANGLONG
+plugins: anyio-4.13.0, hydra-core-1.3.4
+collecting ... collected 42 items
+
+tests/test_solution.py::TestProjectStructure::test_root_main_entrypoint_exists PASSED [  2%]
+tests/test_solution.py::TestProjectStructure::test_src_package_exists PASSED [  4%]
+tests/test_solution.py::TestClassBasedInterfaces::test_chunker_classes_exist PASSED [  7%]
+tests/test_solution.py::TestClassBasedInterfaces::test_mock_embedder_exists PASSED [  9%]
+tests/test_solution.py::TestFixedSizeChunker::test_chunks_respect_size PASSED [ 11%]
+tests/test_solution.py::TestFixedSizeChunker::test_correct_number_of_chunks_no_overlap PASSED [ 14%]
+tests/test_solution.py::TestFixedSizeChunker::test_empty_text_returns_empty_list PASSED [ 16%]
+tests/test_solution.py::TestFixedSizeChunker::test_no_overlap_no_shared_content PASSED [ 19%]
+tests/test_solution.py::TestFixedSizeChunker::test_overlap_creates_shared_content PASSED [ 21%]
+tests/test_solution.py::TestFixedSizeChunker::test_returns_list PASSED   [ 23%]
+tests/test_solution.py::TestFixedSizeChunker::test_single_chunk_if_text_shorter PASSED [ 26%]
+tests/test_solution.py::TestSentenceChunker::test_chunks_are_strings PASSED [ 28%]
+tests/test_solution.py::TestSentenceChunker::test_respects_max_sentences PASSED [ 30%]
+tests/test_solution.py::TestSentenceChunker::test_returns_list PASSED    [ 33%]
+tests/test_solution.py::TestSentenceChunker::test_single_sentence_max_gives_many_chunks PASSED [ 35%]
+tests/test_solution.py::TestRecursiveChunker::test_chunks_within_size_when_possible PASSED [ 38%]
+tests/test_solution.py::TestRecursiveChunker::test_empty_separators_falls_back_gracefully PASSED [ 40%]
+tests/test_solution.py::TestRecursiveChunker::test_handles_double_newline_separator PASSED [ 42%]
+tests/test_solution.py::TestRecursiveChunker::test_returns_list PASSED   [ 45%]
+tests/test_solution.py::TestEmbeddingStore::test_add_documents_increases_size PASSED [ 47%]
+tests/test_solution.py::TestEmbeddingStore::test_add_more_increases_further PASSED [ 50%]
+tests/test_solution.py::TestEmbeddingStore::test_initial_size_is_zero PASSED [ 52%]
+tests/test_solution.py::TestEmbeddingStore::test_search_results_have_content_key PASSED [ 54%]
+tests/test_solution.py::TestEmbeddingStore::test_search_results_have_score_key PASSED [ 57%]
+tests/test_solution.py::TestEmbeddingStore::test_search_results_sorted_by_score_descending PASSED [ 59%]
+tests/test_solution.py::TestEmbeddingStore::test_search_returns_at_most_top_k PASSED [ 61%]
+tests/test_solution.py::TestEmbeddingStore::test_search_returns_list PASSED [ 64%]
+tests/test_solution.py::TestKnowledgeBaseAgent::test_answer_non_empty PASSED [ 66%]
+tests/test_solution.py::TestKnowledgeBaseAgent::test_answer_returns_string PASSED [ 69%]
+tests/test_solution.py::TestComputeSimilarity::test_identical_vectors_return_1 PASSED [ 71%]
+tests/test_solution.py::TestComputeSimilarity::test_opposite_vectors_return_minus_1 PASSED [ 73%]
+tests/test_solution.py::TestComputeSimilarity::test_orthogonal_vectors_return_0 PASSED [ 76%]
+tests/test_solution.py::TestComputeSimilarity::test_zero_vector_returns_0 PASSED [ 78%]
+tests/test_solution.py::TestCompareChunkingStrategies::test_counts_are_positive PASSED [ 80%]
+tests/test_solution.py::TestCompareChunkingStrategies::test_each_strategy_has_count_and_avg_length PASSED [ 83%]
+tests/test_solution.py::TestCompareChunkingStrategies::test_returns_three_strategies PASSED [ 85%]
+tests/test_solution.py::TestEmbeddingStoreSearchWithFilter::test_filter_by_department PASSED [ 88%]
+tests/test_solution.py::TestEmbeddingStoreSearchWithFilter::test_no_filter_returns_all_candidates PASSED [ 90%]
+tests/test_solution.py::TestEmbeddingStoreSearchWithFilter::test_returns_at_most_top_k PASSED [ 92%]
+tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_reduces_collection_size PASSED [ 95%]
+tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_false_for_nonexistent_doc PASSED [ 97%]
+tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_true_for_existing_doc PASSED [100%]
+
+============================= 42 passed in 0.15s ==============================
 ```
 
-**Số lượng bài test vượt qua (pass):** __ / 42
+> Bộ test chấm gói cá nhân `src.K4_2A202601308_LuongMinhQuan` qua biến `LAB_SOLUTION_PACKAGE` (khai trong `.env`, được `conftest.py` ở thư mục gốc nạp trước khi pytest import test module). Toàn bộ code nộp nằm trong gói cá nhân; gói dùng chung `src/` giữ nguyên, không sửa.
+>
+> Demo end-to-end chạy bằng entrypoint của gói cá nhân (`main.py` ở thư mục gốc import thẳng `src.chunking`/`src.store`/`src.agent` nên phụ thuộc gói chung):
+>
+> ```
+> $ python -m src.K4_2A202601308_LuongMinhQuan.main "Chunking là gì?"
+> Đã nạp 77 chunk vào EmbeddingStore   (data/k4_asos_products, FixedSizeChunker mặc định)
+> ```
+
+**Số lượng bài test vượt qua (pass):** **42** / 42
 
 ---
 
