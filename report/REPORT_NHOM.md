@@ -17,28 +17,37 @@
 **Chủ đề (cố định theo lớp K4):** Chính sách thương mại điện tử / hỗ trợ khách hàng (thanh toán, đổi trả, giao hàng, quyền riêng tư, điều kiện người bán…).
 
 **Phạm vi cụ thể nhóm tập trung:**
-> *1 câu — ví dụ: đổi trả + điều kiện người bán.*
+> Vòng đời đơn hàng và quy tắc marketplace trên Shopee Việt Nam, từ đăng bán và sản phẩm bị cấm đến thanh toán, hủy đơn, trả hàng và hoàn tiền.
 
 ### Danh sách tài liệu (Data Inventory)
 
 | # | Tên tài liệu | Nguồn (Source URL) | Ngày lấy / Phiên bản | Số ký tự | Metadata đã gán |
 |---|--------------|------------|--------------------|----------|-----------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | Chính sách trả hàng và hoàn tiền | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77251?seo=1) | 2026-08-03 / 2026-03-11 | 19,420 | `customer_role=both`, `category=returns-refunds`, `language=vi` |
+| 2 | Tôi có thể hủy đơn hàng không? | [Shopee Help Center](https://help.shopee.vn/portal/4/article/79182?seo=1) | 2026-08-03 / `not-stated` | 1,872 | `customer_role=buyer`, `category=order-cancellation`, `language=vi` |
+| 3 | Quy định về đăng bán sản phẩm trên Shopee | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77246?seo=1) | 2026-08-03 / 2024-08-21 | 21,279 | `customer_role=seller`, `category=product-listing`, `language=vi` |
+| 4 | Chính sách cấm/hạn chế sản phẩm | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77247?seo=1) | 2026-08-03 / 2025-05-05 | 12,653 | `customer_role=seller`, `category=prohibited-products`, `language=vi` |
+| 5 | Điều khoản dịch vụ | [Shopee Help Center](https://help.shopee.vn/portal/4/article/77243?seo=1) | 2026-08-03 / 2026-05-01 | 83,183 | `customer_role=both`, `category=payments-and-orders`, `language=vi` |
+
+Số ký tự được tính trên phần nội dung đã làm sạch, không gồm YAML front matter.
 
 **Danh sách kiểm tra quản trị dữ liệu (Data governance checklist):**
-- [ ] Tập tài liệu (Corpus) chỉ chứa nguồn công khai/được phép dùng và không chứa dữ liệu cá nhân, thông tin đăng nhập hoặc tài liệu nội bộ.
-- [ ] Mỗi tài liệu có `source_url`, `retrieved_at`, `document_version` (hoặc ngày hiệu lực) trong metadata.
+- [x] Tập tài liệu (Corpus) chỉ chứa nguồn công khai/được phép dùng và không chứa dữ liệu cá nhân, thông tin đăng nhập hoặc tài liệu nội bộ.
+- [x] Mỗi tài liệu có `source_url`, `retrieved_at`, `document_version` (hoặc ngày hiệu lực) trong metadata.
 
 ### Cấu trúc Metadata (Metadata Schema)
 
 | Trường metadata | Kiểu | Ví dụ giá trị | Tại sao hữu ích cho truy xuất (retrieval)? |
 |----------------|------|---------------|-------------------------------|
-| | | | |
-| | | | |
+| `doc_id` | string | `shopee-order-cancellation` | Định danh duy nhất, trùng tên file và dùng để truy vết/xóa toàn bộ chunk của một tài liệu. |
+| `title` | string | `Tôi có thể hủy đơn hàng không?` | Hiển thị nguồn dễ đọc trong kết quả retrieval. |
+| `source_url` | URL | `https://help.shopee.vn/...` | Đối chiếu câu trả lời với nguồn công khai gốc. |
+| `retrieved_at` | date | `2026-08-03` | Xác định thời điểm nhóm thu thập dữ liệu. |
+| `document_version` | string/date | `2026-03-11`, `not-stated` | Phân biệt phiên bản chính sách; không suy đoán khi nguồn không nêu. |
+| `customer_role` | enum | `buyer`, `seller`, `both` | Lọc tài liệu theo vai trò khách hàng; đây là field filter bắt buộc của K4. |
+| `category` | enum | `order-cancellation`, `product-listing` | Thu hẹp retrieval theo nghiệp vụ cụ thể. |
+| `language` | string | `vi` | Xác nhận ngôn ngữ corpus và query. |
+| `effective_date` | date, optional | `2026-05-01` | Cho biết ngày chính sách có hiệu lực khi nguồn công bố rõ ràng. |
 
 ---
 
@@ -97,13 +106,13 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 > **Đúng 5 câu hỏi**, đa dạng, có thể kiểm chứng; **ít nhất 1 câu** cần lọc metadata mới trả lời tốt. Đây là bộ câu hỏi chung cho mọi thành viên chạy.
 
-| # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Chunk nào chứa thông tin? |
-|---|-------|-------------------------------|--------------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| # | Câu hỏi (Query) | Metadata filter | Câu trả lời chuẩn (Gold Answer) | Vị trí kiểm chứng trong corpus |
+|---|-------|-----------------|-------------------------------|-------------------------------|
+| 1 | Đơn hàng do đơn vị vận chuyển không phải SPX đang ở trạng thái “Chờ lấy hàng” thì Người mua có thể hủy ngay không? | `{"customer_role": "buyer"}` | Không. Người mua phải chờ phản hồi của Người bán: nếu Người bán chấp nhận thì đơn được hủy ngay; nếu từ chối thì đơn không bị hủy và tiếp tục được giao. | `shopee-order-cancellation`, mục 1, dòng “Chờ lấy hàng” trong bảng trạng thái. |
+| 2 | Người mua có bao lâu để gửi yêu cầu trả hàng/hoàn tiền sau khi đơn được giao thành công, và thời hạn riêng cho thực phẩm tươi sống hoặc đông lạnh là bao lâu? | Không | Hàng thông thường: 15 ngày kể từ khi đơn được cập nhật giao thành công. Thực phẩm tươi sống hoặc đông lạnh: 24 giờ. | `shopee-return-refund-policy`, mục 3 “Điều kiện yêu cầu trả hàng/hoàn tiền”, Điều 3.2. |
+| 3 | Ảnh sản phẩm đăng bán trên Shopee phải đáp ứng yêu cầu tối thiểu nào về ảnh thật và tỷ lệ diện tích sản phẩm? | Không | Phải có ít nhất một ảnh thật của sản phẩm do chính Người bán tự chụp; sản phẩm thật phải chiếm ít nhất 40% diện tích ảnh đó. | `shopee-product-listing-rules`, mục C.1 “Hình ảnh sản phẩm”, điểm b. |
+| 4 | Vi phạm Chính sách Cấm/Hạn chế Sản phẩm có thể khiến Người bán chịu những nhóm chế tài nào? | Không | Sản phẩm có thể bị xóa; tài khoản bị giới hạn quyền; tài khoản bị đình chỉ hoặc xóa; số dư bị cấn trừ hoặc quyền rút tiền bị phong tỏa; và có thể chịu chế tài khác theo chính sách hoặc pháp luật như phạt hành chính, xử lý hình sự hay bồi thường thiệt hại. | `shopee-prohibited-products-policy`, mục 3 “Hành vi vi phạm và biện pháp xử lý”. |
+| 5 | Nếu Người mua không nhấn “Đã nhận được hàng” hoặc “Trả hàng/Hoàn tiền”, Shopee chuyển tiền cho Người bán sớm nhất khi nào? | Không | Sớm nhất vào ngày thứ 4 kể từ khi đơn được cập nhật trạng thái giao hàng thành công; Shopee có thể thanh toán muộn hơn nếu đơn hàng bị nghi ngờ gian lận. | `shopee-terms-of-service`, mục 10 “Số dư tài khoản Shopee”, Điều 10.3(a). |
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 
@@ -118,7 +127,7 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 | 5 | | | | |
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
-> *Viết 2-3 câu:*
+> Câu 1 bắt buộc chạy với `metadata_filter={"customer_role": "buyer"}` và đối chiếu thêm một lượt không filter. Filter phải loại các tài liệu chỉ dành cho `seller`; tác động thực tế lên top-3 sẽ được ghi sau khi tất cả thành viên chạy benchmark trên cùng corpus.
 
 ---
 
