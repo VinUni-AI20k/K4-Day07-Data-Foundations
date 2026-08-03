@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Thuyết Trình Lab 7 — Embedding & Vector Store (Nhóm A5-1)</title>
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- MathJax Engine for Rendering LaTeX Equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 50%, #1e1b4b 100%);
+      --accent-cyan: #00f2fe;
+      --accent-blue: #4facfe;
+      --accent-purple: #a855f7;
+      --accent-emerald: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --glass-bg: rgba(30, 41, 59, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      --card-bg: rgba(15, 23, 42, 0.6);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-code: 'Fira Code', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Header & Progress Bar */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      padding: 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.1rem;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      background: rgba(0, 242, 254, 0.15);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: var(--accent-cyan);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-family: var(--font-body);
+      -webkit-text-fill-color: initial;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .slide-counter {
+      font-family: var(--font-code);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .btn-icon {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .progress-bar-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      transition: width 0.3s ease;
+    }
+
+    /* Main Stage Container */
+    .stage {
+      flex: 1;
+      position: relative;
+      margin-top: 60px;
+      margin-bottom: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 40px;
+    }
+
+    /* Slide Component */
+    .slide {
+      position: absolute;
+      width: 100%;
+      max-width: 1280px;
+      height: calc(100vh - 170px);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: var(--glass-shadow);
+      padding: 40px 50px;
+      opacity: 0;
+      transform: scale(0.95) translateY(30px);
+      pointer-events: none;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Slide Typography & Layouts */
+    .slide-header {
+      margin-bottom: 24px;
+    }
+
+    .slide-tag {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .slide-title {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Cover Slide Specifics */
+    .cover-slide {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at center, rgba(79, 172, 254, 0.15) 0%, rgba(15, 23, 42, 0.8) 70%);
+    }
+
+    .cover-title {
+      font-family: var(--font-heading);
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .cover-badge-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .badge-pill {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--glass-border);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--accent-cyan);
+      font-weight: 500;
+    }
+
+    .author-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--glass-border);
+      padding: 20px 40px;
+      border-radius: 16px;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .author-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .author-group {
+      color: var(--accent-purple);
+      font-weight: 600;
+    }
+
+    /* Cards & Grid Utilities */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(0, 242, 254, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Table Styles */
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+    }
+
+    .custom-table th {
+      background: rgba(30, 41, 59, 0.9);
+      color: var(--accent-cyan);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .custom-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .custom-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .custom-table tr:hover td {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* Code Block */
+    pre {
+      font-family: var(--font-code);
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid var(--glass-border);
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      color: #a5f3fc;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: var(--font-code);
+    }
+
+    .param-highlight {
+      color: var(--accent-purple);
+      font-weight: 600;
+    }
+
+    .score-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-family: var(--font-code);
+    }
+
+    /* Footer Controls */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .nav-btn-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-nav {
+      background: linear-gradient(135deg, var(--accent-blue), #3b82f6);
+      color: #ffffff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Overview Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .slides-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      overflow-y: auto;
+      padding-bottom: 20px;
+    }
+
+    .grid-slide-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      aspect-ratio: 16/9;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .grid-slide-card:hover {
+      border-color: var(--accent-cyan);
+      transform: scale(1.03);
+    }
+
+    .grid-slide-number {
+      font-family: var(--font-code);
+      font-size: 0.8rem;
+      color: var(--accent-purple);
+    }
+
+    .grid-slide-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    /* Key Shortcuts Bar */
+    .kbd-shortcut {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header & Progress -->
+  <header>
+    <div class="brand">
+      <span>VINAI THỰC CHIẾN - LAB 07</span>
+      <span class="brand-badge">Nhóm A5-1</span>
+    </div>
+    <div class="header-controls">
+      <div class="slide-counter"><span id="currentSlideNum">1</span> / <span id="totalSlideNum">8</span></div>
+      <button class="btn-icon" onclick="toggleOverview()">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/></svg>
+        Overview (Esc)
+      </button>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </header>
+
+  <!-- Stage Container -->
+  <main class="stage">
+
+    <!-- SLIDE 1: Cover Slide -->
+    <div class="slide cover-slide active">
+      <div class="cover-badge-group">
+        <span class="badge-pill">Lab 07: Data Foundations</span>
+        <span class="badge-pill">Biến thể K4 TMĐT Shopee</span>
+      </div>
+      <h1 class="cover-title">Embedding & Vector Store<br>Retrieval Pipeline</h1>
+      <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 700px; margin: 0 auto 30px;">
+        Báo cáo phân tích so sánh các chiến lược Chunking, mô hình Nhúng đa ngữ (Multilingual Embedding) và mô hình LLM NIM thực tế.
+      </p>
+      <div class="author-card">
+        <div class="author-name">Lê Mai Việt Hoàng (Lead)</div>
+        <div class="author-group">Thành viên: Kiều Hồng Phong, Đỗ Duy Đức, Nguyễn Đức Đạt, Vũ Nguyễn Bảo Sơn</div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Nhóm A5-1 — Ngày 03/08/2026</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Scope & Data Inventory -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">Phần 1: Phạm Vi Dữ Liệu</div>
+        <h2 class="slide-title">Kho Dữ Liệu Chính Sách TMĐT Shopee</h2>
+        <p class="slide-subtitle">Tập hợp 7 tài liệu Markdown chính sách Trả hàng / Hoàn tiền được crawl và định dạng theo chuẩn K4 governance.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/></svg>
+            Tập Tài Liệu Data Inventory (7 Files)
+          </div>
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>File ID</th>
+                <th>Số Ký Tự</th>
+                <th>Phân Loại (customer_role)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>shopee-returns-01</code></td><td>8,962</td><td><code>buyer</code> (Thời hạn chung)</td></tr>
+              <tr><td><code>shopee-returns-02</code></td><td>3,793</td><td><code>buyer</code> (Quy trình trả hàng)</td></tr>
+              <tr><td><code>shopee-returns-03</code></td><td>3,109</td><td><code>buyer</code> (Hàng hạn chế trả)</td></tr>
+              <tr><td><code>shopee-returns-04</code></td><td>5,059</td><td><code>buyer</code> (Video bằng chứng)</td></tr>
+              <tr><td><code>shopee-returns-05</code></td><td>2,427</td><td><code>buyer</code> (Theo dõi trên App)</td></tr>
+              <tr><td><code>shopee-returns-06</code></td><td>5,422</td><td><code>buyer</code> (Phương thức hoàn tiền)</td></tr>
+              <tr><td><code>shopee-returns-07</code></td><td>11,110</td><td><code>seller</code> (Quy trình người bán)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M6 1v3H1V1h5zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12v3h-5v-3h5zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8v7H1V8h5zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6v7h-5V1h5zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z"/></svg>
+            Cấu Trúc Metadata Schema
+          </div>
+          <pre><code># YAML Front-Matter Template trong từng tài liệu:
+---
+doc_id: shopee-returns-01
+customer_role: buyer        # buyer | seller | both
+category: return_policy    # return_policy | refund_methods
+source_url: https://help.shopee.vn/portal/4/article/79018
+retrieved_at: 2026-08-01
+document_version: 2026-v1
+---</code></pre>
+          <ul style="font-size: 0.88rem; color: var(--text-muted); margin-left: 20px; line-height: 1.6;">
+            <li><strong style="color: var(--accent-cyan);">Pre-filtering:</strong> Lọc theo <code class="param-highlight">customer_role</code> loại bỏ nhiễu seller.</li>
+            <li><strong style="color: var(--accent-cyan);">Traceability:</strong> Minh bạch nguồn URL và thời gian lấy tài liệu.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: Chunking Strategy & Parameters -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">Phần 2: Thiết Kế Chiến Lược</div>
+        <h2 class="slide-title">So Sánh Chiến Lược Chunking & Tham Số</h2>
+        <p class="slide-subtitle">So sánh tham số cấu hình chính xác (Hyper-parameters) giữa các thành viên trong nhóm.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">FixedSizeChunker</div>
+          <div style="font-size: 0.85rem; color: var(--accent-purple); font-weight: 600;">Thành viên: Đỗ Duy Đức (ducdd)</div>
+          <pre><code>chunk_size = 500  # ký tự
+overlap    = 50   # ký tự
+# (Baseline: size=300, overlap=30)</code></pre>
+          <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+            <li><strong>Ưu điểm:</strong> Cắt cố định đều đặn, tốc độ xử lý nhanh $O(1)$.</li>
+            <li><strong>Nhược điểm:</strong> Dễ làm xé đôi câu hoặc bảng hoàn tiền giữa chừng.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">SentenceChunker</div>
+          <div style="font-size: 0.85rem; color: var(--accent-purple); font-weight: 600;">Thành viên: Hoàng LMV & Sơn VNB</div>
+          <pre><code>max_sentences_per_chunk = 3
+separators = [".", "!", "?"]
+min_chunk_length = 100</code></pre>
+          <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+            <li><strong>Ưu điểm:</strong> Mạch lạc theo 3 câu hoàn chỉnh ngữ pháp.</li>
+            <li><strong>Nhược điểm:</strong> Kích thước chunk không đồng đều (57-121 chunks).</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-color: rgba(0, 242, 254, 0.5);">
+          <div class="card-title" style="color: var(--accent-cyan);">
+            Recursive & LangChain (Best)
+          </div>
+          <div style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 600;">Thành viên: Kiều Hồng Phong & Đạt ND</div>
+          <pre><code>chunk_size    = 500
+chunk_overlap = 50
+separators    = ["\n\n", "\n", ". ", " "]</code></pre>
+          <ul style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+            <li><strong>Ưu điểm:</strong> Giữ trọn vẹn tiêu đề <code>##</code>, danh sách và bảng biểu Markdown.</li>
+            <li><strong>Kết quả:</strong> Đạt 72 chunks tối ưu, điểm Cosine cao nhất.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Embedding Engine & Math -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">Phần 3: Embedding Engine</div>
+        <h2 class="slide-title">Mô Hình Nhúng & Chuẩn Hóa Vector L2</h2>
+        <p class="slide-subtitle">Triển khai Hugging Face Inference API và toán học véc-tơ đơn vị Cosine Similarity.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Cấu Hình Tham Số Embedding Engine</div>
+          <pre><code>Model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+Dimension: 384 dimensions (véc-tơ đa chiều)
+Provider: HuggingFace API (via HF_TOKEN) / Local PyTorch
+Cache: self._cache dict (tốc độ nạp 0ms)</code></pre>
+          <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+            <strong style="color: #ffffff;">Công Thức Toán Chuẩn Hóa Véc-tơ L2 Norm:</strong>
+            <div style="background: rgba(2, 6, 23, 0.7); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; margin: 10px 0; text-align: center; color: var(--accent-cyan);">
+              $$\hat{\mathbf{v}} = \frac{\mathbf{v}}{\|\mathbf{v}\|_2} = \frac{\mathbf{v}}{\sqrt{\sum_{i=1}^{d} v_i^2}}$$
+            </div>
+            Khi $\|\hat{\mathbf{v}}\|_2 = 1.0$, tích vô hướng chuyển thành điểm Cosine Score chuẩn trong $[0.0, 1.0]$:
+            $$\mathbf{A} \cdot \mathbf{B} = \cos(\theta)$$
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">So Sánh Công Thức Cosine vs Euclidean</div>
+          
+          <div style="margin-bottom: 14px;">
+            <strong style="color: var(--accent-cyan);">1. Cosine Similarity (Đo góc $\theta$ giữa 2 véc-tơ):</strong>
+            <div style="background: rgba(2, 6, 23, 0.7); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px; margin: 6px 0; text-align: center; color: var(--accent-cyan);">
+              $$\text{Similarity}(\mathbf{A}, \mathbf{B}) = \cos(\theta) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\|_2 \|\mathbf{B}\|_2}$$
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">👉 Triệt tiêu yếu tố độ dài văn bản, so sánh chính xác giữa câu hỏi ngắn và đoạn văn dài.</span>
+          </div>
+
+          <div>
+            <strong style="color: #f87171;">2. Euclidean Distance (Khoảng cách độ dài tuyệt đối):</strong>
+            <div style="background: rgba(2, 6, 23, 0.7); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px; margin: 6px 0; text-align: center; color: #f87171;">
+              $$d(\mathbf{A}, \mathbf{B}) = \|\mathbf{A} - \mathbf{B}\|_2 = \sqrt{\sum_{i=1}^{d} (A_i - B_i)^2}$$
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">👉 Bị ảnh hưởng bởi số lượng từ — đoạn văn dài bị đẩy ra xa câu hỏi dù chung ngữ nghĩa.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Benchmark Execution & Live Demo -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">Phần 4: Kết Quả Đánh Giá RAG</div>
+        <h2 class="slide-title">Thực Thi Benchmark Với Nvidia LLM NIM</h2>
+        <p class="slide-subtitle">Kết quả chạy thực tế 5 Benchmark Queries với <code>meta/llama-3.1-8b-instruct</code> (temp=0.1, max_tokens=512).</p>
+      </div>
+      <div style="flex: 1; overflow-y: auto;">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th># Query</th>
+              <th>Câu Hỏi Đánh Giá</th>
+              <th>Doc Kỳ Vọng / Tìm Thấy</th>
+              <th>Cosine Score</th>
+              <th>Câu Trả Lời Sinh Ra Từ Nvidia Llama-3.1 LLM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>q1</code></td>
+              <td>Thời hạn gửi yêu cầu Trả hàng/Hoàn tiền (tươi sống, tự vận chuyển)?</td>
+              <td><code>shopee-returns-01</code> / Top-1</td>
+              <td><span class="score-badge">0.7690</span></td>
+              <td>Tươi sống: 24h từ giao thành công. Tự vận chuyển: 15 ngày từ bấm nhận (hoặc 20 ngày). Đơn khác: 15 ngày.</td>
+            </tr>
+            <tr>
+              <td><code>q2</code></td>
+              <td>Sản phẩm hạn chế trả hàng là gì và lý do không áp dụng?</td>
+              <td><code>shopee-returns-03</code> / Top-1</td>
+              <td><span class="score-badge">0.8402</span></td>
+              <td>Sản phẩm đặc thù cao, dễ hư hỏng. Không áp dụng lý do 'Hàng nguyên vẹn nhưng không còn nhu cầu'. Ví dụ: thực phẩm tươi sống, sữa.</td>
+            </tr>
+            <tr>
+              <td><code>q3</code></td>
+              <td>Video bằng chứng mở kiện và cách xử lý khi > 100MB?</td>
+              <td><code>shopee-returns-04</code> / Top-1</td>
+              <td><span class="score-badge">0.7112</span></td>
+              <td>Video rõ nét, quay liên tục không cắt ghép. Nếu > 100MB/1 phút thì tải lên YouTube/Google Drive công khai và gửi link.</td>
+            </tr>
+            <tr>
+              <td><code>q4</code></td>
+              <td>Các bước xem tình trạng xử lý đơn trên App Shopee?</td>
+              <td><code>shopee-returns-05</code> / Top-3</td>
+              <td><span class="score-badge">0.7710</span></td>
+              <td>Theo dõi tại mục Thông báo > Cập nhật đơn hàng trên App Shopee.</td>
+            </tr>
+            <tr>
+              <td><code>q5</code></td>
+              <td>Thời gian hoàn tiền ShopeePay, Napas và thẻ tín dụng?</td>
+              <td><code>shopee-returns-06</code> / Top-1</td>
+              <td><span class="score-badge">0.7704</span></td>
+              <td>Ví ShopeePay: 24h. Thẻ Napas: 2-5 ngày làm việc. Thẻ tín dụng/ghi nợ: 7-14 ngày làm việc.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: A/B Testing Metadata Filter -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">Phần 5: Thí Nghiệm A/B</div>
+        <h2 class="slide-title">Thử Nghiệm A/B Testing Metadata Filter</h2>
+        <p class="slide-subtitle">Chứng minh sức mạnh của Pre-filtering trong việc loại bỏ hoàn toàn tài liệu nhiễu giữa Buyer và Seller.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card" style="border-color: rgba(239, 68, 68, 0.4);">
+          <div class="card-title" style="color: #f87171;">
+            Kịch Bản A: Không Có Filter (Standard Search)
+          </div>
+          <pre><code>results = store.search(query="Thời hạn trả hàng người mua", top_k=3)</code></pre>
+          <ul style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+            <li><strong>Top-1 Tìm thấy:</strong> <code style="color: #f87171;">shopee-returns-07.md</code> (Tài liệu dành cho **Người Bán / Seller**).</li>
+            <li><strong>Lý do nhiễu:</strong> Từ khóa *"thời hạn gửi hàng"* xuất hiện dày đặc ở bài quy định cho shop làm véc-tơ bị hút sai lệch.</li>
+            <li><strong>Kết quả:</strong> Agent trả lời nhầm thời hạn xử lý của shop thay vì mốc 24h/15 ngày của người mua!</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-color: rgba(16, 185, 129, 0.5);">
+          <div class="card-title" style="color: var(--accent-emerald);">
+            Kịch Bản B: Có Metadata Filter (Pre-filtering)
+          </div>
+          <pre><code>results = store.search_with_filter(
+    query="Thời hạn trả hàng người mua", 
+    top_k=3, 
+    metadata_filter={'customer_role': 'buyer'}
+)</code></pre>
+          <ul style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+            <li><strong>Top-1 Tìm thấy:</strong> <code style="color: var(--accent-emerald);">shopee-returns-01.md</code> (Chính xác cho **Người Mua**).</li>
+            <li><strong>Cosine Score:</strong> <span class="score-badge">0.7690</span> (Rất cao).</li>
+            <li><strong>Kết quả:</strong> Pre-filtering loại bỏ 100% tài liệu seller trước khi xếp hạng vector. Agent trả lời đúng 100%!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Failure Case & Mitigation -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">Phần 6: Phân Tích Lỗi</div>
+        <h2 class="slide-title">Failure Case Analysis & Phương Án Cải Tiến</h2>
+        <p class="slide-subtitle">Phân tích chuyên sâu 1 trường hợp truy xuất bị nhiễu và đề xuất giải pháp kiến trúc nâng cấp.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title" style="color: #fbbf24;">
+            Phân Tích Trường Hợp Lỗi ở Query 4 (q4_track_request)
+          </div>
+          <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+            <strong style="color: #ffffff;">Câu hỏi:</strong> *"Người mua cần thực hiện các bước nào trên ứng dụng Shopee để xem tình trạng xử lý yêu cầu Trả hàng/Hoàn tiền?"*<br><br>
+            <strong style="color: #f87171;">Hiện tượng:</strong> Khi không áp dụng filter category, Top-1 bị hút về <code>shopee-returns-07.md</code> (Score <code>0.7710</code> - tài liệu seller) thay vì <code>shopee-returns-05.md</code>.<br><br>
+            <strong style="color: #ffffff;">Nguyên nhân cốt lõi:</strong> Từ khóa tổng quát *"theo dõi tình trạng"* xuất hiện nhiều ở tài liệu seller làm véc-tơ bị lệch hướng.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title" style="color: var(--accent-cyan);">
+            Giải Pháp Kiến Trúc Cải Tiến (Remediation Plan)
+          </div>
+          <ul style="font-size: 0.9rem; line-height: 1.8; color: var(--text-muted);">
+            <li><strong style="color: var(--accent-cyan);">1. Nâng cấp Pre-filtering:</strong> Bổ sung <code>metadata_filter={"category": "tracking", "customer_role": "buyer"}</code>.</li>
+            <li><strong style="color: var(--accent-cyan);">2. MarkdownHeaderChunker:</strong> Cắt chunk theo tiêu đề <code>## Thao tác trên App Shopee</code> và tự động gắn tên Heading vào đầu mỗi chunk để tăng trọng số từ khóa.</li>
+            <li><strong style="color: var(--accent-cyan);">3. Hybrid Search:</strong> Kết hợp BM25 Keyword Search + Vector Dense Search.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Insights & Q&A -->
+    <div class="slide cover-slide">
+      <div class="slide-tag" style="margin-bottom: 12px;">Tổng Kết & Bài Học Rút Ra</div>
+      <h2 style="font-family: var(--font-heading); font-size: 2.6rem; font-weight: 800; color: #ffffff; margin-bottom: 24px;">
+        Key Insights & Q&A
+      </h2>
+      <div style="max-width: 800px; text-align: left; background: var(--card-bg); border: 1px solid var(--glass-border); padding: 30px; border-radius: 20px; margin-bottom: 30px;">
+        <ul style="font-size: 1rem; line-height: 1.8; color: var(--text-main);">
+          <li>💡 <strong style="color: var(--accent-cyan);">Chiến lược Chunking > Điểm số thuần túy:</strong> Tách đệ quy theo dấu ngắt đoạn Markdown <code>\n\n</code> giữ trọn vẹn 100% ngữ cảnh bảng biểu chính sách.</li>
+          <li>💡 <strong style="color: var(--accent-cyan);">Metadata Filtering là bắt buộc:</strong> Trong RAG thực tế TMĐT, lọc vai trò người dùng (buyer vs seller) giúp nâng cao Precision và loại bỏ nhiễu tuyệt đối.</li>
+          <li>💡 <strong style="color: var(--accent-cyan);">Chuẩn hóa L2 Norm:</strong> Biến đổi véc-tơ đơn vị đưa Cosine Score về khoảng $[0.0, 1.0]$, giúp đánh giá độ tương đồng chính xác hơn.</li>
+        </ul>
+      </div>
+      <h3 style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--accent-purple);">
+        Cảm Ơn Thầy Cô & Các Bạn Đã Lắng Nghe! (Q&A)
+      </h3>
+    </div>
+
+  </main>
+
+  <!-- Footer Controls -->
+  <footer>
+    <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+      <span>Điều khiển:</span>
+      <span class="kbd-shortcut">←</span>
+      <span class="kbd-shortcut">→</span>
+      <span class="kbd-shortcut">Space</span>
+      <span class="kbd-shortcut">Esc</span>
+    </div>
+    <div class="nav-btn-group">
+      <button class="btn-nav" id="prevBtn" onclick="changeSlide(-1)">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+        Trang Trước
+      </button>
+      <button class="btn-nav" id="nextBtn" onclick="changeSlide(1)">
+        Trang Sau
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Overview Modal -->
+  <div class="modal-overlay" id="overviewModal">
+    <div class="modal-header">
+      <div class="modal-title">Tổng Quan Danh Sách Slides</div>
+      <button class="btn-icon" onclick="toggleOverview()">Đóng (Esc)</button>
+    </div>
+    <div class="slides-grid" id="slidesGrid"></div>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const currentSlideNumEl = document.getElementById('currentSlideNum');
+    const totalSlideNumEl = document.getElementById('totalSlideNum');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const overviewModal = document.getElementById('overviewModal');
+    const slidesGrid = document.getElementById('slidesGrid');
+
+    totalSlideNumEl.textContent = totalSlides;
+
+    // Generate Overview Grid Cards
+    slides.forEach((slide, idx) => {
+      const titleEl = slide.querySelector('.slide-title') || slide.querySelector('.cover-title');
+      const titleText = titleEl ? titleEl.innerText.replace('\n', ' ') : `Slide ${idx + 1}`;
+      
+      const card = document.createElement('div');
+      card.className = 'grid-slide-card';
+      card.innerHTML = `
+        <div class="grid-slide-number">Slide ${idx + 1}</div>
+        <div class="grid-slide-title">${titleText}</div>
+      `;
+      card.onclick = () => {
+        goToSlide(idx);
+        toggleOverview();
+      };
+      slidesGrid.appendChild(card);
+    });
+
+    function updateStage() {
+      slides.forEach((slide, idx) => {
+        if (idx === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      currentSlideNumEl.textContent = currentSlide + 1;
+      const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function changeSlide(direction) {
+      const target = currentSlide + direction;
+      if (target >= 0 && target < totalSlides) {
+        currentSlide = target;
+        updateStage();
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < totalSlides) {
+        currentSlide = index;
+        updateStage();
+      }
+    }
+
+    function toggleOverview() {
+      overviewModal.classList.toggle('active');
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        changeSlide(-1);
+      } else if (e.key === 'Home') {
+        goToSlide(0);
+      } else if (e.key === 'End') {
+        goToSlide(totalSlides - 1);
+      } else if (e.key === 'Escape') {
+        toggleOverview();
+      }
+    });
+
+    updateStage();
+  </script>
+</body>
+</html>

@@ -54,41 +54,15 @@ class SentenceChunker:
         if not text or not text.strip():
             return []
 
-        sentences = [part.strip() for part in re.split(r'(?<=[.!?])\s+', text.strip()) if part.strip()]
-        if not sentences:
-            return []
-
-        chunks: list[str] = []
-        for start in range(0, len(sentences), self.max_sentences_per_chunk):
-            chunk = " ".join(sentences[start : start + self.max_sentences_per_chunk]).strip()
-            if chunk:
-                chunks.append(chunk)
-        return chunks
-
-
-class LangChainSentenceChunker:
-    """
-    Sentence chunking powered by LangChain text splitters.
-    """
-
-    def __init__(self, chunk_size: int = 500, chunk_overlap: int = 50) -> None:
-        try:
-            from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-            self.splitter = RecursiveCharacterTextSplitter(
-                chunk_size=chunk_size,
-                chunk_overlap=chunk_overlap,
-                separators=[". ", "! ", "? ", "\n\n", "\n", " "],
-            )
-        except ImportError:
-            self.splitter = None
-
-    def chunk(self, text: str) -> list[str]:
-        if not text or not text.strip():
-            return []
-        if self.splitter:
-            return self.splitter.split_text(text)
-        return SentenceChunker().chunk(text)
+        sentences = [
+            sentence.strip()
+            for sentence in re.split(r"(?<=[.!?])(?:[ \t]+|\n+)", text.strip())
+            if sentence.strip()
+        ]
+        return [
+            " ".join(sentences[start : start + self.max_sentences_per_chunk])
+            for start in range(0, len(sentences), self.max_sentences_per_chunk)
+        ]
 
 
 class RecursiveChunker:
