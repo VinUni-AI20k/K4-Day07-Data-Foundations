@@ -107,9 +107,11 @@ def run_benchmark(data_dir: str = "data/k4_ecommerce") -> int:
     llm_fn, llm_name = select_llm()
     print(f"2. Backend LLM: {llm_name}")
 
-    print(f"\n3. Nạp dữ liệu từ: {data_dir}")
-    chunker = RecursiveChunker(chunk_size=500)
-    store = build_knowledge_base(data_dir, embedding_fn=embedder, chunker=chunker, collection_name="bench_store")
+    from src.chunking import SentenceChunker
+
+    chunker = SentenceChunker(max_sentences_per_chunk=3)
+    print(f"3. Nạp dữ liệu từ: {data_dir} (Dùng SentenceChunker, max_sentences=3)")
+    store = build_knowledge_base(data_dir, embedding_fn=embedder, chunker=chunker, collection_name="bench_sentence_store")
     print(f"   Đã nạp {store.get_collection_size()} chunks vào Vector Store.\n")
 
     agent = KnowledgeBaseAgent(store=store, llm_fn=llm_fn)

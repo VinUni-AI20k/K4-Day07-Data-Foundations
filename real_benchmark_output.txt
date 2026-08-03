@@ -2,78 +2,80 @@
 
 - **Embedding Provider:** `huggingface: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`
 - **LLM Provider:** `Nvidia API (meta/llama-3.1-8b-instruct)`
-- **Tổng số Chunks:** `72`
+- **Tổng số Chunks:** `57`
 
 ### Query 1: q1_return_deadline
 - **Câu hỏi:** Thời hạn tối đa để người mua gửi yêu cầu Trả hàng/Hoàn tiền là bao lâu đối với thực phẩm tươi sống, đơn do người bán tự vận chuyển và các đơn hàng khác?
 - **Metadata Filter:** `{'customer_role': 'buyer'}`
-- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-01` / `shopee-returns-01` (Score: `0.7066`)
-- **Top-1 Content:** Đối với đơn hàng giao thực phẩm tươi sống & đông lạnh (trừ lý do Chưa nhận được hàng): Trong vòng 24 giờ kể từ lúc đơn hàng được cập nhật trạng thái ‘Giao hàng thành công’.  Đối với đơn hàng do Người ...
+- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-01` / `shopee-returns-01` (Score: `0.7690`)
+- **Top-1 Content:** Thời gian tối đa để gửi yêu cầu trả hàng hoàn tiền cho Shopee  Thời gian để Shopee tiếp nhận yêu cầu Trả hàng/Hoàn tiền từ bạn sẽ là:  Đối với đơn hàng giao thực phẩm tươi sống & đông lạnh (trừ lý do ...
 - **Gold Answer:**
   > Thực phẩm tươi sống/đông lạnh: 24 giờ từ khi giao thành công (trừ lý do chưa nhận được hàng). Đơn do người bán tự vận chuyển: 15 ngày từ khi bấm Đã nhận được hàng, hoặc 20 ngày từ khi lấy hàng thành công nếu chưa bấm nhận hàng. Các đơn khác: 15 ngày từ khi giao hàng thành công.
 - **Real LLM Answer:**
-  > Đối với đơn hàng giao thực phẩm tươi sống: 24 giờ kể từ lúc đơn hàng được cập nhật trạng thái ‘Giao hàng thành công’.
+  > Đối với đơn hàng giao thực phẩm tươi sống & đông lạnh (trừ lý do Chưa nhận được hàng): Trong vòng 24 giờ kể từ lúc đơn hàng được cập nhật trạng thái ‘Giao hàng thành công’.
 
-Đối với đơn hàng do Người bán tự vận chuyển: 15 ngày kể từ lúc bạn bấm ‘Đã nhận được hàng’, hoặc 20 ngày kể từ lúc đơn hàng được cập nhật trạng thái ‘Lấy hàng thành công’ và bạn không bấm ‘Đã nhận được hàng’.
+Đối với đơn hàng do Người bán tự vận chuyển: + 15 ngày kể từ lúc bạn bấm ‘Đã nhận được hàng’, hoặc + 20 ngày kể từ lúc đơn hàng được cập nhật trạng thái ‘Lấy hàng thành công’ và bạn không bấm ‘Đã nhận được hàng’.
 
 Đối với các đơn hàng khác: 15 ngày kể từ lúc đơn hàng được cập nhật trạng thái ‘Giao hàng thành công’.
 
 ### Query 2: q2_restricted_products
 - **Câu hỏi:** Sản phẩm hạn chế trả hàng là gì và Shopee không áp dụng lý do trả hàng nào cho nhóm sản phẩm này? Hãy nêu ba ví dụ.
 - **Metadata Filter:** `None`
-- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-03` / `shopee-returns-03` (Score: `0.6949`)
-- **Top-1 Content:** # [Trả hàng/ Hoàn tiền] Sản phẩm hạn chế trả hàng là gì? | Shopee Trung tâm trợ giúp  [Trả hàng/ Hoàn tiền] Sản phẩm hạn chế trả hàng là gì? | Shopee Trung tâm trợ giúp  Xin chào, Shopee có thể giúp g...
+- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-03` / `shopee-returns-03` (Score: `0.8402`)
+- **Top-1 Content:** [Trả hàng/ Hoàn tiền] Sản phẩm hạn chế trả hàng là gì? Sản phẩm hạn chế trả hàng là những sản phẩm có tính đặc thù cao, dễ hư hỏng hoặc cần điều kiện bảo quản nghiêm ngặt. Đối với nhóm sản phẩm này, S...
 - **Gold Answer:**
   > Đây là sản phẩm có tính đặc thù cao, dễ hư hỏng hoặc cần bảo quản nghiêm ngặt. Shopee không áp dụng lý do 'Hàng nguyên vẹn nhưng không còn nhu cầu'. Ví dụ gồm cây cảnh, thực phẩm tươi sống/đông lạnh và găng tay hoặc khẩu trang y tế.
 - **Real LLM Answer:**
-  > Sản phẩm hạn chế trả hàng là những sản phẩm có tính đặc thù cao, dễ hư hỏng hoặc cần điều kiện bảo quản nghiêm ngặt. Đối với nhóm sản phẩm này, Shopee không áp dụng lý do trả hàng 'Hàng nguyên vẹn nhưng không còn nhu cầu'.
+  > Sản phẩm hạn chế trả hàng là những sản phẩm có tính đặc thù cao, dễ hư hỏng hoặc cần điều kiện bảo quản nghiêm ngặt. Shopee không áp dụng lý do trả hàng 'Hàng nguyên vẹn nhưng không còn nhu cầu' cho nhóm sản phẩm này.
 
 Ba ví dụ về sản phẩm hạn chế trả hàng có thể bao gồm:
 
-1. Thực phẩm tươi sống (ví dụ: thịt, cá, trứng) - dễ hư hỏng và cần điều kiện bảo quản nghiêm ngặt.
-2. Sữa và các sản phẩm từ sữa - dễ hư hỏng và cần điều kiện bảo quản nghiêm ngặt.
-3. Các sản phẩm điện tử có tính đặc thù cao (ví dụ: máy tính, điện thoại) - dễ hư hỏng và cần điều kiện bảo quản nghiêm ngặt.
+1. Các sản phẩm dễ hư hỏng như thực phẩm tươi sống, mỹ phẩm có hạn sử dụng, hoặc các sản phẩm có tính chất đặc biệt như thuốc, vaccine, v.v.
+2. Các sản phẩm cần điều kiện bảo quản nghiêm ngặt như thiết bị y tế, thiết bị điện tử, hoặc các sản phẩm có yêu cầu đặc biệt về nhiệt độ, độ ẩm, v.v.
+3. Các sản phẩm có tính đặc thù cao như đồ cổ, đồ nghệ thuật, hoặc các sản phẩm có giá trị cao và cần được bảo quản cẩn thận.
 
-Lưu ý rằng các ví dụ trên chỉ là minh họa và không phải là danh sách đầy đủ về sản phẩm hạn chế trả hàng.
+Lưu ý rằng danh sách sản phẩm hạn chế trả hàng có thể thay đổi tùy thuộc vào chính sách của Shopee và các quy định pháp luật hiện hành.
 
 ### Query 3: q3_evidence_video
 - **Câu hỏi:** Video mở kiện dùng làm bằng chứng khi hàng bị lỗi hoặc khác mô tả phải đáp ứng những yêu cầu nào, và nếu video vượt dung lượng cho phép thì xử lý ra sao?
 - **Metadata Filter:** `None`
-- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-04` / `shopee-returns-04` (Score: `0.7682`)
-- **Top-1 Content:** 2. Đã nhận được hàng, khiếu nại hàng có vấn đề (bể vỡ, sai mẫu, hàng lỗi, khác mô tả,...)  Trong các trường hợp đã nhận hàng nhưng gặp vấn đề, Shopee khuyến khích bạn chuẩn bị bằng chứng là video mở k...
+- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-04` / `shopee-returns-04` (Score: `0.7112`)
+- **Top-1 Content:** 4. Quy định về bằng chứng  Để yêu cầu của bạn được xử lý hiệu quả, hãy lưu ý các quy định sau về bằng chứng:  Dung lượng tối đa:  Hình ảnh: Không quá 5MB/ảnh. Video: Không quá 100 MB/video (tối đa 1 p...
 - **Gold Answer:**
   > Video phải quay liên tục, không cắt ghép; góc quay rõ, chất lượng không mờ; thể hiện 6 mặt kiện hàng, mã vận đơn, quá trình mở kiện và tình trạng/số lượng/tem nhãn sản phẩm. Video tối đa 100 MB và 1 phút; nếu lớn hơn thì tải lên YouTube hoặc Google Drive ở chế độ công khai và gửi liên kết trong chú thích.
 - **Real LLM Answer:**
-  > Video mở kiện dùng làm bằng chứng khi hàng bị lỗi hoặc khác mô tả phải đáp ứng các yêu cầu sau:
+  > Theo Context 2, video mở kiện dùng làm bằng chứng khi hàng bị lỗi hoặc khác mô tả phải rõ nét, không mờ nhòe.
 
-- Quay xuyên suốt, liên tục, không bị cắt ghép.
-- Góc quay rõ ràng, không bị khuất.
-- Chất lượng video tốt, không bị mờ nhòe.
-- Thể hiện rõ các thông tin sau: (không rõ thông tin này là gì vì thông tin này không được cung cấp trong văn bản)
-
-Nếu video vượt dung lượng cho phép (không quá 100 MB/video và tối đa 1 phút), bạn có thể tải lên YouTube hoặc Google Drive (để ở chế độ công khai) rồi gửi đường dẫn trong phần chú thích khi gửi yêu cầu.
+Nếu video vượt dung lượng cho phép (không quá 100 MB/video, tối đa 1 phút), thì theo Context 1, bạn có thể tải lên YouTube hoặc Google Drive (để ở chế độ công khai) rồi gửi đường dẫn trong phần chú thích khi gửi yêu cầu.
 
 ### Query 4: q4_track_request
 - **Câu hỏi:** Người mua cần thực hiện các bước nào trên ứng dụng Shopee để xem tình trạng xử lý yêu cầu Trả hàng/Hoàn tiền?
 - **Metadata Filter:** `None`
-- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-05` / `shopee-returns-07` (Score: `0.8188`)
-- **Top-1 Content:** Sau khi đã cung cấp bằng chứng thành công, bạn vui lòng thường xuyên theo dõi tại phần thông báo Shopee để nhanh chóng được cập nhật tình hình xử lý của yêu cầu Trả hàng/Hoàn tiền...
+- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-05` / `shopee-returns-07` (Score: `0.7710`)
+- **Top-1 Content:** Trường hợp nếu bạn không kịp thời bổ sung bằng chứng đúng hạn, Shopee sẽ tiến hành xử lý yêu cầu Trả hàng/Hoàn tiền trên những bằng chứng đã nhận trước đó. Để bổ sung bằ...
 - **Gold Answer:**
   > Vào Tôi > Đơn Mua; mở ô Trả hàng rồi chọn Trả hàng/Hoàn tiền; chọn sản phẩm cần theo dõi và bấm Chi Tiết Trả Hàng/Hoàn Tiền; xem trạng thái ở phía trên màn hình. Ngoài ra có thể xem tại Thông báo > Cập nhật Đơn hàng.
 - **Real LLM Answer:**
-  > Người mua cần thực hiện các bước sau trên ứng dụng Shopee để xem tình trạng xử lý yêu cầu Trả hàng/Hoàn tiền:
+  > Tôi không thể tìm thấy thông tin cụ thể về các bước để xem tình trạng xử lý yêu cầu Trả hàng/Hoàn tiền trên ứng dụng Shopee trong các đoạn văn bạn cung cấp. Tuy nhiên, tôi có thể đưa ra một số gợi ý dựa trên các đoạn văn đã cung cấp.
 
-1. Theo dõi tại phần thông báo Shopee.
-2. Đợi thông báo được gửi trên ứng dụng.
+Từ Context 1, tôi thấy rằng người mua có thể theo dõi tình trạng xử lý yêu cầu Trả hàng/Hoàn tiền tại phần thông báo trên ứng dụng Shopee.
 
-Cụ thể, sau khi đã cung cấp bằng chứng thành công, người mua vui lòng thường xuyên theo dõi tại phần thông báo Shopee để nhanh chóng được cập nhật tình hình xử lý của yêu cầu Trả hàng/Hoàn tiền.
+Từ Context 3, tôi thấy rằng người mua có thể theo dõi hành trình đơn hàng hoàn trả tại trang Chi tiết Trả hàng/ Hoàn tiền ngay trên ứng dụng Shopee.
+
+Tuy nhiên, để xem tình trạng xử lý yêu cầu Trả hàng/Hoàn tiền, người mua có thể thực hiện các bước sau:
+
+- Bước 1: Tại ứng dụng Shopee, chọn 'Tôi'.
+- Bước 2: Chọn 'Xem lịch sử mua hàng'.
+- Bước 3: Tìm kiếm đơn hàng liên quan đến yêu cầu Trả hàng/Hoàn tiền và xem tình trạng xử lý.
+
+Lưu ý rằng các bước này có thể không chính xác 100% và người mua nên kiểm tra lại trên ứng dụng Shopee để có thông tin chính xác nhất.
 
 ### Query 5: q5_refund_time
 - **Câu hỏi:** Sau khi Shopee chấp nhận hoàn tiền, thời gian nhận tiền đối với Ví ShopeePay, thẻ Napas và thẻ tín dụng/ghi nợ khác nhau như thế nào?
 - **Metadata Filter:** `None`
-- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-06` / `shopee-returns-06` (Score: `0.7230`)
-- **Top-1 Content:** Sau khi gửi trả hàng, bạn sẽ nhận được thông báo xác nhận hoàn tiền qua mục Thông báo > Cập nhật đơn hàng trên ứng dụng Shopee, sau đó tiền sẽ được hoàn theo các phương thức thanh toán sau:  Phương th...
+- **Doc kỳ vọng / Doc tìm thấy:** `shopee-returns-06` / `shopee-returns-06` (Score: `0.7704`)
+- **Top-1 Content:** Đối với các hình thức hoàn tiền về Ví Shopee Pay, tại thời điểm xử lý hoàn tiền, ví cần ở trạng thái bình thường và còn liên kết với tài khoản Shopee để việc hoàn tiền thành công trong 24h. Đối với cá...
 - **Gold Answer:**
   > Ví ShopeePay: 24 giờ nếu ví hoạt động bình thường; thẻ nội địa Napas: 2-5 ngày làm việc tùy ngân hàng; thẻ tín dụng/ghi nợ: 7-14 ngày làm việc tùy ngân hàng.
 - **Real LLM Answer:**
-  > Tôi không thể tìm thấy thông tin về thẻ Napas và thẻ tín dụng/ghi nợ khác trong các đoạn văn bạn cung cấp.
+  > Tôi không thể tìm thấy thông tin về thời gian nhận tiền đối với thẻ Napas và thẻ tín dụng/ghi nợ khác nhau trong các đoạn văn bạn cung cấp.

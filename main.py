@@ -101,9 +101,12 @@ def run_manual_demo(question: str | None = None, data_dir: str | None = None) ->
             "Ở Giai đoạn 2, đặt EMBEDDING_PROVIDER=local hoặc huggingface để so sánh retrieval có ý nghĩa."
         )
 
+    from src.chunking import SentenceChunker
+
     # Pipeline cung cấp sẵn: parse front matter -> chunk -> gắn metadata -> nạp store.
-    store = build_knowledge_base(data_dir, embedding_fn=embedder)
-    print(f"Đã nạp {store.get_collection_size()} chunk vào EmbeddingStore")
+    chunker = SentenceChunker(max_sentences_per_chunk=3)
+    store = build_knowledge_base(data_dir, embedding_fn=embedder, chunker=chunker, collection_name="main_sentence_store")
+    print(f"Đã nạp {store.get_collection_size()} chunk (SentenceChunker) vào EmbeddingStore")
 
     print("\n=== Tìm kiếm (EmbeddingStore.search) ===")
     print(f"Câu hỏi: {query}")
