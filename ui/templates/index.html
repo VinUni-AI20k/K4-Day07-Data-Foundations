@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ASOS Product Intelligence</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="history-panel">
+      <div class="brand"><span class="brand-mark">✦</span><span>Product Intelligence</span></div>
+      <button id="new-chat" class="new-chat" type="button">＋ Cuộc trò chuyện mới</button>
+      <p class="sidebar-label">LỊCH SỬ</p>
+      <nav id="history-list" class="history-list" aria-label="Lịch sử chat"></nav>
+      <footer class="catalog-note"><strong>{{ product_count }}</strong> sản phẩm<br><span>data/k4_asos_products</span></footer>
+    </aside>
+
+    <section class="chat-panel">
+      <header class="chat-header">
+        <div><p class="eyebrow">GROUNDED PRODUCT CHAT</p><h1>ASOS catalog assistant</h1></div>
+        <div class="header-controls"><label for="top-k">Top-k <select id="top-k" aria-label="Số lượng sản phẩm truy xuất"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label><span class="data-badge">● Catalog loaded</span></div>
+      </header>
+      {% if startup_error %}<p class="warning">{{ startup_error }}</p>{% endif %}
+      <div id="messages" class="messages" aria-live="polite">
+        <div class="welcome">
+          <span class="welcome-icon">✦</span>
+          <h2>Tôi có thể tìm gì cho bạn?</h2>
+          <p>Hãy hỏi theo loại trang phục, thương hiệu, màu sắc hoặc đặc điểm. Câu trả lời chỉ dựa trên các product listing được truy xuất.</p>
+          <div class="prompt-grid">
+            <button class="prompt" type="button">Tìm blazer màu trắng</button>
+            <button class="prompt" type="button">Gợi ý váy màu xanh</button>
+            <button class="prompt" type="button">Tôi cần áo Adidas</button>
+          </div>
+        </div>
+      </div>
+      <form id="chat-form" class="composer">
+        <label class="sr-only" for="message-input">Tin nhắn</label>
+        <textarea id="message-input" maxlength="1000" rows="1" placeholder="Nhắn Product Intelligence…"></textarea>
+        <button id="send-button" aria-label="Gửi" type="submit">↑</button>
+      </form>
+      <p class="disclaimer">AI có thể mắc lỗi. Kiểm tra product card và nguồn trước khi quyết định.</p>
+    </section>
+
+    <aside class="inspector-panel">
+      <div class="inspector-header"><div><p class="eyebrow">OBSERVABILITY</p><h2>Run inspector</h2></div><span id="run-state" class="run-state">Idle</span></div>
+      <section class="metrics-section">
+        <h3>Metrics</h3>
+        <div id="metrics" class="metric-grid">
+          <div class="metric"><span>LATENCY</span><strong>—</strong></div>
+          <div class="metric"><span>TOKENS</span><strong>—</strong></div>
+          <div class="metric"><span>COST</span><strong>—</strong></div>
+          <div class="metric"><span>RETRIEVED</span><strong>—</strong></div>
+        </div>
+      </section>
+      <section class="query-section"><h3>Query agent</h3><dl class="query-details"><div><dt>Original</dt><dd id="original-query">Chờ truy vấn đầu tiên</dd></div><div><dt>Rewritten</dt><dd id="rewritten-query">—</dd></div><div><dt>Top-k</dt><dd id="active-top-k">—</dd></div><div><dt>Guardrails</dt><dd id="guardrail-status">—</dd></div></dl></section>
+      <section class="trace-section"><h3>Retrieve where</h3><code id="retrieve-where">Chờ truy vấn đầu tiên</code><p id="retrieval-strategy" class="strategy">—</p></section>
+      <section class="products-section"><div class="section-title"><h3>Retrieved products</h3><span id="result-count">0</span></div><div id="retrieved-products" class="retrieved-products"><p class="empty-state">Các product card sẽ hiện ở đây sau khi truy vấn.</p></div></section>
+    </aside>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
