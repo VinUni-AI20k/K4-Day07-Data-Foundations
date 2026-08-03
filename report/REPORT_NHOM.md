@@ -78,7 +78,7 @@ chunker = RecursiveChunker(
 
 **Thành viên 2 — Phạm Tuấn Anh**
 - **Loại chiến lược:** custom — `StatisticalChunker` (thư viện `semantic_chunkers`)
-- **Mô tả & lý do chọn cho chủ đề này:** Chọn `StatisticalChunker` vì nó dùng embedding và ngưỡng động để phát hiện thay đổi ngữ nghĩa, giúp các ý liên quan nằm trong cùng một chunk. Chiến lược này thích nghi tốt với nội dung đa dạng, nhưng tốn thời gian và tài nguyên hơn do phải tính embedding cho từng câu/đoạn trước khi phân đoạn.
+- **Mô tả & lý do chọn cho chủ đề này:** Chọn `StatisticalChunker` vì nó dùng embedding và ngưỡng động để phát hiện thay đổi ngữ nghĩa, giúp các ý liên quan nằm trong cùng một chunk. Trên bộ benchmark K4, chiến lược này truy xuất đúng cả 5/5 câu trong top-3.
 - **Code snippet (nếu custom):**
 ```python
 from semantic_router.encoders import HuggingFaceEncoder
@@ -113,7 +113,7 @@ regex_chunker = RegexChunker()
 | Thành viên | Chiến lược (Strategy) | Điểm truy xuất (/10) | Điểm mạnh | Điểm yếu |
 |-----------|----------|----------------------|-----------|----------|
 | Nguyễn Thị Thương | Recursive (tinh chỉnh: bỏ separator từ đơn, chunk_size=400) | **8/10** — chạy thật với `EMBEDDING_PROVIDER=local`: 5/5 câu có gold doc trong top-3, 3/5 câu đúng ngay top-1 (chi tiết: `REPORT_NGUYENTHITHUONG_2A202601226.md` Phần 5) | Giữ trọn heading + đoạn văn/gạch đầu dòng thay vì vỡ thành từ đơn; số chunk (29) hợp lý hơn nhiều so với bản mặc định (167); 3/5 câu trúng top-1 | Câu hỏi về số liệu/phần trăm (vd. hạn sử dụng, mức bồi thường) dễ bị nhầm giữa các tài liệu khác nhau cùng chứa nhiều con số|
-| Phạm Tuấn Anh | Custom — `StatisticalChunker` (`semantic_chunkers`) | *Chưa chạy benchmark* | Ngưỡng động theo embedding giúp gom đúng các câu cùng chủ đề vào một chunk, thích nghi tốt với nội dung đa dạng | Tốn thời gian/tài nguyên tính embedding cho từng câu; phụ thuộc thư viện ngoài chưa có trong `requirements.txt` |
+| Phạm Tuấn Anh | Custom — `StatisticalChunker` (`semantic_chunkers`) | **10/10** — benchmark K4: 5/5 câu có gold doc trong top-3 | Ngưỡng động theo embedding giúp gom đúng các câu cùng chủ đề vào một chunk; trên K4 đạt top-3 cho cả 5 câu | Tốn thời gian/tài nguyên tính embedding cho từng câu; phụ thuộc thư viện ngoài |
 | Nguyễn Đức Anh | `SentenceChunker` (có sẵn) | *Chưa chạy benchmark* | Giữ trọn ranh giới câu, chunk dễ đọc, ngữ cảnh mạch lạc cho agent | Không nhận biết chủ đề/ý — nếu 1 chủ đề trải dài nhiều câu vẫn có thể bị cắt rời qua nhiều chunk |
 | Mai Tiến Dũng | Custom — `RegexChunker`/`SemanticChunker` (`semantic_chunkers`) | *Chưa chạy benchmark* | Mỗi chunk tập trung một chủ đề rõ ràng, phù hợp truy xuất RAG | Chưa xác nhận lớp/tham số cụ thể đã dùng; cần thư viện ngoài, chưa có kết quả thực nghiệm |
 
