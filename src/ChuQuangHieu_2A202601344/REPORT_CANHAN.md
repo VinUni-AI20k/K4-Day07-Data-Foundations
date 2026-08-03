@@ -52,23 +52,48 @@ Giải thích cách tiếp cận của bạn khi lập trình (implement) các p
 ### Các hàm chia nhỏ (Chunking Functions)
 
 **`SentenceChunker.chunk`** — hướng tiếp cận:
-> *Viết 2-3 câu: dùng biểu thức chính quy (regex) gì để phát hiện câu? Xử lý trường hợp ngoại lệ (edge case) nào?*
+
+- **Regex tách câu:** `re.split(r'(?<=[.!?])\s+', text)`.
+- **Vì sao dùng lookbehind:** giữ lại dấu câu ở cuối mỗi câu thay vì nuốt mất; `\s+` bao luôn cả `". "` lẫn `".\n"`.
+- **Gom nhóm:** mỗi `max_sentences_per_chunk` câu ghép thành một chunk bằng `" ".join(...)` rồi `.strip()`.
+- **Edge case đã xử lý:** văn bản rỗng / chỉ có khoảng trắng trả về `[]`; loại bỏ mảnh rỗng sau khi split; nhóm cuối được phép ngắn hơn `max_sentences_per_chunk`.
+- **Hạn chế đã biết:** cắt nhầm ở chữ viết tắt có dấu chấm ("TP.", "vd.").
 
 **`RecursiveChunker.chunk` / `_split`** — hướng tiếp cận:
-> *Viết 2-3 câu: thuật toán hoạt động thế nào? Base case (trường hợp cơ sở) là gì?*
+
+- **Phân vai:** `chunk()` chỉ là lớp vỏ gọi `self._split(text, self.separators)`; toàn bộ logic nằm ở hàm đệ quy.
+- **Bước đệ quy:** cắt theo dấu phân cách ưu tiên cao nhất `remaining_separators[0]`; mảnh nào còn dài hơn `chunk_size` thì gọi lại với `remaining_separators[1:]`, tức hạ dần `"\n\n"` → `"\n"` → `". "` → `" "`.
+- **Base case 1:** `len(current_text) <= chunk_size` → trả về `[current_text]`.
+- **Base case 2:** hết dấu phân cách → cắt cứng theo `chunk_size`; nhánh này bảo đảm `separators=[]` vẫn trả về danh sách không rỗng.
+- **Hậu xử lý:** ghép các mảnh nhỏ liền kề tới sát `chunk_size` để chunk không bị vụn, truy xuất tốt hơn.
 
 ### Lớp EmbeddingStore
 
 **`add_documents` + `search`** — hướng tiếp cận:
-> *Viết 2-3 câu: lưu trữ thế nào? Tính độ tương tự ra sao?*
+
+- **Cấu trúc lưu trữ:** `_make_record` chuẩn hóa mỗi `Document` thành bản ghi `{"id", "content", "metadata", "embedding", "index"}`, embedding tính bằng `self._embedding_fn(doc.content)`.
+- **Chi tiết quan trọng:** luôn `metadata.setdefault("doc_id", doc.id)` trên một **bản sao** của metadata, để `delete_document()` và lọc theo `doc_id` vẫn chạy đúng kể cả khi tài liệu tạo với `metadata={}` — trùng quy ước `ingest.py` gắn cho từng chunk.
+- **`add_documents`:** lặp và `append` bản ghi vào `self._store`.
+- **`search`:** nhúng câu hỏi đúng một lần, so với embedding mọi bản ghi, sắp xếp score giảm dần, cắt `top_k`.
+- **Vì sao dùng `compute_similarity` chứ không phải `_dot` thô:** vector từ `_mock_embed` chưa chuẩn hóa nên tích vô hướng bị thiên vị theo độ dài vector.
 
 **`search_with_filter` + `delete_document`** — hướng tiếp cận:
-> *Viết 2-3 câu: lọc (filter) trước hay sau? Xóa bằng cách nào?*
+
+- **Lọc TRƯỚC rồi mới tìm kiếm (pre-filter):** thu hẹp `self._store` xuống các bản ghi khớp mọi cặp khóa-giá trị trong `metadata_filter`, rồi đưa tập con cho `_search_records` — cũng là lý do `_search_records` nhận tham số `records` thay vì đọc thẳng `self._store`.
+- **Vì sao lọc trước:** rẻ hơn (chỉ tính similarity trên tập con) và bảo đảm đủ `top_k` kết quả hợp lệ; lọc sau dễ trả về ít hơn `top_k`.
+- **Khi `metadata_filter=None`:** bỏ qua hoàn toàn bước lọc, kết quả trùng với `search` thường.
+- **`delete_document`:** dựng lại `self._store` chỉ giữ bản ghi có `metadata["doc_id"] != doc_id` — xóa trọn mọi chunk của cùng một tài liệu trong một lượt.
+- **Giá trị trả về:** so sánh số bản ghi trước/sau để trả `True`/`False`.
 
 ### Tác tử KnowledgeBaseAgent
 
 **`answer`** — hướng tiếp cận:
-> *Viết 2-3 câu: cấu trúc prompt? Cách đưa ngữ cảnh (inject context) vào thế nào?*
+
+- **`__init__`:** chỉ giữ tham chiếu `self.store` và `self.llm_fn`, tách bạch phần truy xuất với phần sinh câu trả lời.
+- **3 bước RAG:** `store.search(question, top_k)` → ghép chunk thành khối ngữ cảnh → gọi `llm_fn(prompt)`.
+- **Cách inject context:** đánh số từng chunk (`[1] ...`, `[2] ...`) để câu trả lời có thể trích dẫn nguồn.
+- **Cấu trúc prompt:** khối ngữ cảnh + câu hỏi người dùng + chỉ dẫn bắt buộc chỉ trả lời dựa trên ngữ cảnh và nói rõ khi ngữ cảnh không chứa thông tin (phần chống bịa / hallucination).
+- **Trường hợp rỗng:** truy xuất không ra chunk nào thì trả thẳng thông báo không tìm thấy, không gọi `llm_fn` với ngữ cảnh rỗng.
 
 ---
 
