@@ -1,0 +1,77 @@
+{
+  "member": {
+    "name": "Nguyễn Duy Thái",
+    "student_id": "2A202601552",
+    "branch": "member/nguyen-duy-thai-sentence"
+  },
+  "run_date": "2026-08-03",
+  "embedding_backend": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "corpus": "data/k4_ecommerce",
+  "benchmark_script": "experiments/nguyen_duy_thai_sentence_benchmark.py",
+  "similarity_predictions": [
+    {"id": 1, "prediction": "cao", "score": 0.798324, "correct_at_0_5": true},
+    {"id": 2, "prediction": "cao", "score": 0.594621, "correct_at_0_5": true},
+    {"id": 3, "prediction": "thấp", "score": 0.409490, "correct_at_0_5": true},
+    {"id": 4, "prediction": "cao", "score": 0.668036, "correct_at_0_5": true},
+    {"id": 5, "prediction": "thấp", "score": -0.072076, "correct_at_0_5": true}
+  ],
+  "sentence_configurations": [
+    {
+      "max_sentences_per_chunk": 3,
+      "chunk_count": 329,
+      "avg_chunk_length": 418.62,
+      "max_chunk_length": 3659,
+      "top3_relevant": 3,
+      "top1_relevant": 2,
+      "relevant_ranks_by_query": [2, 1, 1, null, null]
+    },
+    {
+      "max_sentences_per_chunk": 5,
+      "chunk_count": 199,
+      "avg_chunk_length": 692.74,
+      "max_chunk_length": 5919,
+      "top3_relevant": 3,
+      "top1_relevant": 2,
+      "relevant_ranks_by_query": [1, 1, 2, null, null]
+    },
+    {
+      "max_sentences_per_chunk": 8,
+      "chunk_count": 124,
+      "avg_chunk_length": 1112.34,
+      "max_chunk_length": 6327,
+      "top3_relevant": 4,
+      "top1_relevant": 4,
+      "relevant_ranks_by_query": [1, null, 1, 1, 1]
+    }
+  ],
+  "selected_configuration": {
+    "max_sentences_per_chunk": 8,
+    "reason": "Best measured top-3 hit rate (4/5) and top-1 hit rate (4/5).",
+    "top1_results": [
+      {"query_id": 1, "doc_id": "shopee-order-cancellation", "chunk_index": 0, "score": 0.746921, "relevant": true},
+      {"query_id": 2, "doc_id": "shopee-product-listing-rules", "chunk_index": 26, "score": 0.672790, "relevant": false},
+      {"query_id": 3, "doc_id": "shopee-product-listing-rules", "chunk_index": 7, "score": 0.852447, "relevant": true},
+      {"query_id": 4, "doc_id": "shopee-prohibited-products-policy", "chunk_index": 1, "score": 0.754894, "relevant": true},
+      {"query_id": 5, "doc_id": "shopee-terms-of-service", "chunk_index": 24, "score": 0.719140, "relevant": true}
+    ]
+  },
+  "buyer_cancellation_filter_comparison": {
+    "unfiltered_top3_doc_ids": [
+      "shopee-order-cancellation",
+      "shopee-terms-of-service",
+      "shopee-return-refund-policy"
+    ],
+    "buyer_filtered_top3_doc_ids": [
+      "shopee-order-cancellation",
+      "shopee-order-cancellation"
+    ],
+    "top1_unchanged": true,
+    "interpretation": "The filter did not change the relevant top-1 result, but removed seller/both-role noise from the remaining candidates. Only two buyer-only chunks existed for this configuration."
+  },
+  "agent_mode": "KnowledgeBaseAgent with a transparent extractive llm_fn returning Context 1; no production generative LLM was evaluated.",
+  "tests": {
+    "python": "3.11.15",
+    "passed": 42,
+    "total": 42
+  }
+}
