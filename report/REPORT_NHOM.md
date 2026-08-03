@@ -138,7 +138,13 @@ Sentence-based không nhận tham số kích thước ký tự nên chunk dài n
 | 5 | | | | |
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
-> Câu 1 bắt buộc chạy với `metadata_filter={"customer_role": "buyer"}` và đối chiếu thêm một lượt không filter. Filter phải loại các tài liệu chỉ dành cho `seller`; tác động thực tế lên top-3 sẽ được ghi sau khi tất cả thành viên chạy benchmark trên cùng corpus.
+> Trong lượt chạy của Khoa ở câu 1, không filter chỉ có top-1 thuộc tài liệu hủy đơn; top-2 và top-3 là nhiễu từ Điều khoản dịch vụ và Chính sách trả hàng/hoàn tiền. Filter `customer_role=buyer` làm cả ba kết quả thuộc tài liệu hủy đơn, nên tăng precision theo chủ đề, nhưng bảng có đáp án vẫn ở hạng 4 và top-3 vẫn chưa trả lời được câu hỏi. Kết quả của các thành viên khác cần được bổ sung sau khi nhóm chạy chung.
+
+### Kết quả cá nhân của Nguyễn Trọng Đăng Khoa
+
+Khoa chạy custom heading/clause-aware với mô hình `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` trên 517 chunks. Câu 2 và 3 có chunk đáp án đầy đủ ở top-1; câu 4 có phần đầu danh sách chế tài ở top-1 nhưng continuation chứa mục (v) chỉ xếp hạng 6. Câu 1 có bảng đáp án ở hạng 4 dù đã lọc `customer_role=buyer`; câu 5 không có chunk đáp án trong top-30. Theo rubric: **5/10**, và **3/5** câu có ít nhất một chunk liên quan trong top-3 nếu tính câu 4 là liên quan nhưng chưa đầy đủ.
+
+**Failure case:** Query 1 minh họa điểm yếu do tách bảng khỏi đoạn dẫn: heading được bảo toàn nhưng query gần đoạn mô tả tổng quát hơn bảng trạng thái, khiến bảng đúng rơi xuống hạng 4. Query 4 cho thấy danh sách chế tài dài bị tách giữa mục (iv) và (v), còn query 5 cho thấy chỉ giữ heading/nhãn chưa đủ khi cách diễn đạt query khác mạnh với clause dài. Hướng cải thiện là nhận diện bảng/danh sách như đơn vị nguyên tử, thêm overlap có kiểm soát giữa continuation chunks, và thử tăng `chunk_size` cho section dạng danh sách trước khi đánh giá lại trên cùng năm query.
 
 ---
 
