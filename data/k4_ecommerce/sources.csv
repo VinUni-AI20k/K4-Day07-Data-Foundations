@@ -1,3 +1,6 @@
 doc_id,file_path,title,source_url,retrieved_at,document_version,license_or_permission
-k4-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách đổi trả,https://example.com/chinh-sach/doi-tra,2026-08-02,2026.1,example-template-replace-me
-k4-seller-listing,data/k4_ecommerce/seller-listing.md,Quy định đăng bán,https://example.com/nguoi-ban/dang-ban,2026-08-02,2026.1,example-template-replace-me
+returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách Trả hàng và Hoàn tiền Shopee,https://help.shopee.vn/portal/article/79233,2026-08-03,2026.02,public-page
+seller-listing,data/k4_ecommerce/seller-listing.md,Quy định Đăng bán và Danh mục Hàng cấm Shopee,https://help.shopee.vn/portal/article/77247,2026-08-03,2026.02,public-page
+shipping-policy,data/k4_ecommerce/shipping-policy.md,Chính sách Vận chuyển và Thời gian Giao hàng Shopee,https://help.shopee.vn/portal/article/79534,2026-08-03,2026.02,public-page
+payment-policy,data/k4_ecommerce/payment-policy.md,Chính sách Thanh toán và Kênh nhận Tiền hoàn Shopee,https://help.shopee.vn/portal/article/189473,2026-08-03,2026.02,public-page
+seller-fees,data/k4_ecommerce/seller-fees.md,Chính sách Phí bán hàng và Khấu trừ cho Người bán Shopee,https://banhang.shopee.vn/edu/article/251,2026-08-03,2026.02,public-page
