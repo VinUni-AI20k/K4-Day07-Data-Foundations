@@ -10,4 +10,4 @@ K4 dùng chung cam kết mã nguồn cốt lõi (core coding contract) với K3,
 - Ít nhất một thành viên thử chia nhỏ (chunking) theo điều/khoản, tiêu đề (heading) hoặc cặp câu hỏi thường gặp (FAQ pair).
 - Câu trả lời chuẩn (Gold answer) phải trích được từ tài liệu nhóm thu thập; không dùng chính sách không có trong tập tài liệu (corpus) để chấm truy xuất (retrieval).
 
-Thư mục `data/k4_ecommerce/` có dữ liệu khởi động nhỏ; nhóm vẫn cần bổ sung tập tài liệu (corpus) 5–10 tài liệu theo yêu cầu Lab.
+Thư mục `data/k4_shopee/` có dữ liệu khởi động nhỏ; nhóm vẫn cần bổ sung tập tài liệu (corpus) 5–10 tài liệu theo yêu cầu Lab.

@@ -1,12 +1,12 @@
 ---
-doc_id: "huong-dan-thanh-toan-nhieu-don"
-title: "Hướng dẫn thanh toán nhiều đơn hàng"
-source_url: "https://help.shopee.vn/portal/4/article/79596-H%C6%B0%E1%BB%9Bng%20D%E1%BA%ABn%20Thanh%20To%C3%A1n%20Nhi%E1%BB%81u%20%C4%90%C6%A1n%20H%C3%A0ng"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "buyer"
-category: "payments"
-language: "vi"
+doc_id: huong-dan-thanh-toan-nhieu-don
+title: Hướng dẫn thanh toán nhiều đơn hàng
+source_url: https://help.shopee.vn/portal/4/article/79596-H%C6%B0%E1%BB%9Bng%20D%E1%BA%ABn%20Thanh%20To%C3%A1n%20Nhi%E1%BB%81u%20%C4%90%C6%A1n%20H%C3%A0ng
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: buyer
+category: payment
+language: vi
 ---
 
 # Hướng dẫn thanh toán nhiều đơn hàng

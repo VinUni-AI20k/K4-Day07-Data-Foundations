@@ -19,13 +19,22 @@ class KnowledgeBaseAgent:
 
     def answer(self, question: str, top_k: int = 3) -> str:
         results = self.store.search(question, top_k=top_k)
-        context_parts = [r["content"] for r in results if "content" in r]
+        if not results:
+            return "I do not have enough context to answer this question."
+
+        context_parts: list[str] = []
+        for index, result in enumerate(results, start=1):
+            metadata = result.get("metadata", {}) or {}
+            source = metadata.get("doc_id") or metadata.get("source") or "unknown"
+            content = result.get("content", "")
+            context_parts.append(f"[{index}] (source: {source}) {content}")
+
         context_str = "\n\n".join(context_parts)
         prompt = (
-            f"Use the following context to answer the question.\n\n"
+            "Instruction: Use only the provided context. If the context is insufficient, say so clearly.\n\n"
             f"Context:\n{context_str}\n\n"
             f"Question: {question}\n\n"
-            f"Answer:"
+            "Answer:"
         )
         return self.llm_fn(prompt)
 

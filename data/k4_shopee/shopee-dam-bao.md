@@ -1,12 +1,12 @@
 ---
-doc_id: "shopee-dam-bao"
-title: "Shopee Đảm Bảo là gì"
-source_url: "https://help.shopee.vn/portal/4/article/79314-%5BMua-s%E1%BA%AFm-an-to%C3%A0n%5D-Shopee-%C4%90%E1%BA%A3m-B%E1%BA%A3o-l%C3%A0-g%C3%AC"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "buyer"
-category: "buyer-protection"
-language: "vi"
+doc_id: shopee-dam-bao
+title: Shopee Đảm Bảo là gì
+source_url: https://help.shopee.vn/portal/4/article/79314-%5BMua-s%E1%BA%AFm-an-to%C3%A0n%5D-Shopee-%C4%90%E1%BA%A3m-B%E1%BA%A3o-l%C3%A0-g%C3%AC
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: buyer
+category: buyer-protection
+language: vi
 ---
 
 # Shopee Đảm Bảo là gì

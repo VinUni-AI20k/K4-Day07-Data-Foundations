@@ -1,12 +1,12 @@
 ---
-doc_id: "quy-trinh-xu-ly-thht"
-title: "Quy trình Shopee xử lý yêu cầu trả hàng hoàn tiền"
-source_url: "https://help.shopee.vn/portal/4/article/190242-%5BTr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n%5D-Quy-tr%C3%ACnh-Shopee-x%E1%BB%AD-l%C3%BD-y%C3%AAu-c%E1%BA%A7u-Tr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "both"
-category: "returns-process"
-language: "vi"
+doc_id: quy-trinh-xu-ly-thht
+title: Quy trình Shopee xử lý yêu cầu trả hàng hoàn tiền
+source_url: https://help.shopee.vn/portal/4/article/190242-%5BTr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n%5D-Quy-tr%C3%ACnh-Shopee-x%E1%BB%AD-l%C3%BD-y%C3%AAu-c%E1%BA%A7u-Tr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: both
+category: returns-process
+language: vi
 ---
 
 # Quy trình Shopee xử lý yêu cầu trả hàng hoàn tiền

@@ -1,12 +1,12 @@
 ---
-doc_id: "phan-hoi-de-xuat-hoan-tien"
-title: "Hướng dẫn phản hồi đề xuất hoàn tiền ngay"
-source_url: "https://help.shopee.vn/portal/4/article/190387-%5BTr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n%5D-H%C6%B0%E1%BB%9Bng-d%E1%BA%ABn-Ng%C6%B0%E1%BB%9Di-mua-tr%E1%BA%A3-l%E1%BB%9Di-%C4%91%E1%BB%81-xu%E1%BA%A5t-Ho%C3%A0n-Ti%E1%BB%81n-Ngay-c%E1%BB%A7a-Ng%C6%B0%E1%BB%9Di-b%C3%A1n"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "buyer"
-category: "returns-process"
-language: "vi"
+doc_id: phan-hoi-de-xuat-hoan-tien
+title: Hướng dẫn phản hồi đề xuất hoàn tiền ngay
+source_url: https://help.shopee.vn/portal/4/article/190387-%5BTr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n%5D-H%C6%B0%E1%BB%9Bng-d%E1%BA%ABn-Ng%C6%B0%E1%BB%9Di-mua-tr%E1%BA%A3-l%E1%BB%9Di-%C4%90%E1%BB%81-xu%E1%BA%A5t-Ho%C3%A0n-Ti%E1%BB%81n-Ngay-c%E1%BB%A7a-Ng%C6%B0%E1%BB%9Di-b%C3%A1n
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: buyer
+category: refund-response
+language: vi
 ---
 
 # Hướng dẫn phản hồi đề xuất hoàn tiền ngay

@@ -1,12 +1,12 @@
 ---
-doc_id: "quy-dinh-chung-tra-hang-hoan-tien"
-title: "Quy định chung về trả hàng hoàn tiền"
-source_url: "https://help.shopee.vn/portal/4/article/188931-%5BTr%E1%BA%A3-h%C3%A0ng/Ho%C3%A0n-ti%E1%BB%81n%5D-Nh%E1%BB%AFng-quy-%C4%91%E1%BB%8Bnh-chung-v%E1%BB%81-Tr%E1%BA%A3-h%C3%A0ng/Ho%C3%A0n-ti%E1%BB%81n-c%E1%BB%A7a-Shopee"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "buyer"
-category: "returns-policy"
-language: "vi"
+doc_id: quy-dinh-chung-tra-hang-hoan-tien
+title: Quy định chung về trả hàng hoàn tiền
+source_url: https://help.shopee.vn/portal/4/article/188931-%5BTr%E1%BA%A3-h%C3%A0ng/Ho%C3%A0n-ti%E1%BB%81n%5D-Nh%E1%BB%AFng-quy-%C4%90%E1%BB%8Bnh-chung-v%E1%BB%81-Tr%E1%BA%A3-h%C3%A0ng/Ho%C3%A0n-ti%E1%BB%81n-c%E1%BB%A7a-Shopee
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: buyer
+category: returns-general
+language: vi
 ---
 
 # Quy định chung về trả hàng hoàn tiền

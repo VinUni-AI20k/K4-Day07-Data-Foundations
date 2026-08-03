@@ -49,18 +49,16 @@ class SentenceChunker:
     def chunk(self, text: str) -> list[str]:
         if not text or not text.strip():
             return []
-        raw_sentences = re.split(r'(?<=[.!?])\s+|(?<=\.)\n+', text.strip())
-        sentences = [s.strip() for s in raw_sentences if s.strip()]
+
+        normalized_text = text.strip()
+        split_pattern = r'(?<=[.!?])\s+|(?<=\.)\n+'
+        raw_sentences = re.split(split_pattern, normalized_text)
+        sentences = [sentence.strip() for sentence in raw_sentences if sentence and sentence.strip()]
         if not sentences:
             return []
 
-        chunks: list[str] = []
-        for i in range(0, len(sentences), self.max_sentences_per_chunk):
-            group = sentences[i : i + self.max_sentences_per_chunk]
-            chunk_str = " ".join(group).strip()
-            if chunk_str:
-                chunks.append(chunk_str)
-        return chunks
+        limit = self.max_sentences_per_chunk
+        return [" ".join(sentences[index : index + limit]).strip() for index in range(0, len(sentences), limit)]
 
 
 class RecursiveChunker:
@@ -78,9 +76,10 @@ class RecursiveChunker:
         self.chunk_size = chunk_size
 
     def chunk(self, text: str) -> list[str]:
-        if not text:
+        if not text or not text.strip():
             return []
-        return self._split(text, self.separators)
+        chunks = self._split(text.strip(), self.separators)
+        return [chunk.strip() for chunk in chunks if chunk and chunk.strip()]
 
     def _split(self, current_text: str, remaining_separators: list[str]) -> list[str]:
         if not current_text:
@@ -88,48 +87,54 @@ class RecursiveChunker:
         if len(current_text) <= self.chunk_size:
             return [current_text]
 
-        if not remaining_separators:
+        if not remaining_separators or remaining_separators[0] == "":
             return [current_text[i : i + self.chunk_size] for i in range(0, len(current_text), self.chunk_size)]
 
         sep = remaining_separators[0]
         next_separators = remaining_separators[1:]
 
-        if sep == "":
-            return [current_text[i : i + self.chunk_size] for i in range(0, len(current_text), self.chunk_size)]
+        if sep not in current_text:
+            return self._split(current_text, next_separators)
 
         parts = current_text.split(sep)
-        final_chunks: list[str] = []
-        current_doc: list[str] = []
+        if len(parts) == 1:
+            return self._split(current_text, next_separators)
+
+        chunks: list[str] = []
+        current_parts: list[str] = []
         current_length = 0
 
         for part in parts:
-            if len(part) > self.chunk_size:
-                if current_doc:
-                    merged = sep.join(current_doc)
-                    if merged:
-                        final_chunks.append(merged)
-                    current_doc = []
-                    current_length = 0
-                sub_chunks = self._split(part, next_separators)
-                final_chunks.extend(sub_chunks)
+            if not part:
+                continue
+
+            part_len = len(part)
+            additional_length = part_len + (len(sep) if current_parts else 0)
+            if current_length + additional_length <= self.chunk_size:
+                current_parts.append(part)
+                current_length += additional_length
             else:
-                additional_length = len(part) + (len(sep) if current_doc else 0)
-                if current_length + additional_length <= self.chunk_size:
-                    current_doc.append(part)
-                    current_length += additional_length
-                else:
-                    if current_doc:
-                        merged = sep.join(current_doc)
-                        if merged:
-                            final_chunks.append(merged)
-                    current_doc = [part]
-                    current_length = len(part)
+                if current_parts:
+                    merged = sep.join(current_parts)
+                    if merged:
+                        chunks.append(merged)
+                current_parts = [part]
+                current_length = part_len
 
-        if current_doc:
-            merged = sep.join(current_doc)
+        if current_parts:
+            merged = sep.join(current_parts)
             if merged:
-                final_chunks.append(merged)
+                chunks.append(merged)
 
+        if not chunks:
+            return self._split(current_text, next_separators)
+
+        final_chunks: list[str] = []
+        for chunk in chunks:
+            if len(chunk) <= self.chunk_size:
+                final_chunks.append(chunk)
+            else:
+                final_chunks.extend(self._split(chunk, next_separators))
         return final_chunks
 
 

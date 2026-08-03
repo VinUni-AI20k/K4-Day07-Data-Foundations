@@ -1,12 +1,12 @@
 ---
-doc_id: "huong-dan-gui-yeu-cau-thht"
-title: "Hướng dẫn gửi yêu cầu trả hàng hoàn tiền"
-source_url: "https://help.shopee.vn/portal/4/article/79233?seo=1"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "buyer"
-category: "returns-process"
-language: "vi"
+doc_id: huong-dan-gui-yeu-cau-thht
+title: Hướng dẫn gửi yêu cầu trả hàng hoàn tiền
+source_url: https://help.shopee.vn/portal/4/article/79233?seo=1
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: buyer
+category: returns-req
+language: vi
 ---
 
 # Hướng dẫn gửi yêu cầu trả hàng hoàn tiền

@@ -42,8 +42,9 @@ class EmbeddingStore:
         if "doc_id" not in meta:
             meta["doc_id"] = doc.id
         embedding = self._embedding_fn(doc.content)
+        record_id = f"{doc.id}_{self._next_index}"
         return {
-            "id": doc.id,
+            "id": record_id,
             "content": doc.content,
             "metadata": meta,
             "embedding": embedding,
@@ -78,16 +79,16 @@ class EmbeddingStore:
         for doc in docs:
             record = self._make_record(doc)
             self._store.append(record)
+            self._next_index += 1
 
             if self._use_chroma and self._collection is not None:
                 try:
                     self._collection.add(
-                        ids=[f"{doc.id}_{self._next_index}"],
+                        ids=[record["id"]],
                         documents=[doc.content],
                         embeddings=[record["embedding"]],
                         metadatas=[record["metadata"]],
                     )
-                    self._next_index += 1
                 except Exception:
                     pass
 
@@ -99,6 +100,17 @@ class EmbeddingStore:
         """
         return self._search_records(query, self._store, top_k)
 
+    def _filter_records(self, metadata_filter: dict | None) -> list[dict[str, Any]]:
+        if not metadata_filter:
+            return list(self._store)
+
+        filtered: list[dict[str, Any]] = []
+        for record in self._store:
+            meta = record.get("metadata", {})
+            if all(meta.get(key) == value for key, value in metadata_filter.items()):
+                filtered.append(record)
+        return filtered
+
     def get_collection_size(self) -> int:
         """Return the total number of stored chunks."""
         return len(self._store)
@@ -109,15 +121,7 @@ class EmbeddingStore:
 
         First filter stored chunks by metadata_filter, then run similarity search.
         """
-        if not metadata_filter:
-            filtered = self._store
-        else:
-            filtered = []
-            for r in self._store:
-                meta = r.get("metadata", {})
-                if all(meta.get(k) == v for k, v in metadata_filter.items()):
-                    filtered.append(r)
-
+        filtered = self._filter_records(metadata_filter)
         return self._search_records(query, filtered, top_k)
 
     def delete_document(self, doc_id: str) -> bool:

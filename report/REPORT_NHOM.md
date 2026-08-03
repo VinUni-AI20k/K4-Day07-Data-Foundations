@@ -21,26 +21,41 @@
 
 ### Danh sách tài liệu (Data Inventory)
 
-| # | Tên tài liệu | Nguồn (Source URL) | Ngày lấy / Phiên bản | Số ký tự | Metadata đã gán |
-|---|--------------|------------|--------------------|----------|-----------------|
-| 1 | Chính sách đổi trả và hoàn tiền | https://example.com/chinh-sach/doi-tra | 2026-08-03 / v2026.2 | 1,120 | `customer_role: buyer`, `category: doi_tra` |
-| 2 | Quy định đăng bán và xử lý vi phạm | https://example.com/nguoi-ban/dang-ban | 2026-08-03 / v2026.2 | 1,280 | `customer_role: seller`, `category: dieu_kien_nguoi_ban` |
-| 3 | Chính sách giao nhận và đồng kiểm | https://example.com/chinh-sach/giao-hang | 2026-08-03 / v2026.2 | 1,050 | `customer_role: both`, `category: giao_hang` |
-| 4 | Phương thức thanh toán và quy trình đối soát | https://example.com/chinh-sach/thanh-toan | 2026-08-03 / v2026.2 | 980 | `customer_role: both`, `category: thanh_toan` |
-| 5 | Chính sách bảo mật thông tin cá nhân | https://example.com/chinh-sach/bao-mat | 2026-08-03 / v2026.2 | 920 | `customer_role: both`, `category: quyen_rieng_tu` |
+**Kết quả kiểm tra checklist mục 6 (03/08/2026):**
+- [x] Có 10 file `.md` trong thư mục data/k4_shopee, nằm trong khoảng 5–10 file.
+- [x] Tất cả 10 file đều có metadata bắt buộc: `doc_id`, `title`, `source_url`, `retrieved_at`, `document_version`, `customer_role`.
+- [x] `sources.csv` khớp một-một với các file tài liệu.
+- [x] Trường `customer_role` có 3 giá trị khác nhau: `buyer`, `both`, `seller`.
+
+| # | Tên tài liệu | Nguồn (Source URL) | Ngày lấy / Phiên bản | Metadata đã gán |
+|---|--------------|-------------------|----------------------|------------------|
+| 1 | Cách đóng gói đơn hàng hoàn trả | https://help.shopee.vn/portal/4/article/79508 | 2026-08-03 / not-stated | `customer_role: buyer`, `category: returns-process`, `language: vi` |
+| 2 | Chính sách trả hàng và hoàn tiền | https://help.shopee.vn/portal/4/article/77251?seo=1 | 2026-08-03 / not-stated | `customer_role: both`, `category: returns-policy`, `language: vi` |
+| 3 | Chính sách vận chuyển Shopee | https://help.shopee.vn/portal/4/article/77250 | 2026-08-03 / not-stated | `customer_role: both`, `category: shipping-policy`, `language: vi` |
+| 4 | Điều khoản dịch vụ Shopee Mall | https://help.shopee.vn/portal/4/article/77262 | 2026-08-03 / not-stated | `customer_role: seller`, `category: service-terms`, `language: vi` |
+| 5 | Hướng dẫn gửi yêu cầu trả hàng hoàn tiền | https://help.shopee.vn/portal/4/article/79233?seo=1 | 2026-08-03 / not-stated | `customer_role: buyer`, `category: returns-req`, `language: vi` |
+| 6 | Hướng dẫn thanh toán nhiều đơn hàng | https://help.shopee.vn/portal/4/article/79596-H%C6%B0%E1%BB%9Bng%20D%E1%BA%ABn%20Thanh%20To%C3%A1n%20Nhi%E1%BB%81u%20%C4%90%C6%A1n%20H%C3%A0ng | 2026-08-03 / not-stated | `customer_role: buyer`, `category: payment`, `language: vi` |
+| 7 | Hướng dẫn phản hồi đề xuất hoàn tiền ngay | https://help.shopee.vn/portal/4/article/190387-%5BTr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n%5D-H%C6%B0%E1%BB%9Bng-d%E1%BA%ABn-Ng%C6%B0%E1%BB%9Di-mua-tr%E1%BA%A3-l%E1%BB%9Di-%C4%90%E1%BB%81-xu%E1%BA%A5t-Ho%C3%A0n-Ti%E1%BB%81n-Ngay-c%E1%BB%A7a-Ng%C6%B0%E1%BB%9Di-b%C3%A1n | 2026-08-03 / not-stated | `customer_role: buyer`, `category: refund-response`, `language: vi` |
+| 8 | Quy định chung về trả hàng hoàn tiền | https://help.shopee.vn/portal/4/article/188931-%5BTr%E1%BA%A3-h%C3%A0ng/Ho%C3%A0n-ti%E1%BB%81n%5D-Nh%E1%BB%AFng-quy-%C4%90%E1%BB%8Bnh-chung-v%E1%BB%81-Tr%E1%BA%A3-h%C3%A0ng/Ho%C3%A0n-ti%E1%BB%81n-c%E1%BB%A7a-Shopee | 2026-08-03 / not-stated | `customer_role: buyer`, `category: returns-general`, `language: vi` |
+| 9 | Quy trình Shopee xử lý yêu cầu trả hàng hoàn tiền | https://help.shopee.vn/portal/4/article/190242-%5BTr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n%5D-Quy-tr%C3%ACnh-Shopee-x%E1%BB%AD-l%C3%BD-y%C3%AAu-c%E1%BA%A7u-Tr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n | 2026-08-03 / not-stated | `customer_role: both`, `category: returns-process`, `language: vi` |
+| 10 | Shopee Đảm Bảo là gì | https://help.shopee.vn/portal/4/article/79314-%5BMua-s%E1%BA%AFm-an-to%C3%A0n%5D-Shopee-%C4%90%E1%BA%A3m-B%E1%BA%A3o-l%C3%A0-g%C3%AC | 2026-08-03 / not-stated | `customer_role: buyer`, `category: buyer-protection`, `language: vi` |
 
 **Danh sách kiểm tra quản trị dữ liệu (Data governance checklist):**
 - [x] Tập tài liệu (Corpus) chỉ chứa nguồn công khai/được phép dùng và không chứa dữ liệu cá nhân, thông tin đăng nhập hoặc tài liệu nội bộ.
-- [x] Mỗi tài liệu có `source_url`, `retrieved_at`, `document_version` (hoặc ngày hiệu lực) trong metadata.
+- [x] Mỗi tài liệu có `source_url`, `retrieved_at`, `document_version` và `customer_role` trong metadata.
+- [x] `sources.csv` khớp một-một với các file `.md` trong thư mục dữ liệu.
 
 ### Cấu trúc Metadata (Metadata Schema)
 
 | Trường metadata | Kiểu | Ví dụ giá trị | Tại sao hữu ích cho truy xuất (retrieval)? |
 |----------------|------|---------------|-------------------------------|
-| `customer_role` | string | `buyer`, `seller`, `both` | Giúp lọc chính xác ngữ cảnh quy định cho người mua hay người bán, loại bỏ nhiễu giữa hai đối tượng. |
-| `category` | string | `doi_tra`, `dieu_kien_nguoi_ban`, `giao_hang` | Phân loại chủ đề chính sách để tiền lọc (pre-filter) trước khi tính Cosine Similarity. |
-| `source_url` | string | `https://example.com/chinh-sach/doi-tra` | Giúp kiểm chứng nguồn gốc thông tin và dẫn nguồn trong câu trả lời của Agent. |
-| `document_version` | string | `2026.2` | Đảm bảo hệ thống RAG truy xuất phiên bản chính sách mới nhất, tránh dùng dữ liệu cũ hết hạn. |
+| `doc_id` | string | `cach-dong-goi-don-hoan-tra` | Dùng làm khóa nhận diện ổn định cho từng tài liệu và cho việc đối chiếu với `sources.csv`. |
+| `title` | string | `Cách đóng gói đơn hàng hoàn trả` | Giúp người dùng và hệ thống nhận diện nội dung chính của tài liệu nhanh chóng. |
+| `customer_role` | string | `buyer`, `seller`, `both` | Cho phép pre-filter dữ liệu theo vai trò người dùng, loại bỏ nhiễu giữa các quy định dành cho người mua và người bán. |
+| `category` | string | `returns-process`, `shipping-policy`, `payment` | Phân loại chủ đề để lọc theo từng nhóm chính sách hoặc quy trình. |
+| `source_url` | string | `https://help.shopee.vn/portal/4/article/79508` | Giúp kiểm chứng nguồn gốc và dẫn nguồn trong câu trả lời của Agent. |
+| `document_version` | string | `not-stated` | Đảm bảo hệ thống ghi nhận phiên bản hoặc trạng thái hiệu lực của tài liệu. |
+| `language` | string | `vi` | Hỗ trợ phân loại và truy xuất đúng ngữ cảnh ngôn ngữ. |
 
 ---
 

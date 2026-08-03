@@ -1,12 +1,12 @@
 ---
-doc_id: "chinh-sach-van-chuyen"
-title: "Chính sách vận chuyển Shopee"
-source_url: "https://help.shopee.vn/portal/4/article/77250"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "both"
-category: "shipping-policy"
-language: "vi"
+doc_id: chinh-sach-van-chuyen
+title: Chính sách vận chuyển Shopee
+source_url: https://help.shopee.vn/portal/4/article/77250
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: both
+category: shipping-policy
+language: vi
 ---
 
 # Chính sách vận chuyển Shopee

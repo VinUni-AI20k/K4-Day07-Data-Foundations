@@ -1,12 +1,12 @@
 ---
-doc_id: "chinh-sach-tra-hang-hoan-tien"
-title: "Chính sách trả hàng và hoàn tiền"
-source_url: "https://help.shopee.vn/portal/4/article/77251?seo=1"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "both"
-category: "returns-policy"
-language: "vi"
+doc_id: chinh-sach-tra-hang-hoan-tien
+title: Chính sách trả hàng và hoàn tiền
+source_url: https://help.shopee.vn/portal/4/article/77251?seo=1
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: both
+category: returns-policy
+language: vi
 ---
 
 # Chính sách trả hàng và hoàn tiền

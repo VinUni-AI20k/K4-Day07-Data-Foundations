@@ -1,8 +1,8 @@
 # Báo Cáo Cá Nhân — Lab 7: Embedding & Vector Store
 
-**Họ tên:** [Tên sinh viên]
-**Nhóm:** [Tên nhóm]
-**Ngày:** [Ngày nộp]
+**Họ tên:** Đỗ Tú Anh
+**Nhóm:** Nhóm K4 - AAA
+**Ngày:** 03/08/2026
 
 > **Nộp 1 bản / sinh viên.** Phần nhóm (lựa chọn tài liệu, thiết kế chiến lược, bộ câu hỏi đánh giá, demo) nộp chung 1 bản trong `REPORT_NHOM.md`. Chi tiết thang điểm: `docs/SCORING.md`.
 
@@ -15,20 +15,7 @@
 ### Độ tương tự Cosine (Cosine Similarity) (Bài tập 1.1)
 
 **Độ tương tự cosine cao (High cosine similarity) nghĩa là gì?**
-> Độ tương tự cosine cao nghĩa là vector biểu diễn của hai đoạn văn bản trỏ cùng hướng trong không gian ngữ nghĩa, thể hiện rằng hai văn bản có cùng ý nghĩa/nội dung cốt lõi mặc dù cách diễn đạt hay từ ngữ có thể khác nhau.
-
-**Ví dụ có độ tương tự CAO:**
-- Câu A: Chính sách đổi trả hàng áp dụng trong vòng 7 ngày kể từ khi nhận hàng.
-- Câu B: Khách hàng có thể hoàn trả sản phẩm trong 7 ngày đầu sau khi nhận được hàng.
-- Tại sao tương đồng: Cả hai câu đều truyền tải cùng một thông điệp quy định thời hạn hoàn trả hàng (7 ngày), dù sử dụng các từ đồng nghĩa khác nhau (đổi trả - hoàn trả, kể từ khi - sau khi).
-
-**Ví dụ có độ tương tự THẤP:**
-- Câu A: Chính sách đổi trả hàng áp dụng trong vòng 7 ngày kể từ khi nhận hàng.
-- Câu B: Mô hình ngôn ngữ lớn đòi hỏi hệ thống máy chủ GPU rất mạnh để huấn luyện.
-- Tại sao khác: Hai câu thuộc hai lĩnh vực hoàn toàn khác nhau (chính sách mua sắm vs hạ tầng AI), vector biểu diễn của chúng trỏ theo hai hướng xa nhau trong không gian vector.
-
-**Tại sao độ tương tự cosine (cosine similarity) được ưu tiên hơn khoảng cách Euclid (Euclidean distance) cho text embeddings?**
-> Cosine similarity đo hướng của vector thay vì độ dài tuyệt đối, giúp nó không bị ảnh hưởng bởi độ dài của đoạn văn bản (đoạn văn dài và ngắn cùng ý nghĩa vẫn có cosine similarity cao). Ngược lại, khoảng cách Euclid bị ảnh hưởng bởi độ dài văn bản, dẫn đến việc đánh giá sai hai văn bản cùng nội dung nhưng khác số lượng từ.
+> Độ tương tự cosine cao nghĩa là hai đoạn văn bản có hướng vector gần nhau trong không gian embedding, tức là chúng mang ý nghĩa tương đồng dù có thể dùng từ khác nhau. Ví dụ: “Chính sách đổi trả áp dụng trong 7 ngày” và “Khách hàng có thể hoàn trả sản phẩm trong vòng 7 ngày” là hai câu cùng nội dung về thời hạn đổi trả. Ngược lại, một câu về chính sách đổi trả và một câu về GPU/huấn luyện mô hình có độ tương tự thấp vì chúng thuộc hai lĩnh vực khác nhau. Cosine thường phù hợp hơn Euclid cho text embeddings vì nó tập trung vào hướng nghĩa, không bị lệch bởi độ dài văn bản.
 
 ### Bài toán tính toán Chunking (Bài tập 1.2)
 
@@ -37,8 +24,8 @@
 > *Đáp án:* **23 chunks**
 
 **Nếu độ chồng chéo (overlap) tăng lên 100, số lượng chunk thay đổi thế nào? Tại sao muốn độ chồng chéo nhiều hơn?**
-> - **Sự thay đổi:** Khi overlap tăng lên 100, số lượng chunk tăng từ 23 lên **25 chunks** (vì $\text{ceil}\left(\frac{10000 - 100}{500 - 100}\right) = \text{ceil}(24.75) = 25$).
-> - **Lý do tăng overlap:** Tăng độ chồng chéo giúp giữ trọn vẹn ngữ cảnh ở ranh giới giữa các chunks, tránh trường hợp một câu văn hoặc một ý nghĩa quan trọng bị cắt đôi làm giảm chất lượng truy xuất (retrieval quality) của RAG.
+> - **Sự thay đổi:** Khi overlap tăng lên 100, số lượng chunk tăng từ 23 lên **25 chunks** vì $\text{ceil}\left(\frac{10000 - 100}{500 - 100}\right) = \text{ceil}(24.75) = 25$. 
+> - **Lý do tăng overlap:** Overlap làm các chunk chồng nhau hơn ở ranh giới, giúp giữ ngữ cảnh và giảm nguy cơ mất ý nghĩa khi một câu hoặc một ý quan trọng bị cắt giữa hai chunk. Tuy nhiên, overlap lớn hơn cũng làm tăng số chunk và có thể làm giảm hiệu quả lưu trữ/độ tập trung của mỗi chunk.
 
 ---
 
@@ -124,6 +111,8 @@ tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_tr
 
 **Số lượng bài test vượt qua (pass):** 42 / 42
 
+**Kiểm tra `main.py`:** `python main.py "Chunking là gì?"` chạy thành công với `data/k4_shopee` làm thư mục dữ liệu mặc định; nạp được 229 chunk và trả về câu trả lời demo từ `KnowledgeBaseAgent`.
+
 ---
 
 ## 4. Dự đoán độ tương tự (Similarity Predictions) — Cá nhân (5 điểm)
@@ -157,6 +146,70 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
 > Việc áp dụng pre-filtering theo metadata (`customer_role="seller"`) giúp loại bỏ hoàn toàn nhiễu từ các văn bản dành cho người mua. Ngoài ra, việc dùng `RecursiveChunker` giữ trọn vẹn ngữ cảnh tiêu đề và điều khoản xuất sắc hơn hẳn so với việc chia cố định ký tự.
+
+---
+
+## 6. Benchmark strategy riêng — Cá nhân (Checkpoint 5)
+
+Đã tạo `bench.py` với chiến lược riêng và chạy thành công trên `data/k4_shopee`.
+
+- Chunker chiến lược: `RecursiveChunker(chunk_size=450)`
+- Embedding backend: mock embedder (`src.embeddings._mock_embed`)
+- Số chunk nạp vào store: **324**
+- 5 query benchmark đã chạy thành công, in ra top-3 kết quả cho mỗi query.
+
+### Kết quả benchmark tóm tắt
+- Query 1 (Trả hàng/Hoàn tiền thời hạn): top-3 trả về `chinh-sach-van-chuyen`, `dieu-khoan-dich-vu-shopee-mall`, `chinh-sach-tra-hang-hoan-tien`; marker phát hiện trên chunk `dieu-khoan-dich-vu-shopee-mall`.
+- Query 2 (Shopee Mall hàng chính hãng và bồi thường, filter `customer_role="seller"`): không filter trả về `chinh-sach-van-chuyen`, `dieu-khoan-dich-vu-shopee-mall`, `chinh-sach-van-chuyen`; có filter trả về toàn bộ `dieu-khoan-dich-vu-shopee-mall`; marker không tìm thấy.
+- Query 3 (Đồng kiểm khi nhận hàng): top-3 trả về `chinh-sach-van-chuyen`, `chinh-sach-tra-hang-hoan-tien`, `chinh-sach-van-chuyen`; marker không tìm thấy.
+- Query 4 (Shopee Đảm Bảo bảo vệ người mua): top-3 trả về `chinh-sach-van-chuyen`, `chinh-sach-van-chuyen`, `dieu-khoan-dich-vu-shopee-mall`; marker không tìm thấy.
+- Query 5 (Đóng gói đơn hàng hoàn trả): top-3 trả về `chinh-sach-tra-hang-hoan-tien`, `huong-dan-thanh-toan-nhieu-don`, `chinh-sach-tra-hang-hoan-tien`; marker không tìm thấy.
+
+## 7. Chạy benchmark và phân tích failure — Cá nhân (Checkpoint 6)
+
+### 7.1. Embedder và giới hạn hiện tại
+- Môi trường hiện tại không có `sentence_transformers`, nên `bench.py` tự động fallback về `MockEmbedder`.
+- Điều này thỏa mãn checkpoint kỹ thuật: pipeline benchmark hoạt động, số chunk nạp được và A/B filter vận hành đúng.
+- Giới hạn: `MockEmbedder` chỉ kiểm luồng, không phản ánh chất lượng ngữ nghĩa thực tế. Do đó, phân tích tập trung vào số chunk, coherence và provenance hơn là điểm số cosine.
+
+### 7.2. A/B filter và metadata
+- Chỉ query 2 có `metadata_filter={"customer_role": "seller"}`.
+- Kết quả A/B cho query 2:
+  - Không filter: top-3 gồm `chinh-sach-van-chuyen`, `dieu-khoan-dich-vu-shopee-mall`, `chinh-sach-van-chuyen`.
+  - Có filter: top-3 đều thuộc `dieu-khoan-dich-vu-shopee-mall`.
+- Diễn giải: filter đã có tác động và giúp loại bỏ các chunks không thuộc seller. Đây là bằng chứng rằng metadata filter thực sự hữu ích cho query bắt buộc seller.
+
+### 7.3. Marker-based scoring (chunk-level)
+- Thay vì chỉ kiểm `doc_id`, tôi dùng các marker đặc trưng trong top-3 kết quả để chứng minh chunk có chứa bằng chứng.
+- Marker cho mỗi query:
+  - Query 1: `7 ngày`, `15 ngày`, `Shopee Mall`, `Giao hàng thành công`
+  - Query 2: `100% hàng chính hãng`, `200%`, `hàng giả`, `hàng nhái`
+  - Query 3: `đồng kiểm`, `kiểm tra số lượng`, `ngoại quan`, `không dùng thử`, `tem niêm phong`
+  - Query 4: `Shopee Đảm Bảo`, `giữ tiền`, `7-15 ngày`, `xác nhận đã nhận hàng`
+  - Query 5: `đóng gói kỹ`, `thùng carton`, `túi niêm phong`, `Mã trả hàng`, `Phiếu giao hoàn trả`
+- Nếu top-3 chỉ cùng `doc_id` nhưng không xuất hiện marker, thì đây là failure ở mức chunk.
+
+### 7.4. Failure cases có bằng chứng từ top-3
+- Query 1: top-3 chứa `chinh-sach-van-chuyen`, `dieu-khoan-dich-vu-shopee-mall`, `chinh-sach-tra-hang-hoan-tien`; marker `Shopee Mall` xuất hiện trong chunk `dieu-khoan-dich-vu-shopee-mall`, nên query này là case tốt nhất trong bộ benchmark.
+- Query 2: A/B filter khác biệt rõ. Với filter, top-3 chuyển sang toàn bộ `dieu-khoan-dich-vu-shopee-mall`, nhưng marker `100% hàng chính hãng` / `200%` / `hàng giả` không xuất hiện trong full chunk, nên đây là failure ở mức chunk evidence.
+- Query 3: top-3 không chứa marker `đồng kiểm` / `ngoại quan` / `tem niêm phong`, cho thấy retrieval chỉ chọn tài liệu chủ đề chung mà không đủ chính xác để trả lời query.
+- Query 4: top-3 là `chinh-sach-van-chuyen` và `dieu-khoan-dich-vu-shopee-mall`, nhưng không có marker rõ ràng về Shopee Đảm Bảo; đây là failure evidence.
+- Query 5: top-3 gồm `chinh-sach-tra-hang-hoan-tien`, `huong-dan-thanh-toan-nhieu-don`, `chinh-sach-tra-hang-hoan-tien`; không có marker đóng gói hoàn trả rõ ràng, nên đây là failure rõ ràng.
+
+### 7.5. Nguyên nhân và sửa đề xuất
+- Nguyên nhân chung:
+  - `MockEmbedder` chỉ chạy kỹ thuật, nên top-3 dựa vào chủ đề rộng hơn chứ không tinh đến câu trả lời chi tiết.
+  - `RecursiveChunker(chunk_size=450)` tạo chunk khá lớn, nên nhiều chunk chứa nhiều nội dung, khiến cosine ưu tiên chủ đề hơn là bằng chứng trả lời.
+- Đề xuất sửa:
+  1. Dùng chunker nhỏ hơn hoặc sentence-based chunker cho các câu hỏi cần số liệu/điều kiện chi tiết.
+  2. Thêm metadata cụ thể hơn như `category=returns-policy`, `category=shipping-policy`, `topic=packaging` để filter/boost đúng nguồn.
+  3. Khi có môi trường, dùng local multilingual embedder `sentence_transformers/paraphrase-multilingual-MiniLM-L12-v2` để đánh giá semantic thật sự.
+  4. Với query bắt buộc filter, bổ sung thêm câu hỏi rõ vai trò người hỏi (seller/buyer) và metadata `customer_role` càng chi tiết càng tốt.
+
+### 7.6. Kết luận checkpoint 6
+- `bench.py` đã chạy thành công, A/B filter hoạt động đúng.
+- Mỗi query đã có top-3 và marker-based evidence; ít nhất một failure case rõ ràng đã được ghi nhận.
+- Kết quả cho thấy checkpoint 6 về flow đã hoàn thành, nhưng cần cải tiến chunking/metadata để nâng chất lượng retrieval trong môi trường mock.
 
 ---
 

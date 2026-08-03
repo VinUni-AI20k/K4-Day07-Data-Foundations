@@ -1,12 +1,12 @@
 ---
-doc_id: "dieu-khoan-dich-vu-shopee-mall"
-title: "Điều khoản dịch vụ Shopee Mall"
-source_url: "https://help.shopee.vn/portal/4/article/77262"
-retrieved_at: "2026-08-03"
-document_version: "not-stated"
-customer_role: "seller"
-category: "seller-terms"
-language: "vi"
+doc_id: dieu-khoan-dich-vu-shopee-mall
+title: Điều khoản dịch vụ Shopee Mall
+source_url: https://help.shopee.vn/portal/4/article/77262
+retrieved_at: 2026-08-03
+document_version: not-stated
+customer_role: seller
+category: service-terms
+language: vi
 ---
 
 # Điều khoản dịch vụ Shopee Mall
