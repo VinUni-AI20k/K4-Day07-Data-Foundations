@@ -108,11 +108,11 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 | # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
 |---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | Tôi có bao nhiêu ngày để gửi yêu cầu Trả hàng/Hoàn tiền... | `cach-dong-goi-hang-hoan-tra` | 0.2771 | Có | Trả lời về hạn 15 ngày giao thành công |
-| 2 | Thanh toán bằng thẻ tín dụng thì bao lâu mới nhận được tiền hoàn? | `quan-ly-don-tra-hang-hoan-tien` | 0.2735 | Có | Trả lời thời gian hoàn 7-14 ngày |
-| 3 | Mua cây cảnh hoặc thực phẩm đông lạnh... trả được không? | `chinh-sach-tra-hang-hoan-tien` | 0.2587 | Có | Trả lời không áp dụng trả hàng không nhu cầu |
-| 4 | (Filter seller) Shop chưa nhận được hàng hoàn, phản hồi trong bao lâu? | `quan-ly-don-tra-hang-hoan-tien` | 0.1712 | Có | Trả lời phản hồi trong 2 ngày |
-| 5 | Hình thức trả hàng nào người mua phải tự trả phí trước? | `chuan-bi-bang-chung` | 0.2822 | Có | Trả lời hình thức 'Tự sắp xếp' |
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+| 4 | | | | | |
+| 5 | | | | | |
 
 **Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** **5** / 5
 
