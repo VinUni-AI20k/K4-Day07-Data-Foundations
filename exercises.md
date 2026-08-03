@@ -36,17 +36,17 @@ Chạy `pytest tests/` để kiểm tra tiến độ.
 ### Danh sách cần làm (Checklist)
 - [x] `Document` dataclass — ĐÃ TRIỂN KHAI SẴN
 - [x] `FixedSizeChunker` — ĐÃ TRIỂN KHAI SẴN
-- [ ] `SentenceChunker` — tách dựa trên ranh giới câu, nhóm lại thành các chunks
-- [ ] `RecursiveChunker` — thử nghiệm các dấu phân cách (separators) theo thứ tự, thực hiện đệ quy trên các đoạn có kích thước quá lớn
-- [ ] `compute_similarity` — công thức tính độ tương tự cosine kèm cơ chế bảo vệ chia cho 0
-- [ ] `ChunkingStrategyComparator` — gọi cả ba chiến lược, tính toán các chỉ số thống kê
-- [ ] `EmbeddingStore.__init__` — khởi tạo store (lưu trữ trong bộ nhớ hoặc ChromaDB)
-- [ ] `EmbeddingStore.add_documents` — nhúng (embed) và lưu trữ từng tài liệu
-- [ ] `EmbeddingStore.search` — nhúng truy vấn, xếp hạng theo tích vô hướng (dot product)
-- [ ] `EmbeddingStore.get_collection_size` — trả về số lượng
-- [ ] `EmbeddingStore.search_with_filter` — lọc theo siêu dữ liệu (metadata), sau đó tìm kiếm
-- [ ] `EmbeddingStore.delete_document` — xóa tất cả các chunks của một doc_id
-- [ ] `KnowledgeBaseAgent.answer` — truy xuất (retrieve) + tạo prompt + gọi LLM
+- [x] `SentenceChunker` — tách dựa trên ranh giới câu, nhóm lại thành các chunks
+- [x] `RecursiveChunker` — thử nghiệm các dấu phân cách (separators) theo thứ tự, thực hiện đệ quy trên các đoạn có kích thước quá lớn
+- [x] `compute_similarity` — công thức tính độ tương tự cosine kèm cơ chế bảo vệ chia cho 0
+- [x] `ChunkingStrategyComparator` — gọi cả ba chiến lược, tính toán các chỉ số thống kê
+- [x] `EmbeddingStore.__init__` — khởi tạo store (lưu trữ trong bộ nhớ hoặc ChromaDB)
+- [x] `EmbeddingStore.add_documents` — nhúng (embed) và lưu trữ từng tài liệu
+- [x] `EmbeddingStore.search` — nhúng truy vấn, xếp hạng theo tích vô hướng (dot product)
+- [x] `EmbeddingStore.get_collection_size` — trả về số lượng
+- [x] `EmbeddingStore.search_with_filter` — lọc theo siêu dữ liệu (metadata), sau đó tìm kiếm
+- [x] `EmbeddingStore.delete_document` — xóa tất cả các chunks của một doc_id
+- [x] `KnowledgeBaseAgent.answer` — truy xuất (retrieve) + tạo prompt + gọi LLM
 
 > **Nộp code:** thư mục `src/`
 > **Ghi lại hướng tiếp cận vào:** REPORT_CANHAN.md — Phần 2 (Hướng tiếp cận của tôi)
@@ -81,11 +81,15 @@ Ghi vào bảng:
 
 | # | Tên tài liệu | Nguồn (Source URL) | Ngày lấy / Phiên bản | Số ký tự | Metadata đã gán |
 |---|--------------|------------|--------------------|----------|-----------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | Chính sách trả hàng và hoàn tiền | [Shopee](https://help.shopee.vn/portal/4/article/77251?seo=1) | 2026-08-03 / not-stated | 26,198 | both, returns, vi |
+| 2 | Quy định về đăng bán sản phẩm | [Shopee](https://help.shopee.vn/portal/4/article/77246) | 2026-08-03 / not-stated | 28,830 | seller, listing, vi |
+| 3 | Điều khoản dịch vụ | [Shopee](https://help.shopee.vn/portal/4/article/77243) | 2026-08-03 / not-stated | 110,814 | both, payment-and-escrow, vi |
+| 4 | Shopee Đảm Bảo | [Shopee](https://help.shopee.vn/portal/4/article/79314-%5BMua-s%E1%BA%AFm-an-to%C3%A0n%5D-Shopee-%C4%90%E1%BA%A3m-B%E1%BA%A3o-l%C3%A0-g%C3%AC) | 2026-08-03 / not-stated | 2,146 | buyer, buyer-protection, vi |
+| 5 | Phương thức gửi hàng hoàn trả và phí hoàn trả | [Shopee](https://help.shopee.vn/portal/4/article/189477-%5BTr%E1%BA%A3-h%C3%A0ng/-Ho%C3%A0n-ti%E1%BB%81n%5D-C%C3%A1c-ph%C6%B0%C6%A1ng-th%E1%BB%A9c-g%E1%BB%ADi-h%C3%A0ng-ho%C3%A0n-tr%E1%BA%A3-v%C3%A0-ph%C3%AD-ho%C3%A0n-tr%E1%BA%A3) | 2026-08-03 / not-stated | 8,439 | buyer, return-shipping, vi |
+| 6 | Điều khoản dịch vụ Shopee Mall | [Shopee](https://help.shopee.vn/portal/4/article/77262) | 2026-08-03 / not-stated | 44,464 | seller, mall-returns, vi |
+
+Corpus nằm trong `data/shopee_policy/`; URL gốc và căn cứ sử dụng từng nguồn
+được ghi trong `data/shopee_policy/sources.csv`.
 
 **Bước 3 — Thiết kế cấu trúc metadata (metadata schema):** Mỗi tài liệu cần `source_url`, `retrieved_at`, `document_version` và ít nhất 2 trường hữu ích cho việc truy xuất (ví dụ: `category`, `customer_role`, `language`, `difficulty`).
 
@@ -98,6 +102,11 @@ Ghi vào bảng:
 Mỗi thành viên **tự chọn chiến lược riêng** để thử nghiệm trên cùng bộ tài liệu của nhóm.
 
 **Bước 1 — Đường cơ sở (Baseline):** Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu. Ghi lại kết quả.
+
+**Kết quả baseline trên toàn bộ 6 tài liệu:** FixedSize (750 ký tự, overlap
+100) tạo 257 chunks, trung bình 741.8 ký tự; Sentence (5 câu/chunk) tạo 218
+chunks, trung bình 755.0 ký tự; Recursive (750 ký tự) tạo 305 chunks, trung
+bình 540.8 ký tự.
 
 > **Dùng embedder thật để so sánh có ý nghĩa:** đặt `EMBEDDING_PROVIDER=local` (xem README, mục *Tùy Chọn Mô Hình Nhúng*). Trình nhúng giả lập (mock) chỉ dùng cho unit test và cho điểm gần như ngẫu nhiên — **không** phản ánh chất lượng ngữ nghĩa tiếng Việt nên đừng dùng mock để kết luận chiến lược nào tốt hơn.
 
@@ -120,6 +129,11 @@ class CustomChunker:
 
 **Bước 3 — So sánh:** So sánh chiến lược tùy chỉnh/được tinh chỉnh (custom/tuned strategy) với đường cơ sở (baseline) trên cùng tài liệu.
 
+**Kết quả lựa chọn:** dùng `SentenceChunker(max_sentences_per_chunk=5)` làm
+chiến lược cá nhân. Khi dùng `text-embedding-3-small`, chiến lược này có đủ
+evidence cho 4/5 gold answer trong top-3; tốt hơn FixedSize và Recursive (mỗi
+chiến lược 3/5 theo cùng phép đo evidence).
+
 > **Ghi kết quả vào:** REPORT_NHOM.md — Phần 2 (Thiết kế chiến lược)
 
 ---
@@ -130,11 +144,11 @@ Mỗi nhóm viết **đúng 5 câu hỏi đánh giá** kèm theo **câu trả l�
 
 | # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Chunk nào chứa thông tin? |
 |---|-------|-------------------------------|--------------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | Hạn trả hàng sau khi giao thành công và ngoại lệ thực phẩm? | 15 ngày; thực phẩm tươi sống/đông lạnh: 24 giờ | `shopee-return-refund-policy`, mục 3.2 |
+| 2 | Người bán phải phản hồi yêu cầu hoàn tiền trong bao lâu? | 2 ngày lịch từ khi nhận thông báo | `shopee-return-refund-policy`, mục 5 |
+| 3 | Tự gửi hàng hoàn ngoài Shopee Mall được hỗ trợ bao nhiêu? | 25.000 Xu cùng tỉnh; 40.000 Xu khác tỉnh | `shopee-return-shipping`, mục 2.2; filter buyer |
+| 4 | Ảnh thật khi đăng bán phải đạt yêu cầu nào? | Ảnh tự chụp, sản phẩm chiếm ít nhất 40% ảnh | `shopee-listing-regulations`, mục C.1.b; filter seller |
+| 5 | Tiền thanh toán được giữ ở đâu và khi nào hoàn tiền? | Tài Khoản Đảm Bảo; hoàn khi yêu cầu được chấp thuận | `shopee-terms-of-service`, mục 11.1–11.2 |
 
 **Yêu cầu:**
 - Câu hỏi phải đa dạng (không hỏi 5 câu có nội dung/cấu trúc giống hệt nhau)
@@ -164,6 +178,12 @@ Gọi hàm `compute_similarity()` trên 5 cặp câu. **Trước khi chạy**, h
 
 **Bước 3:** Thảo luận và rút ra bài học — chuẩn bị cho phần demo (thuyết trình) với các nhóm khác.
 
+**Kết quả đánh giá:** SentenceChunker trả lời grounded đúng Q1, Q2, Q4 và Q5.
+Q3 là failure case: document đúng có trong top-3 nhưng thiếu đồng thời hai mức
+25.000/40.000 Xu, nên không đủ gold answer. Metadata filter hữu ích rõ ở Q4
+(`seller`); ở Q3, filter `buyer` giảm nhiễu nhưng không thay thế được chunking
+giữ nguyên một mục phí hoàn trả.
+
 > **Ghi kết quả vào:** REPORT_CANHAN.md — Phần 5 (Kết quả truy xuất của tôi) + REPORT_NHOM.md — Phần 3 (Chất lượng truy xuất của nhóm)
 > **Gợi ý đánh giá:** xem danh sách kiểm tra ngắn trong `README.md` mục **Cách Tự Đánh Giá Kết Quả Retrieval** hoặc chi tiết hơn trong file `docs/EVALUATION.md`.
 
@@ -179,11 +199,16 @@ Tìm ít nhất **1 trường hợp lỗi (failure case)** trong quá trình so 
 > **Ghi kết quả vào:** REPORT_NHOM.md — Phần 4 (Demo & Bài học nhóm)
 > **Gợi ý:** phân tích lỗi nên tham chiếu từ các góc nhìn như độ chính xác (precision), tính mạch lạc của chunk (chunk coherence), tính hữu dụng của metadata, và chất lượng thông tin nền (grounding quality).
 
+**Phân tích lỗi đã thực hiện:** Q3 thất bại vì `SentenceChunker(5)` tách các
+câu chứa hai mức phí khỏi nhau trong ranking. Cải thiện đề xuất là chunk theo
+heading/bảng hoặc gom toàn bộ section “phí trả hàng” vào cùng một chunk; không
+chỉ tăng số câu một cách mù quáng.
+
 ---
 
 ## Danh Sách Kiểm Tra Nộp Bài (Submission Checklist)
 
-- [ ] Vượt qua tất cả các bài kiểm thử (tests): `pytest tests/ -v`
-- [ ] Cập nhật thư mục `src/` (cá nhân)
-- [ ] Hoàn thành báo cáo nhóm (`report/REPORT_NHOM.md` — 1 file/nhóm)
-- [ ] Hoàn thành báo cáo cá nhân (`report/REPORT_CANHAN.md` — 1 file/sinh viên)
+- [x] Vượt qua tất cả các bài kiểm thử (tests): `pytest tests/ -v` — 42 / 42 pass
+- [x] Cập nhật thư mục `src/` (cá nhân)
+- [x] Hoàn thành báo cáo nhóm (`report/REPORT_NHOM.md` — 1 file/nhóm)
+- [x] Hoàn thành báo cáo cá nhân (`report/REPORT_CANHAN.md` — 1 file/sinh viên)
