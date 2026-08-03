@@ -15,6 +15,9 @@ dev = [
 local = [
     "sentence-transformers==5.6.0",
 ]
+openai = [
+    "openai>=1.0.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

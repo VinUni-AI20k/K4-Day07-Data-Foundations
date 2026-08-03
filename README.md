@@ -31,31 +31,15 @@ Nhóm cùng chọn một bộ tài liệu và thống nhất 5 câu hỏi đánh
 
 ### Python 3.11 là chuẩn của Lab
 
-Phần bắt buộc được kiểm thử trên **Python 3.11**. Dùng đúng trình thông dịch (interpreter) này khi tạo môi trường ảo (virtual environment) (`py -3.11` trên Windows hoặc `python3.11` trên macOS/Linux); file `.python-version` cũng đã khai báo phiên bản chuẩn.
-
-```bash
-pip install -r requirements.txt
-pytest tests/ -v          # Phần lớn bài kiểm thử sẽ THẤT BẠI (chưa được lập trình)
-```
-
-Mặc định, lab vẫn chạy với trình nhúng giả lập `_mock_embed` nên **không bắt buộc** cài đặt mô hình nhúng (embedder) thật.
-File `.env` được tự động nạp khi chạy `main.py`. Với các đoạn mã Python (snippet) chạy trực tiếp, hãy dùng lệnh `export` cho các biến môi trường cần thiết hoặc gọi hàm `load_dotenv()` nếu cần.
-
-### Thiết lập bằng uv
-
-Repo có `pyproject.toml` và `uv.lock` để tạo môi trường Python 3.11 có thể tái lập:
+Phần bắt buộc được kiểm thử trên **Python 3.11**. File `.python-version` và `pyproject.toml` đã khai báo phiên bản chuẩn; `uv` sẽ tự chọn trình thông dịch phù hợp.
 
 ```bash
 uv sync
-uv run pytest tests/ -v
+uv run pytest tests/ -v   # Phần lớn bài kiểm thử sẽ THẤT BẠI (chưa được lập trình)
 ```
 
-Nhóm dependency `local` dành cho bài so sánh retrieval bằng mô hình nhúng đa ngữ:
-
-```bash
-uv sync --group local
-EMBEDDING_PROVIDER=local uv run python main.py
-```
+Mặc định, lab vẫn chạy với trình nhúng giả lập `_mock_embed` nên **không bắt buộc** cài đặt mô hình nhúng (embedder) thật.
+File `.env` được tự động nạp khi chạy `main.py`. Với các đoạn mã Python (snippet) chạy trực tiếp, hãy dùng lệnh `export` cho các biến môi trường cần thiết hoặc gọi hàm `load_dotenv()` nếu cần. Mọi lệnh Python trong repo nên chạy qua `uv run` để dùng đúng môi trường đã khóa trong `uv.lock`.
 
 > **Giai đoạn 2 (so sánh retrieval): đặt `EMBEDDING_PROVIDER=local`** để dùng trình nhúng đa ngữ (mô tả bên dưới). Mock sinh vector xác định nhưng **gần như ngẫu nhiên theo cả chuỗi** — chỉ hợp để chạy unit test, **không phản ánh chất lượng ngữ nghĩa** và không nên dùng để kết luận chiến lược chunking/tiếng Việt nào tốt hơn.
 
@@ -65,14 +49,14 @@ EMBEDDING_PROVIDER=local uv run python main.py
 
 Không cần cài gì thêm ngoài:
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 ### 2) Tùy chọn: Trình nhúng đa ngữ cục bộ (Local multilingual embedder)
 
 ```bash
-pip install -r requirements-local.txt
-python3 - <<'PY'
+uv sync --group local
+uv run python - <<'PY'
 from src import LocalEmbedder
 embedder = LocalEmbedder()
 print(embedder._backend_name)
@@ -86,9 +70,9 @@ PY
 ### 3) Tùy chọn: Trình nhúng OpenAI (OpenAI embedder)
 
 ```bash
-pip install openai
+uv sync --group openai
 export OPENAI_API_KEY=your-key-here
-python3 - <<'PY'
+uv run python - <<'PY'
 from src import OpenAIEmbedder
 embedder = OpenAIEmbedder()
 print(embedder._backend_name)
@@ -116,7 +100,7 @@ Sau khi cài đặt các thư viện tùy chọn, bạn có thể kiểm tra t�
 **Kiểm tra local embedder**
 
 ```bash
-python3 - <<'PY'
+uv run --group local python - <<'PY'
 from src import LocalEmbedder
 
 embedder = LocalEmbedder()
@@ -127,7 +111,7 @@ PY
 **Kiểm tra OpenAI embedder**
 
 ```bash
-python3 - <<'PY'
+uv run --group openai python - <<'PY'
 from pathlib import Path
 from dotenv import load_dotenv
 from src import OpenAIEmbedder
@@ -164,7 +148,9 @@ PY
 │   ├── DATA_COLLECTION.md ← Hướng dẫn thu thập & format dữ liệu
 │   ├── EVALUATION.md     ← Các tiêu chí đánh giá
 │   └── SCORING.md        ← Tiêu chí chấm điểm
-└── requirements.txt
+├── requirements.txt
+├── pyproject.toml         ← Cấu hình dự án và các nhóm dependency cho uv
+└── uv.lock                ← Phiên bản dependency đã khóa
 ```
 
 ---
@@ -260,5 +246,5 @@ Xem chi tiết tại `docs/SCORING.md`. Tóm tắt:
 ## Chạy Kiểm Thử
 
 ```bash
-pytest tests/ -v
+uv run pytest tests/ -v
 ```
