@@ -8,6 +8,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- MathJax Engine for Rendering LaTeX Equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 50%, #1e1b4b 100%);
@@ -649,26 +661,39 @@ separators    = ["\n\n", "\n", ". ", " "]</code></pre>
       </div>
       <div class="grid-2">
         <div class="card">
-          <div class="card-title">Cấu Hấp Tham Số Embedding Engine</div>
+          <div class="card-title">Cấu Hình Tham Số Embedding Engine</div>
           <pre><code>Model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
 Dimension: 384 dimensions (véc-tơ đa chiều)
 Provider: HuggingFace API (via HF_TOKEN) / Local PyTorch
 Cache: self._cache dict (tốc độ nạp 0ms)</code></pre>
           <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
-            <strong style="color: #ffffff;">Toán học Chuẩn Hóa Véc-tơ (L2 Vector Normalization):</strong><br>
-            Để đưa tích vô hướng (Dot Product) về điểm góc **Cosine Similarity** chuẩn trong $[0.0, 1.0]$:
-            <pre style="margin-top: 8px;"><code>import math
-norm = math.sqrt(sum(x * x for x in vec))
-vec_normalized = [x / norm for x in vec]  # ||v||2 = 1.0</code></pre>
+            <strong style="color: #ffffff;">Công Thức Toán Chuẩn Hóa Véc-tơ L2 Norm:</strong>
+            <div style="background: rgba(2, 6, 23, 0.7); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; margin: 10px 0; text-align: center; color: var(--accent-cyan);">
+              $$\hat{\mathbf{v}} = \frac{\mathbf{v}}{\|\mathbf{v}\|_2} = \frac{\mathbf{v}}{\sqrt{\sum_{i=1}^{d} v_i^2}}$$
+            </div>
+            Khi $\|\hat{\mathbf{v}}\|_2 = 1.0$, tích vô hướng chuyển thành điểm Cosine Score chuẩn trong $[0.0, 1.0]$:
+            $$\mathbf{A} \cdot \mathbf{B} = \cos(\theta)$$
           </div>
         </div>
 
         <div class="card">
-          <div class="card-title">So Sánh Cosine Similarity vs Euclidean Distance</div>
-          <ul style="font-size: 0.9rem; line-height: 1.8; color: var(--text-muted);">
-            <li><strong style="color: var(--accent-cyan);">Cosine Similarity:</strong> Đo **góc** giữa 2 vector ($\cos \theta = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|}$). Triệt tiêu hoàn toàn độ dài của đoạn văn bản, giúp so sánh chính xác giữa câu hỏi ngắn và đoạn văn dài.</li>
-            <li><strong style="color: #f87171;">Euclidean Distance:</strong> Đo khoảng cách độ dài absolute ($\|\mathbf{A} - \mathbf{B}\|$). Bị nhiễu mạnh bởi số lượng từ — đoạn văn dài bị đẩy ra xa câu hỏi dù cùng chung ngữ nghĩa.</li>
-          </ul>
+          <div class="card-title">So Sánh Công Thức Cosine vs Euclidean</div>
+          
+          <div style="margin-bottom: 14px;">
+            <strong style="color: var(--accent-cyan);">1. Cosine Similarity (Đo góc $\theta$ giữa 2 véc-tơ):</strong>
+            <div style="background: rgba(2, 6, 23, 0.7); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px; margin: 6px 0; text-align: center; color: var(--accent-cyan);">
+              $$\text{Similarity}(\mathbf{A}, \mathbf{B}) = \cos(\theta) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\|_2 \|\mathbf{B}\|_2}$$
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">👉 Triệt tiêu yếu tố độ dài văn bản, so sánh chính xác giữa câu hỏi ngắn và đoạn văn dài.</span>
+          </div>
+
+          <div>
+            <strong style="color: #f87171;">2. Euclidean Distance (Khoảng cách độ dài tuyệt đối):</strong>
+            <div style="background: rgba(2, 6, 23, 0.7); border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px; margin: 6px 0; text-align: center; color: #f87171;">
+              $$d(\mathbf{A}, \mathbf{B}) = \|\mathbf{A} - \mathbf{B}\|_2 = \sqrt{\sum_{i=1}^{d} (A_i - B_i)^2}$$
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">👉 Bị ảnh hưởng bởi số lượng từ — đoạn văn dài bị đẩy ra xa câu hỏi dù chung ngữ nghĩa.</span>
+          </div>
         </div>
       </div>
     </div>
