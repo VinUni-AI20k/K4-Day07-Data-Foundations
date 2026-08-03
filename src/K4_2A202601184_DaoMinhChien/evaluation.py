@@ -12,6 +12,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
+from benchmark.queries import BENCHMARK
 from ingest import chunk_document, load_documents
 
 from .agent import KnowledgeBaseAgent
@@ -47,13 +48,7 @@ SIMILARITY_PAIRS = [
     ),
 ]
 
-BENCHMARK_QUERIES = [
-    "Người mua cần làm gì khi hàng bị lỗi hoặc không đúng mô tả?",
-    "Người bán phải cung cấp những thông tin nào khi đăng sản phẩm?",
-    "Sản phẩm bị hạn chế hoặc bị cấm có được đăng bán không?",
-    "Ai có trách nhiệm phản hồi yêu cầu đổi trả?",
-    "Với vai trò người bán, trách nhiệm về độ chính xác của thông tin sản phẩm là gì?",
-]
+BENCHMARK_QUERIES = [item["query"] for item in BENCHMARK]
 
 
 def _tokens(text: str) -> list[str]:
@@ -83,7 +78,10 @@ def _extract_top_context(prompt: str) -> str:
 
 def run_evaluation() -> dict:
     repo_root = Path(__file__).resolve().parents[2]
-    documents = load_documents(repo_root / "data" / "k4_ecommerce")
+    data_dir = repo_root / "data" / "k4_asos_products"
+    documents = load_documents(data_dir)
+    if not documents:
+        raise RuntimeError(f"Không tìm thấy tài liệu benchmark trong {data_dir}")
     chunker = RecursiveChunker(chunk_size=500)
     chunks = [
         chunk
@@ -115,8 +113,9 @@ def run_evaluation() -> dict:
     store.add_documents(chunks)
     agent = KnowledgeBaseAgent(store, llm_fn=_extract_top_context)
     retrieval_results = []
-    for index, query in enumerate(BENCHMARK_QUERIES, start=1):
-        metadata_filter = {"customer_role": "seller"} if index == 5 else None
+    for item in BENCHMARK:
+        query = item["query"]
+        metadata_filter = item["metadata_filter"]
         results = store.search_with_filter(
             query,
             top_k=3,
@@ -124,11 +123,18 @@ def run_evaluation() -> dict:
         )
         retrieval_results.append(
             {
+                "id": item["id"],
                 "query": query,
+                "gold_answer": item["gold_answer"],
                 "metadata_filter": metadata_filter,
                 "top_1_score": round(results[0]["score"], 4) if results else None,
                 "top_1_doc_id": results[0]["metadata"].get("doc_id") if results else None,
                 "top_3_doc_ids": [result["metadata"].get("doc_id") for result in results],
+                "expected_doc_ids": item["expected_doc_ids"],
+                "hit_top_3": any(
+                    result["metadata"].get("doc_id") in item["expected_doc_ids"]
+                    for result in results
+                ),
                 "agent_answer": agent.answer(
                     query,
                     top_k=3,

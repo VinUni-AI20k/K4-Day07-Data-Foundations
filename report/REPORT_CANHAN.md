@@ -142,11 +142,9 @@ src/K4_2A202601184_DaoMinhChien/
 Lệnh kiểm thử:
 
 ```powershell
+$env:LAB_SOLUTION_PACKAGE='src.K4_2A202601184_DaoMinhChien'
 python -m pytest tests -v
 ```
-
-File `conftest.py` đặt package cá nhân làm lựa chọn mặc định khi chạy pytest;
-biến `LAB_SOLUTION_PACKAGE` vẫn có thể được đặt thủ công để kiểm tra package khác.
 
 Kết quả:
 
@@ -192,12 +190,12 @@ có thể biểu diễn các quan hệ ngữ nghĩa này tốt hơn.
 
 ### Phạm vi phép thử
 
-Tại thời điểm chạy, `REPORT_NHOM.md` chưa có năm benchmark query chung và thư
-mục `data/k4_ecommerce/` mới chứa hai tài liệu khởi động. Vì vậy, bảng dưới đây
-là **benchmark cá nhân tạm thời**, không giả định là kết quả chính thức của nhóm.
-Tôi dùng `RecursiveChunker(chunk_size=500)`, thu được 3 chunk, và dùng vector từ
-vựng chuẩn hóa thay cho mock embedding ngẫu nhiên. Câu 5 được lọc bằng
-`metadata_filter={"customer_role": "seller"}`.
+Tôi chạy đúng năm câu hỏi chung trong `benchmark/queries.py` trên corpus ASOS
+`data/k4_asos_products/`. Cấu hình cá nhân dùng
+`RecursiveChunker(chunk_size=500)`, tạo 76 chunk, và vector tần suất từ vựng đã
+chuẩn hóa để kết quả có thể tái lập offline mà không dùng mock embedding ngẫu
+nhiên. Câu 3 sử dụng metadata filter
+`{"category_group": "outerwear"}` theo benchmark chung.
 
 Script `src/K4_2A202601184_DaoMinhChien/evaluation.py` lưu cố định năm cặp câu,
 năm truy vấn, vectorizer, cấu hình chunking, Top-3 và Agent stub trích xuất; vì
@@ -205,24 +203,24 @@ vậy các số liệu trong hai bảng có thể được kiểm tra lại đ�
 
 | # | Câu hỏi | Top-1 chunk truy xuất được | Score | Liên quan? | Câu trả lời Agent (tóm tắt từ context) |
 |---|---|---|---:|---|---|
-| 1 | Người mua cần làm gì khi hàng bị lỗi hoặc không đúng mô tả? | `k4-returns-policy`: điều kiện gửi yêu cầu đổi trả | 0,4193 | Có | Gửi yêu cầu trong thời hạn chính sách và kèm bằng chứng phù hợp nếu hàng lỗi hoặc sai mô tả. |
-| 2 | Người bán phải cung cấp những thông tin nào khi đăng sản phẩm? | `k4-seller-listing`: trách nhiệm đăng bán | 0,4430 | Có | Cung cấp chính xác giá, mô tả và tình trạng hàng. |
-| 3 | Sản phẩm bị hạn chế hoặc bị cấm có được đăng bán không? | `k4-seller-listing`: quy định hàng cấm | 0,5041 | Có | Không; sản phẩm bị hạn chế hoặc bị cấm không được đăng bán. |
-| 4 | Ai có trách nhiệm phản hồi yêu cầu đổi trả? | `k4-returns-policy`: trách nhiệm xử lý đổi trả | 0,2752 | Có | Người bán có trách nhiệm phản hồi theo quy trình của sàn. |
-| 5 | Với vai trò người bán, trách nhiệm về độ chính xác của thông tin sản phẩm là gì? | `k4-seller-listing`, lọc `seller` | 0,3765 | Có | Người bán chịu trách nhiệm bảo đảm giá, mô tả và tình trạng hàng chính xác. |
+| 1 | Sản phẩm nào phải giặt khô và làm từ chất liệu gì? | `asos-collusion-x008-y2k-flare-jeans-co-ord-in-pink-tint-dirty-wash` | 0,2272 | Không | Context đầu nói về thương hiệu COLLUSION, không trả lời được yêu cầu. |
+| 2 | Đầm maxi ASOS EDITION satin cami giá bao nhiêu? | `asos-asos-edition-satin-cami-maxi-dress-with-full-skirt-in-dusky-blue` | 0,4706 | Có | Truy xuất đúng tài liệu nhưng context đầu mới chứa nguồn, chưa trích được giá £110. |
+| 3 | Trong nhóm outerwear, áo nào làm từ faux fur? | `asos-daisy-street-mid-length-faux-fur-coat-in-wavy-checkerboard-print` | 0,1896 | Có | Filter đưa đúng tài liệu Daisy Street lên Top-1; context đầu vẫn thiên về nguồn thay vì câu trả lời. |
+| 4 | Món màu đen, cổ yếm để đi biển có lựa chọn nào? | `asos-new-look-ruched-button-vest-in-brown` | 0,2378 | Không | Context không liên quan nên Agent chưa trả lời được hai lựa chọn chuẩn. |
+| 5 | Có đầm bầu không và được thiết kế vừa vặn thế nào? | `asos-asos-design-maternity-cami-wrap-midi-dress-with-lace-up-back` | 0,3115 | Có | Đúng tài liệu maternity ở Top-1 nhưng context đầu chưa chứa đủ chi tiết “bump to baby”, wrap front và shirred back. |
 
-**Số câu có chunk liên quan trong Top-3:** **5 / 5** trên corpus khởi động.
+**Số câu có chunk liên quan trong Top-3:** **3 / 5** (câu 2, 3 và 5).
 
-Metadata filter ở câu 5 loại bỏ toàn bộ chunk dành cho `buyer`, giúp tập ứng
-viên chỉ còn tài liệu người bán. Tuy vậy, corpus chỉ có ba chunk nên kết quả 5/5
-chưa chứng minh chất lượng retrieval trên dữ liệu thật; sau khi nhóm bổ sung
-5–10 nguồn và năm câu hỏi chung, cần chạy lại bảng này bằng local multilingual
-embedder.
+Metadata filter ở câu 3 có tác dụng rõ: nó giới hạn ứng viên về nhóm
+`outerwear` và đưa tài liệu Daisy Street faux-fur lên Top-1. Hai failure case là
+câu 1 và 4; vector từ vựng bị nhiễu bởi các từ phổ biến, còn chunk theo kích
+thước chưa ưu tiên các heading như `Look After Me`, `About Me` hay `Dac diem`.
+Hướng cải thiện là dùng multilingual semantic embedder và chunk theo heading để
+giữ thuộc tính sản phẩm cùng tiêu đề mục.
 
-**Điều học được từ quá trình tự kiểm tra:** cùng một nội dung nhưng cách chia
-chunk quyết định lượng ngữ cảnh đi kèm kết quả. Metadata giúp giảm nhiễu khi câu
-hỏi xác định rõ vai trò, còn chất lượng embedding ảnh hưởng trực tiếp đến thứ tự
-Top-k. Chưa có dữ liệu demo của thành viên khác để đưa ra so sánh nhóm trung thực.
+**Điều học được từ benchmark chung:** cùng một corpus và năm câu hỏi cố định mới
+cho phép so sánh công bằng giữa các thành viên. Retrieval đúng `doc_id` chưa đủ;
+chunk Top-1 còn phải chứa đúng bằng chứng để Agent trả lời khớp gold answer.
 
 ---
 
@@ -234,9 +232,9 @@ Top-k. Chưa có dữ liệu demo của thành viên khác để đưa ra so sá
 | Hướng tiếp cận của tôi | 10 / 10 |
 | Hoàn thiện code — 42/42 tests | 30 / 30 |
 | Dự đoán độ tương tự | 5 / 5 |
-| Kết quả truy xuất tạm thời | 6 / 10 |
-| **Tổng phần cá nhân hiện tại** | **56 / 60** |
+| Kết quả truy xuất trên benchmark chung | 3 / 10 |
+| **Tổng phần cá nhân hiện tại** | **53 / 60** |
 
-Phần retrieval tự đánh giá 6/10 vì mã và phép đo đã hoàn thành nhưng corpus cùng
-benchmark chính thức của nhóm chưa có. Khi nhóm cung cấp 5–10 tài liệu thật và
-năm câu hỏi chung, cần thay bảng tạm thời để chốt điểm phần này.
+Phần retrieval tự đánh giá 3/10: ba câu có đúng tài liệu trong Top-3 nhưng Agent
+stub chưa trích đủ gold answer; hai câu còn lại miss. Đây là kết quả offline có
+thể tái lập, chưa phải điểm cuối khi dùng local multilingual embedder.

@@ -8,6 +8,10 @@ class FixedSizeChunker:
     """Split text into fixed-size chunks with optional overlap."""
 
     def __init__(self, chunk_size: int = 500, overlap: int = 50) -> None:
+        if chunk_size <= 0:
+            raise ValueError("chunk_size must be greater than zero")
+        if overlap < 0 or overlap >= chunk_size:
+            raise ValueError("overlap must satisfy 0 <= overlap < chunk_size")
         self.chunk_size = chunk_size
         self.overlap = overlap
 
@@ -54,6 +58,8 @@ class RecursiveChunker:
     DEFAULT_SEPARATORS = ["\n\n", "\n", ". ", " ", ""]
 
     def __init__(self, separators: list[str] | None = None, chunk_size: int = 500) -> None:
+        if chunk_size <= 0:
+            raise ValueError("chunk_size must be greater than zero")
         self.separators = self.DEFAULT_SEPARATORS if separators is None else list(separators)
         self.chunk_size = chunk_size
 
