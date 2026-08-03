@@ -147,11 +147,12 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 | # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
 |---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | Thời hạn và ngoại lệ đổi trả sản phẩm | `k4-returns-policy`: Thời hạn 7 ngày, ngoại lệ thực phẩm/đồ lót | 0.85 | Có | Đổi trả trong 7 ngày, ngoại lệ thực phẩm tươi sống & phụ kiện cá nhân |
-| 2 | Hàng cấm đăng bán và chế tài người bán | `k4-seller-listing`: Hàng cấm vũ khí/hàng giả, phạt khóa ví & tài khoản | 0.91 | Có | Cấm vũ khí, hàng giả, phạt khóa ví người bán và tài khoản vĩnh viễn |
-| 3 | Phương thức thanh toán & lịch rút tiền | `k4-payment-policy`: Thanh toán COD/thẻ/ví, rút tiền thứ 2 & thứ 5 | 0.88 | Có | Hỗ trợ COD/Ví/Thẻ, rút tiền tự động vào thứ 2 và thứ 5 hàng tuần |
-| 4 | Quy định đồng kiểm & bồi thường hư hỏng | `k4-shipping-delivery`: Đồng kiểm ngoại quan, bồi thường 100% | 0.82 | Có | Được kiểm hàng trước khi nhận, đơn vị vận chuyển bồi thường 100% |
-| 5 | Mục đích sử dụng dữ liệu & quyền xóa | `k4-privacy-policy`: Xử lý đơn hàng, có quyền yêu cầu xóa trong 7 ngày | 0.89 | Có | Dùng cho giao nhận đơn hàng, người dùng được quyền xóa vĩnh viễn dữ liệu |
+| 1 | Thời hạn gửi yêu cầu Trả hàng / Hoàn tiền Shopee | `quy-dinh-chung-tra-hang-hoan-tien`: 7 ngày kể từ khi nhận hàng (15 ngày với Shopee Mall) | 0.88 | Có | Thời hạn là 7 ngày kể từ khi giao thành công (15 ngày với Shopee Mall) |
+| 2 | Nghĩa vụ hàng chính hãng Shopee Mall & phạt hàng giả | `dieu-khoan-dich-vu-shopee-mall`: Cam kết chính hãng 100%, phạt hoàn 200% nếu bán hàng giả | 0.94 | Có | Người bán Shopee Mall phải cam kết chính hãng, phạt hoàn 200% nếu vi phạm |
+| 3 | Quy định đồng kiểm khi nhận hàng từ Shopee | `chinh-sach-van-chuyen`: Mở hộp kiểm ngoại quan/số lượng, không dùng thử | 0.85 | Có | Được mở hộp kiểm tra số lượng và ngoại quan trước sự chứng kiến của shipper |
+| 4 | Shopee Đảm Bảo bảo vệ Người mua như thế nào | `shopee-dam-bao`: Giữ tiền thanh toán cho đến khi nhận hàng thành công | 0.91 | Có | Giữ khoản tiền thanh toán cho tới khi đơn hàng giao thành công thỏa đáng |
+| 5 | Quy định đóng gói đơn hàng hoàn trả Shopee | `cach-dong-goi-don-hoan-tra`: Đóng thùng carton, dán Mã trả hàng bên ngoài | 0.87 | Có | Yêu cầu đóng gói kỹ bằng thùng carton/túi niêm phong và dán Mã trả hàng |
+
 
 **Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** 5 / 5
 

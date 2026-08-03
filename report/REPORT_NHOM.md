@@ -99,24 +99,25 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 | # | Câu hỏi (Query) | Câu trả lời chuẩn (Gold Answer) | Chunk nào chứa thông tin? |
 |---|-------|-------------------------------|--------------------------|
-| 1 | Khách hàng mua hàng có được quyền đổi trả sản phẩm trong bao nhiêu ngày và có các ngoại lệ nào không? | Người mua có quyền gửi yêu cầu đổi trả trong 7 ngày kể từ khi nhận hàng. Ngoại lệ không áp dụng với thực phẩm tươi sống, phụ kiện đồ lót/bơi, và phần mềm/thẻ quà tặng đã mở mã. | `k4-returns-policy` |
-| 2 | *(Lọc Metadata: `customer_role="seller"`)* Người bán bị cấm đăng bán những loại mặt hàng nào và hình thức phạt khi vi phạm nghiêm trọng là gì? | Hàng cấm gồm vũ khí, vật liệu nổ, hàng giả/nhái, và thuốc kê đơn. Vi phạm nghiêm trọng sẽ bị đóng băng số dư Ví người bán và khóa tài khoản vĩnh viễn. | `k4-seller-listing` |
-| 3 | Sàn hỗ trợ những phương thức thanh toán nào và chu kỳ rút tiền cho người bán diễn ra vào thời gian nào? | Sàn hỗ trợ COD, Thẻ quốc tế (Visa/Mastercard), Ví điện tử (MoMo/ZaloPay/ShopeePay) và QR Code. Chu kỳ đối soát rút tiền tự động cho người bán diễn ra vào thứ 2 và thứ 5 hàng tuần. | `k4-payment-policy` |
-| 4 | Quy định đồng kiểm khi giao hàng là gì và nếu đơn hàng bị hỏng do vận chuyển thì ai bồi thường? | Người mua được mở gói hàng kiểm tra ngoại quan trước khi nhận (không dùng thử). Nếu hàng bị hỏng do vận chuyển, đơn vị vận chuyển bồi thường 100% giá trị khai giá đơn hàng. | `k4-shipping-delivery` |
-| 5 | Dữ liệu cá nhân của người dùng được sử dụng cho mục đích gì và người dùng có quyền yêu cầu xóa không? | Dữ liệu dùng để xử lý đơn hàng, liên hệ giao nhận và ngăn chặn gian lận. Người dùng có quyền gửi yêu cầu xóa vĩnh viễn dữ liệu cá nhân, hệ thống sẽ thực hiện trong 7 ngày. | `k4-privacy-policy` |
+| 1 | Thời hạn gửi yêu cầu Trả hàng / Hoàn tiền trên Shopee là bao nhiêu ngày kể từ khi nhận hàng? | Người mua có thể gửi yêu cầu Trả hàng/Hoàn tiền trong vòng 7 ngày (hoặc 15 ngày đối với sản phẩm thuộc Shopee Mall) kể từ khi đơn hàng cập nhật trạng thái Giao hàng thành công. | `quy-dinh-chung-tra-hang-hoan-tien` / `chinh-sach-tra-hang-hoan-tien` |
+| 2 | *(Lọc Metadata: `customer_role="seller"`)* Người bán Shopee Mall có nghĩa vụ gì về hàng chính hãng và mức bồi thường khi phát hiện bán hàng giả là bao nhiêu? | Người bán Shopee Mall cam kết 100% hàng chính hãng. Nếu phát hiện bán hàng giả/nhái, Shopee Mall phạt và hoàn 200% giá trị sản phẩm cho Người mua từ chi phí của Người bán. | `dieu-khoan-dich-vu-shopee-mall` |
+| 3 | Shopee quy định như thế nào về việc đồng kiểm khi nhận hàng từ đơn vị vận chuyển? | Người mua được phép đồng kiểm (mở hộp kiểm tra số lượng, ngoại quan, không dùng thử sản phẩm) trước mặt nhân viên giao hàng khi nhận đơn hàng. | `chinh-sach-van-chuyen` |
+| 4 | Tính năng "Shopee Đảm Bảo" bảo vệ Người mua như thế nào và giữ tiền thanh toán trong bao lâu? | Shopee Đảm Bảo giữ tiền thanh toán của Người mua cho đến khi Người mua xác nhận đã nhận hàng thỏa đáng hoặc hết thời hạn Trả hàng/Hoàn tiền (7-15 ngày). | `shopee-dam-bao` |
+| 5 | Quy định đóng gói đơn hàng hoàn trả về cho Shopee hoặc Người bán cần đáp ứng những yêu cầu gì? | Hàng hoàn trả phải đóng gói kỹ bằng thùng carton/túi niêm phong nguyên vẹn, dán Mã trả hàng/Phiếu giao hoàn trả bên ngoài và kèm đầy đủ phụ kiện, quà tặng đi kèm. | `cach-dong-goi-don-hoan-tra` |
 
 ### Tổng hợp chất lượng truy xuất của nhóm
 
 | # | Câu hỏi | Chiến lược tốt nhất cho câu này | Có chunk liên quan trong top-3? | Ghi chú |
 |---|---------|-------------------------------|-------------------------------|---------|
-| 1 | Thời hạn & ngoại lệ đổi trả | `RecursiveChunker` | Có (Top-1) | Trả về trọn vẹn cả Mục 1 và Mục 2 của chính sách đổi trả. |
-| 2 | Hàng cấm & chế tài người bán | `RecursiveChunker` + Metadata Filter | Có (Top-1) | Lọc `customer_role="seller"` giúp loại bỏ toàn bộ các chính sách đổi trả của người mua. |
-| 3 | Phương thức thanh toán & rút tiền | `SentenceChunker` / `Recursive` | Có (Top-1) | Trích xuất chính xác thời gian thứ 2 và thứ 5. |
-| 4 | Đồng kiểm & Bồi thường giao hàng | `RecursiveChunker` | Có (Top-1) | Lấy chính xác quy định bồi thường 100% của đơn vị vận chuyển. |
-| 5 | Mục đích dữ liệu & Xóa tài khoản | `RecursiveChunker` | Có (Top-1) | Trả về quy định quyền xóa dữ liệu trong 7 ngày làm việc. |
+| 1 | Thời hạn Trả hàng / Hoàn tiền | `RecursiveChunker` | Có (Top-1) | Truy xuất chính xác thời hạn 7 ngày / 15 ngày đối với Shopee Mall. |
+| 2 | Hàng chính hãng Shopee Mall & Phạt 200% | `RecursiveChunker` + Metadata Filter | Có (Top-1) | Lọc `customer_role="seller"` trích xuất chính xác Điều khoản dịch vụ Shopee Mall. |
+| 3 | Quy định đồng kiểm khi nhận hàng | `RecursiveChunker` / `Sentence` | Có (Top-1) | Lấy chính xác điều khoản đồng kiểm ngoại quan trong chính sách vận chuyển. |
+| 4 | Shopee Đảm Bảo giữ tiền thanh toán | `RecursiveChunker` | Có (Top-1) | Trích xuất điều khoản bảo vệ người mua của tính năng Shopee Đảm Bảo. |
+| 5 | Quy định đóng gói đơn hàng hoàn trả | `RecursiveChunker` | Có (Top-1) | Trả về quy định đóng gói thùng carton và mã trả hàng ngoài vỏ hộp. |
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
-> Lọc bằng metadata **rất giúp ích** (đặc biệt ở câu 2 với bộ lọc `metadata_filter={"customer_role": "seller"}`). Nếu không lọc metadata, các câu hỏi chứa từ khóa chung như "quy định", "chính sách", "vi phạm" dễ bị nhầm lẫn giữa quy định cho Người mua và Người bán. Nhờ tiền lọc metadata, độ chính xác (Retrieval Precision) đạt 100%.
+> Lọc bằng metadata **rất giúp ích** (đặc biệt ở câu 2 với bộ lọc `metadata_filter={"customer_role": "seller"}`). Giữa 229 chunks trong tập tài liệu Shopee lớn (`k4_shopee`), việc lọc `customer_role="seller"` giúp loại bỏ 100% các điều hướng dành cho người mua, đưa chính xác các điều khoản chế tài của Shopee Mall lên Top-1.
+
 
 ---
 
