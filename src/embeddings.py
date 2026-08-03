@@ -60,4 +60,38 @@ class OpenAIEmbedder:
         return [float(value) for value in response.data[0].embedding]
 
 
+VOYAGE_EMBEDDING_MODEL = "voyage-multilingual-2"
+
+
+class VoyageAIEmbedder:
+    """Voyage AI embeddings API-backed embedder."""
+
+    def __init__(self, model_name: str = VOYAGE_EMBEDDING_MODEL, api_key: str | None = None) -> None:
+        import os
+        from dotenv import load_dotenv
+
+        load_dotenv(override=False)
+        self.model_name = os.getenv("VOYAGE_EMBEDDING_MODEL", model_name)
+        self.api_key = api_key or os.getenv("VOYAGE_API_KEY")
+        if not self.api_key:
+            raise ValueError("VOYAGE_API_KEY is not set")
+        self._backend_name = f"voyage-ai ({self.model_name})"
+
+    def __call__(self, text: str) -> list[float]:
+        import json
+        import urllib.request
+
+        url = "https://api.voyageai.com/v1/embeddings"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}",
+        }
+        data = json.dumps({"input": [text], "model": self.model_name}).encode("utf-8")
+        req = urllib.request.Request(url, data=data, headers=headers)
+        with urllib.request.urlopen(req) as resp:
+            res = json.loads(resp.read().decode("utf-8"))
+            return [float(v) for v in res["data"][0]["embedding"]]
+
+
 _mock_embed = MockEmbedder()
+
