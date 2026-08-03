@@ -49,18 +49,18 @@ Corpus chỉ chứa nội dung công khai, không có dữ liệu cá nhân, th�
 
 ## 2. Phương pháp kiểm chứng
 
-Nhóm chạy `git fetch origin`, kiểm tra branch/commit, `REPORT_CANHAN.md`, handoff, experiment, code `src` và raw artifact. Không dùng số liệu chỉ dựa trên tin nhắn. Tests và `ingest.py` của ba branch remote được chạy lại độc lập từ archive commit; branch Đức Anh được kiểm tra trong Python 3.11 trước khi commit.
+Nhóm chạy `git fetch origin`, kiểm tra branch/commit, `REPORT_CANHAN.md`, handoff, experiment, code `src` và raw artifact. Không dùng số liệu chỉ dựa trên tin nhắn. Bốn báo cáo cá nhân được thu thập từ đúng remote commit; test, ingest và benchmark chung được chạy lại trên branch tích hợp bằng Python 3.11.
 
 ### Báo cáo cá nhân và provenance
 
 | Thành viên | Branch | Commit | Artifact có trên branch |
 |---|---|---|---|
 | Nguyễn Đức Anh | `member/nguyen-duc-anh-fixed` | `c282d74` | Báo cáo, JSON raw và script FixedSize |
-| Nguyễn Trọng Đăng Khoa | `member/nguyen-trong-dang-khoa-heading` | `b345446` | Báo cáo semantic; không có handoff/benchmark script machine-readable |
-| Nguyễn Duy Thái | `member/nguyen-duy-thai-sentence` | `66c1415` | Báo cáo, handoff Markdown/JSON và script Sentence |
-| Nguyễn Hoàng Long | `member/nguyen-hoang-long-recursive` | `283e835` | Báo cáo, `bench.py`, `bench_results.json`; không có handoff trong `report/member_handoffs/` |
+| Nguyễn Trọng Đăng Khoa | `member/nguyen-trong-dang-khoa-heading` | `01490ab` | Báo cáo hoàn chỉnh; implementation Heading được benchmark lại bằng script chung |
+| Nguyễn Duy Thái | `member/nguyen-duy-thai-sentence` | `5bc4462` | Báo cáo hoàn chỉnh, handoff Markdown/JSON và script Sentence |
+| Nguyễn Hoàng Long | `member/nguyen-hoang-long-recursive` | `4170fc1` | Báo cáo hoàn chỉnh, `bench.py`, `bench_results.json`; implementation Recursive được benchmark lại bằng script chung |
 
-Báo cáo cá nhân chính thức tiếp tục nằm trên branch cá nhân. `report/REPORT_CANHAN.md` của nhánh tích hợp chỉ là chỉ mục để một thành viên không ghi đè báo cáo của người khác.
+Báo cáo cá nhân chính thức tiếp tục nằm trên branch cá nhân. Bản sao tại `report/individual/<MSSV>/REPORT_CANHAN.md` được lấy từ commit tương ứng và chỉ chuẩn hóa tên nhóm thành Sigmoid; `report/REPORT_CANHAN.md` là chỉ mục, không trộn nội dung cá nhân.
 
 ### Benchmark chung
 
@@ -105,9 +105,9 @@ Các cột số lượng/độ dài và relevance dưới đây dùng benchmark 
 | Thành viên | MSSV | Branch | Commit | Strategy | Cấu hình thử nghiệm | Cấu hình tốt nhất | Embedding backend | Số chunk | Avg length | Max length | Top-1 relevant | Top-3 relevant | Filter impact | Tests | Điểm mạnh | Hạn chế |
 |---|---|---|---|---|---|---|---|---:|---:|---:|---:|---:|---|---|---|---|
 | Nguyễn Đức Anh | 2A202601624 | `member/nguyen-duc-anh-fixed` | `c282d74` | FixedSize | 500/50; 800/100; 1200/150 | **800/100** | multilingual MiniLM | 199 | 793.00 | 800 | 3/5 | **5/5** | Rank 1 giữ nguyên; top-3 từ `cancellation, terms, cancellation` thành ba chunk `cancellation` | 42/42 | Đủ evidence 5/5, độ dài kiểm soát, chi phí vừa | Cắt theo ký tự; query 3 và 5 evidence ở rank 2 |
-| Nguyễn Trọng Đăng Khoa | 2A202601964 | `member/nguyen-trong-dang-khoa-heading` | `b345446` | Markdown heading/clause | Chỉ có 500 trong artifact gốc | **500** | multilingual MiniLM | 517 | 330.86 | 500 | 3/5 | 3/5 | Loại nhiễu theo role nhưng evidence query 1 vẫn ngoài top-3 | 42/42 | Context heading/clause, max length chặt, truy vết tốt | Đủ evidence 2/5; thiếu script/handoff và chưa tune nhiều config |
-| Nguyễn Duy Thái | 2A202601552 | `member/nguyen-duy-thai-sentence` | `66c1415` | Sentence | 3; 5; 8 câu/chunk | **8** | multilingual MiniLM | 124 | 1108.27 | 6301 | **4/5** | 4/5 | Rank 1 giữ nguyên; loại `both` noise, chỉ còn hai buyer chunks | 42/42 | Top-1 tốt nhất, giữ danh sách/điều khoản liền mạch | Bỏ lỡ query 2; chunk rất dài, dễ truncate/nhiễu |
-| Nguyễn Hoàng Long | 2A202601134 | `member/nguyen-hoang-long-recursive` | `283e835` | Recursive theo commit | 500; 800; 1200 | **500** | Gốc: Mock; rerun: multilingual MiniLM | 2856 | 47.12 | 500 | 2/5 | 2/5 | Làm sạch doc IDs nhưng evidence query 1 vẫn không vào top-3 | 42/42 | Dùng separator tự nhiên; có script/JSON gốc | Không repack, mất context/delimiter, quá nhiều chunk; agent gốc chỉ là chuỗi demo |
+| Nguyễn Trọng Đăng Khoa | 2A202601964 | `member/nguyen-trong-dang-khoa-heading` | `01490ab` | Markdown heading/clause | Chỉ có 500 trong artifact gốc | **500** | multilingual MiniLM | 517 | 330.86 | 500 | 3/5 | 3/5 | Loại nhiễu theo role nhưng evidence query 1 vẫn ngoài top-3 | 42/42 | Context heading/clause, max length chặt, truy vết tốt | Đủ evidence 2/5; artifact cá nhân chỉ có cấu hình 500 |
+| Nguyễn Duy Thái | 2A202601552 | `member/nguyen-duy-thai-sentence` | `5bc4462` | Sentence | 3; 5; 8 câu/chunk | **8** | multilingual MiniLM | 124 | 1108.27 | 6301 | **4/5** | 4/5 | Rank 1 giữ nguyên; loại `both` noise, chỉ còn hai buyer chunks | 42/42 | Top-1 tốt nhất, giữ danh sách/điều khoản liền mạch | Bỏ lỡ query 2; chunk rất dài, dễ truncate/nhiễu |
+| Nguyễn Hoàng Long | 2A202601134 | `member/nguyen-hoang-long-recursive` | `4170fc1` | Recursive theo commit | 500; 800; 1200 | **500** | Gốc: Mock; rerun: multilingual MiniLM | 2856 | 47.12 | 500 | 2/5 | 2/5 | Làm sạch doc IDs nhưng evidence query 1 vẫn không vào top-3 | 42/42 | Dùng separator tự nhiên; có script/JSON gốc | Không repack, mất context/delimiter, quá nhiều chunk; agent gốc chỉ là chuỗi demo |
 
 ### Số liệu các cấu hình
 
@@ -123,6 +123,10 @@ Các cột số lượng/độ dài và relevance dưới đây dùng benchmark 
 | Long Recursive 500 | 2856 | 47.12 | 500 | 2/5 | 2/5 | 2/5 |
 | Long Recursive 800 | 1295 | 105.18 | 785 | 2/5 | 2/5 | 2/5 |
 | Long Recursive 1200 | 790 | 173.10 | 1195 | 2/5 | 2/5 | 2/5 |
+
+### Phân biệt benchmark cá nhân và benchmark chung
+
+Số liệu ở bảng trên là **benchmark chung** chạy lại cùng corpus, 5 query, tiêu chí gold evidence và multilingual MiniLM. Số liệu trong báo cáo cá nhân được giữ nguyên theo môi trường tác giả và dùng để truy vết quá trình thử nghiệm, không dùng để so raw cosine score giữa các embedding backend. Cụ thể, Long báo cáo Recursive 500 đạt **3/5** với MockEmbedder cá nhân, còn rerun chuẩn hóa đạt **2/5** với multilingual MiniLM; đây là hai phép đo khác backend và phương pháp, không phải kết quả mâu thuẫn.
 
 ## 5. Strategy được chọn
 
@@ -163,13 +167,24 @@ Query 1 được chạy A/B trên cùng Fixed 800/100:
 
 Đề xuất tiếp theo: thêm table/list-aware chunker; batch embedding trong pipeline; cache theo content hash; đo latency/storage; thêm Recall@k, MRR và evidence coverage; hỗ trợ filter role theo quan hệ `buyer` khớp cả `buyer` và `both` khi nghiệp vụ yêu cầu.
 
-## 9. Hình thức nộp project
+## 9. Kiểm tra yêu cầu K4
+
+| Hạng mục | Kết quả kiểm tra |
+|---|---|
+| Document inventory | Đúng 5 tài liệu Shopee; `sources.csv` có đúng 5 dòng và cùng 5 `doc_id` |
+| Metadata | Cả 5 tài liệu có `doc_id`, `customer_role`, `source_url`, `retrieved_at`, `document_version`; đồng thời có `category`, `language`, `title` và đường dẫn `source` |
+| Metadata filter | Benchmark có query A/B với `{"customer_role": "buyer"}` và ghi rõ tác động filtered/unfiltered |
+| Strategy thành viên | Có FixedSize, Sentence, Recursive và `MarkdownHeadingChunker`/Heading-Clause của Khoa trong implementation và benchmark |
+| Gold evidence | Cả 5 gold answer đều có bằng chứng trong corpus; Fixed 800/100 đưa đủ bằng chứng vào top-3 ở 5/5 query |
+| An toàn dữ liệu | Corpus là chính sách công khai, không chứa secret, API key hoặc dữ liệu cá nhân nhạy cảm; không track `.venv`, cache, model hay file `.env` |
+
+## 10. Hình thức nộp project
 
 **Demo/Presentation:** `Không áp dụng — project được nộp và đánh giá qua GitHub`.
 
-Nhóm không chuẩn bị lời nói 5–7 phút, không phân công thuyết trình, không chờ buổi demo và không ghi bài học giả định “sau demo”. Toàn bộ bằng chứng nằm trong commit, handoff, benchmark JSON, script tái lập và báo cáo này.
+Hình thức hoàn thành của nhóm là nộp project trên GitHub, không tổ chức demo trực tiếp. Các deliverable gồm repository, báo cáo kỹ thuật, benchmark có thể tái lập, bảng so sánh strategy và retrieval evidence cho đúng 5 query.
 
-## 10. Tự đánh giá trung thực
+## 11. Tự đánh giá trung thực
 
 | Tiêu chí | Tự đánh giá | Căn cứ |
 |---|---:|---|
@@ -179,8 +194,8 @@ Nhóm không chuẩn bị lời nói 5–7 phút, không phân công thuyết tr
 | Demo/Presentation | Không áp dụng | Project nộp qua GitHub; rubric chưa xác nhận quy đổi 5 điểm demo |
 | **Tổng phần áp dụng** | **33/35** | Không tự cộng 5 điểm demo vào tổng /40 |
 
-### Dữ liệu còn thiếu đã ghi nhận
+### Giới hạn và provenance cần lưu ý
 
-- Khoa: không có handoff/benchmark script machine-readable và không có thử nghiệm nhiều `chunk_size` trên branch cá nhân.
-- Long: không có handoff trong `report/member_handoffs/`; benchmark gốc dùng MockEmbedder, thiếu avg/max/filter A/B và không có agent answer thật.
-- Không có production LLM evaluation cho bất kỳ thành viên nào; nhóm dùng evidence kiểm chứng thay vì bịa generation output.
+- Khoa thử một cấu hình Heading 500 trong artifact cá nhân; benchmark tích hợp cung cấp rerun chuẩn hóa và handoff để đối chiếu, không suy diễn thêm kết quả cá nhân.
+- Long dùng MockEmbedder trong benchmark cá nhân và đạt 3/5; benchmark chung dùng multilingual MiniLM và đạt 2/5. Hai số liệu được giữ riêng theo provenance.
+- Không có production LLM evaluation; nhóm dùng evidence kiểm chứng từ corpus và test đường đi RAG bằng injected `llm_fn`, không bịa generation output.
