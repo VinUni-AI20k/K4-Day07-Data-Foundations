@@ -41,6 +41,22 @@ pytest tests/ -v          # Phần lớn bài kiểm thử sẽ THẤT BẠI (ch
 Mặc định, lab vẫn chạy với trình nhúng giả lập `_mock_embed` nên **không bắt buộc** cài đặt mô hình nhúng (embedder) thật.
 File `.env` được tự động nạp khi chạy `main.py`. Với các đoạn mã Python (snippet) chạy trực tiếp, hãy dùng lệnh `export` cho các biến môi trường cần thiết hoặc gọi hàm `load_dotenv()` nếu cần.
 
+### Thiết lập bằng uv
+
+Repo có `pyproject.toml` và `uv.lock` để tạo môi trường Python 3.11 có thể tái lập:
+
+```bash
+uv sync
+uv run pytest tests/ -v
+```
+
+Nhóm dependency `local` dành cho bài so sánh retrieval bằng mô hình nhúng đa ngữ:
+
+```bash
+uv sync --group local
+EMBEDDING_PROVIDER=local uv run python main.py
+```
+
 > **Giai đoạn 2 (so sánh retrieval): đặt `EMBEDDING_PROVIDER=local`** để dùng trình nhúng đa ngữ (mô tả bên dưới). Mock sinh vector xác định nhưng **gần như ngẫu nhiên theo cả chuỗi** — chỉ hợp để chạy unit test, **không phản ánh chất lượng ngữ nghĩa** và không nên dùng để kết luận chiến lược chunking/tiếng Việt nào tốt hơn.
 
 ## Tùy Chọn Mô Hình Nhúng (Embedding Backend)
