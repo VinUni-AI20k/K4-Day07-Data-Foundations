@@ -34,10 +34,14 @@
 
 **Tài liệu 10,000 ký tự, chunk_size=500, overlap=50. Bao nhiêu chunks?**
 > *Trình bày phép tính:*
-> *Đáp án:*
+> Bước nhảy (step) của cửa sổ trượt: `step = chunk_size - overlap = 500 - 50 = 450`.
+> Chunk đầu phủ từ vị trí 0 và mỗi chunk sau dịch thêm 450 ký tự, nên số chunk là:
+> `n_chunks = ceil((10000 - 500) / 450) + 1 = ceil(9500 / 450) + 1 = ceil(21.11) + 1 = 22 + 1 = 23`
+> Kiểm tra lại theo vòng lặp trong `FixedSizeChunker.chunk`: các vị trí bắt đầu là 0, 450, 900, …, 9900 (23 giá trị); tại `start = 9900` thì `9900 + 500 ≥ 10000` nên vòng lặp cắt (break). Chunk cuối là `text[9900:10400]`, thực tế chỉ còn 100 ký tự.
+> *Đáp án:* **23 chunks** (22 chunk đầy 500 ký tự + 1 chunk đuôi 100 ký tự).
 
 **Nếu độ chồng chéo (overlap) tăng lên 100, số lượng chunk thay đổi thế nào? Tại sao muốn độ chồng chéo nhiều hơn?**
-> *Viết 1-2 câu:*
+> Step giảm còn 400 nên số chunk **tăng lên 25** (`ceil(9500 / 400) + 1 = 24 + 1 = 25`) — overlap lớn hơn thì cửa sổ dịch chậm hơn, tốn thêm chi phí lưu trữ và embedding. Đổi lại, overlap nhiều giúp một câu/ý nằm vắt qua ranh giới chunk vẫn xuất hiện trọn vẹn trong ít nhất một chunk, tránh mất ngữ cảnh khi truy xuất.
 
 ---
 
