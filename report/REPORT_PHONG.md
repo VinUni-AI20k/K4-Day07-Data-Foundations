@@ -147,18 +147,27 @@ tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_tr
 
 Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân của bạn trong gói `src` (Chiến lược `RecursiveChunker(chunk_size=500)` / `LangChainSentenceChunker`). 5 câu hỏi này trùng khớp với `REPORT_NHOM.md`.
 
-| # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Real LLM (Nvidia Llama-3.3-70B) |
+| # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Real LLM (Nvidia Llama-3.1-8B) |
 |---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | Thời hạn tối đa để người mua gửi yêu cầu Trả hàng/Hoàn tiền đối với thực phẩm tươi sống, đơn do người bán tự vận chuyển...? | [shopee-returns-01] 1.2 Thời gian tối đa để gửi yêu cầu trả hàng hoàn tiền: Thực phẩm tươi sống 24h, đơn tự vận chuyển 15 ngày... | 0.3804 | Có (Top-1) | Trả lời chính xác: Thực phẩm tươi sống 24h, đơn do người bán tự vận chuyển 15 ngày, đơn khác 15 ngày từ khi giao thành công. |
-| 2 | Sản phẩm hạn chế trả hàng là gì và Shopee không áp dụng lý do trả hàng nào cho nhóm sản phẩm này? | [shopee-returns-03] Sản phẩm hạn chế trả hàng là sản phẩm có tính đặc thù cao, không áp dụng lý do Không còn nhu cầu... | 0.4026 | Có (Top-1) | Giải thích đúng định nghĩa sản phẩm hạn chế trả hàng, không áp dụng lý do "Không còn nhu cầu". Ví dụ: cây cảnh, thực phẩm tươi sống, khẩu trang y tế. |
-| 3 | Video mở kiện dùng làm bằng chứng khi hàng bị lỗi hoặc khác mô tả phải đáp ứng những yêu cầu nào...? | [shopee-returns-04] Quay 6 mặt kiện hàng, không cắt ghép, mã vận đơn rõ ràng, dung lượng > 100MB tải lên Drive/Youtube... | 0.3780 | Có (Top-1) | Liệt kê quay 6 mặt kiện hàng liên tục không cắt ghép, mã vận đơn; nếu > 100MB gửi link YouTube/Google Drive công khai. |
-| 4 | Người mua cần thực hiện các bước nào trên ứng dụng Shopee để xem tình trạng xử lý yêu cầu Trả hàng/Hoàn tiền? | [shopee-returns-05] Vào Tôi > Đơn Mua > Trả hàng/Hoàn tiền > Chọn sản phẩm > Chi tiết trả hàng... | 0.3542 | Có (Top-1) | Hướng dẫn chuẩn 4 bước: App Shopee -> Tôi -> Đơn Mua -> Trả hàng/Hoàn tiền -> Chi tiết Trả hàng/Hoàn tiền. |
-| 5 | Sau khi Shopee chấp nhận hoàn tiền, thời gian nhận tiền đối với Ví ShopeePay, thẻ Napas và thẻ tín dụng khác nhau như thế nào? | [shopee-returns-06] Bảng thời gian hoàn tiền: Ví ShopeePay 24h, thẻ Napas 2-5 ngày, thẻ tín dụng/ghi nợ 7-14 ngày làm việc... | 0.4079 | Có (Top-1) | Trích xuất chính xác 3 mốc thời gian: Ví ShopeePay 24h, Thẻ Napas 2-5 ngày làm việc, Thẻ tín dụng/ghi nợ 7-14 ngày làm việc. |
+| 1 | Thời hạn tối đa để người mua gửi yêu cầu Trả hàng/Hoàn tiền đối với thực phẩm tươi sống, đơn do người bán tự vận chuyển...? | [shopee-returns-01] 1.2 Thời gian tối đa để gửi yêu cầu trả hàng hoàn tiền: Thực phẩm tươi sống 24h, đơn tự vận chuyển 15 ngày... | 0.7066 | Có (Top-1) | Trả lời chính xác: Thực phẩm tươi sống 24h, đơn do người bán tự vận chuyển 15 ngày, đơn khác 15 ngày từ khi giao thành công. |
+| 2 | Sản phẩm hạn chế trả hàng là gì và Shopee không áp dụng lý do trả hàng nào cho nhóm sản phẩm này? | [shopee-returns-03] Sản phẩm hạn chế trả hàng là sản phẩm có tính đặc thù cao, không áp dụng lý do Không còn nhu cầu... | 0.6949 | Có (Top-1) | Giải thích đúng định nghĩa sản phẩm hạn chế trả hàng, không áp dụng lý do "Không còn nhu cầu". Ví dụ: thực phẩm tươi sống, sữa, thiết bị điện tử. |
+| 3 | Video mở kiện dùng làm bằng chứng khi hàng bị lỗi hoặc khác mô tả phải đáp ứng những yêu cầu nào...? | [shopee-returns-04] Quay 6 mặt kiện hàng, không cắt ghép, mã vận đơn rõ ràng, dung lượng > 100MB tải lên Drive/Youtube... | 0.7682 | Có (Top-1) | Liệt kê quay 6 mặt kiện hàng liên tục không cắt ghép, mã vận đơn; nếu > 100MB gửi link YouTube/Google Drive công khai. |
+| 4 | Người mua cần thực hiện các bước nào trên ứng dụng Shopee để xem tình trạng xử lý yêu cầu Trả hàng/Hoàn tiền? | [shopee-returns-05] Vào Tôi > Đơn Mua > Trả hàng/Hoàn tiền > Chọn sản phẩm > Chi tiết trả hàng... | 0.8188 | Có (Top-3) | Hướng dẫn theo dõi thông báo trên ứng dụng Shopee (do nhiễu từ tài liệu seller khi chưa áp dụng pre-filter category). |
+| 5 | Sau khi Shopee chấp nhận hoàn tiền, thời gian nhận tiền đối với Ví ShopeePay, thẻ Napas và thẻ tín dụng khác nhau như thế nào? | [shopee-returns-06] Bảng thời gian hoàn tiền: Ví ShopeePay 24h, thẻ Napas 2-5 ngày, thẻ tín dụng/ghi nợ 7-14 ngày làm việc... | 0.7230 | Có (Top-1) | Trích xuất chính xác phương thức hoàn tiền về Ví ShopeePay và các mốc thời gian. |
 
 **Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** 5 / 5
 
+**So sánh A/B (Thí nghiệm Lọc Metadata):**
+> Thử nghiệm A/B trên Query 1 (`q1_return_deadline`) cho thấy:
+> - **Khi KHÔNG dùng filter (`search`)**: Trả về tài liệu dành riêng cho Người bán `shopee-returns-07.md` (seller) làm Top-1 do chứa nhiều từ khóa "thời hạn gửi trả hàng", gây nhiễu cho người mua.
+> - **Khi CÓ dùng filter (`search_with_filter` với `customer_role: buyer`)**: Loại bỏ hoàn toàn tài liệu seller, trả về chính xác 100% tài liệu `shopee-returns-01.md` cho người mua tại Top-1 (Score: 0.7066).
+
+**Phân tích 1 Trường hợp Thất bại (Failure Case Analysis):**
+> - **Failure Case ở Query 4 (`q4_track_request`)**: *"Người mua cần thực hiện các bước nào trên ứng dụng Shopee để xem tình trạng xử lý yêu cầu..."*. Khi không có metadata filter `category: tracking`, vector similarity trả về `shopee-returns-07.md` (Score `0.8188`) cao hơn `shopee-returns-05.md` do từ khóa "theo dõi tình trạng" xuất hiện lặp lại ở tài liệu seller.
+> - **Đề xuất giải pháp**: Sử dụng `MarkdownHeaderChunker` tự động chèn tiêu đề mục `## Thao tác trên App Shopee` vào từng chunk để tăng độ tương đồng với truy vấn của người dùng.
+
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> Kết hợp mô hình nhúng thực tế `paraphrase-multilingual-MiniLM-L12-v2` (từ Hugging Face API / LocalEmbedder) cùng mô hình LLM thực tế `Nvidia Llama-3.3-70b-instruct` giúp hệ thống RAG đạt độ chính xác 100% khi trả lời các câu hỏi chính sách phức tạp. Việc áp dụng pre-filtering `customer_role: buyer` giúp loại bỏ hoàn toàn các chunk nhiễu từ người bán (`seller`).
+> Kết hợp mô hình nhúng thực tế `paraphrase-multilingual-MiniLM-L12-v2` (chuẩn hóa L2 Norm) cùng mô hình LLM thực tế `Nvidia Llama-3.1-8b-instruct` giúp hệ thống RAG đạt độ chính xác cao. Việc áp dụng pre-filtering `customer_role: buyer` giúp loại bỏ hoàn toàn các chunk nhiễu từ người bán (`seller`).
 
 ---
 
