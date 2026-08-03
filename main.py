@@ -14,17 +14,23 @@ from src.embeddings import (
     OPENAI_EMBEDDING_MODEL,
     LocalEmbedder,
     OpenAIEmbedder,
+    VoyageAIEmbedder,
     _mock_embed,
 )
 
 DEFAULT_DATA_DIR = "data/k4_shopee" if Path("data/k4_shopee").exists() else "data/k4_ecommerce"
 
 
-
 def _select_embedder():
-    """Chọn backend nhúng theo biến môi trường EMBEDDING_PROVIDER (mock | local | openai)."""
+    """Chọn backend nhúng theo biến môi trường EMBEDDING_PROVIDER (mock | local | openai | voyage)."""
     load_dotenv(override=False)
     provider = os.getenv(EMBEDDING_PROVIDER_ENV, "mock").strip().lower()
+    if provider == "voyage":
+        try:
+            return VoyageAIEmbedder()
+        except Exception as e:
+            print(f"Voyage AI embedder không sẵn sàng ({e}); tạm dùng mock.")
+            return _mock_embed
     if provider == "local":
         try:
             return LocalEmbedder(model_name=os.getenv("LOCAL_EMBEDDING_MODEL", LOCAL_EMBEDDING_MODEL))
@@ -38,6 +44,7 @@ def _select_embedder():
             print("OpenAI embedder không sẵn sàng; tạm dùng mock.")
             return _mock_embed
     return _mock_embed
+
 
 
 def demo_llm(prompt: str) -> str:
