@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import math
 
+# Multilingual model suitable for the Vietnamese corpora used in this Lab.
+# The local backend remains optional; required checkpoints use MockEmbedder.
 LOCAL_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
 EMBEDDING_PROVIDER_ENV = "EMBEDDING_PROVIDER"
@@ -27,7 +29,7 @@ class MockEmbedder:
 
 
 class LocalEmbedder:
-    """Sentence Transformers-backed local multilingual embedder."""
+    """Sentence Transformers-backed local embedder."""
 
     def __init__(self, model_name: str = LOCAL_EMBEDDING_MODEL) -> None:
         from sentence_transformers import SentenceTransformer

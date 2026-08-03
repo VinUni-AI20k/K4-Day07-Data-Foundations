@@ -6,7 +6,6 @@ from .chunking import (
     SentenceChunker,
     compute_similarity,
 )
-from .custom_chunking import HeadingChunker
 from .embeddings import (
     EMBEDDING_PROVIDER_ENV,
     LOCAL_EMBEDDING_MODEL,
@@ -24,7 +23,6 @@ __all__ = [
     "FixedSizeChunker",
     "SentenceChunker",
     "RecursiveChunker",
-    "HeadingChunker",
     "ChunkingStrategyComparator",
     "compute_similarity",
     "EmbeddingStore",

@@ -1,18 +1,21 @@
 ---
-doc_id: k4-seller-listing
-title: Quy định đăng bán
-customer_role: seller       # buyer | seller | both
-category: listing
+doc_id: t-hexa-seller-listing-policy
+title: Điều kiện người bán và nội dung đăng bán
+customer_role: seller
+category: seller_rules
 language: vi
-source_url: https://example.com/nguoi-ban/dang-ban
-retrieved_at: 2026-08-02
-document_version: "2026.1"
+source_url: https://www.t-hexa.vn/
+retrieved_at: 2026-08-03
+document_version: 2026.08
+permission: owner-approved-lab-corpus
 ---
+# Điều kiện người bán và nội dung đăng bán
 
-> Khối metadata phía trên là **template mẫu** cho K4 — thay `source_url`/`retrieved_at`/`document_version` bằng nguồn công khai thật trước khi dùng làm benchmark.
+## Quyền sử dụng thiết kế
+Người bán phải có quyền sử dụng hình ảnh, logo, phông chữ và nội dung đưa lên sản phẩm. Không được đăng nội dung vi phạm bản quyền, giả mạo thương hiệu hoặc xâm phạm quyền riêng tư của người khác.
 
-# Đăng bán sản phẩm (dữ liệu khởi động)
+## Nội dung bị cấm
+Không đăng nội dung kích động bạo lực, thù ghét, lừa đảo, hàng cấm hoặc nội dung trái pháp luật. T-Hexa có thể tạm ẩn hoặc từ chối sản xuất mẫu có dấu hiệu vi phạm.
 
-Người bán chịu trách nhiệm cung cấp thông tin sản phẩm chính xác, bao gồm giá, mô tả và tình trạng hàng. Sản phẩm bị hạn chế hoặc bị cấm không được đăng bán.
-
-Nhóm cần bổ sung danh mục hàng cấm và quy trình xử lý vi phạm từ nguồn chính thức trước khi tạo benchmark query.
+## Thông tin sản phẩm
+Người bán cần mô tả trung thực về mẫu áo, màu sắc, kích thước, vị trí in và thời gian xử lý. Mọi thay đổi quan trọng phải được thông báo trước khi khách xác nhận đơn.
