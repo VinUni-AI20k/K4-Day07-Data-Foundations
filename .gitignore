@@ -17,3 +17,10 @@ __pycache__/
 .omx/
 .venv/
 src_w_solution/
+.crawl_cache/
+
+# Crawled/processed corpus: keep data scripts, ignore generated documents.
+data/*
+!data/*.py
+!data/**/*.py
+!data/.gitkeep
