@@ -1,0 +1,11 @@
+url,doc_id,title,customer_role,category,language,region,license_or_permission
+https://europa.eu/youreurope/citizens/consumers/shopping/returns/index_en.htm,eu-buyer-returns-withdrawal,Returns and the right of withdrawal,buyer,returns,en,eu,CC-BY-4.0
+https://europa.eu/youreurope/citizens/consumers/shopping/guarantees/index_en.htm,eu-buyer-guarantees,Legal guarantees on goods bought in the EU,buyer,guarantees,en,eu,CC-BY-4.0
+https://europa.eu/youreurope/citizens/consumers/shopping/shipping-delivery/index_en.htm,eu-buyer-shipping-delivery,Shipping and delivery rights,buyer,delivery,en,eu,CC-BY-4.0
+https://europa.eu/youreurope/citizens/consumers/shopping/pricing-payments/index_en.htm,eu-buyer-pricing-payments,Pricing payments and price discrimination,buyer,payments,en,eu,CC-BY-4.0
+https://www.gov.uk/consumer-protection-rights,uk-buyer-consumer-rights,UK consumer rights when buying goods and services,buyer,consumer-rights,en,uk,OGL-v3.0
+https://europa.eu/youreurope/business/selling-in-eu/selling-goods-services/ecommerce-distance-selling/index_en.htm,eu-seller-ecommerce-distance-selling,B2C e-commerce distance and off-premises selling obligations,seller,seller-obligations,en,eu,CC-BY-4.0
+https://europa.eu/youreurope/business/governance-and-sustainability/digital-and-data-compliance/data-protection-gdpr/index_en.htm,eu-seller-data-protection-gdpr,Data protection under GDPR for businesses,seller,privacy,en,eu,CC-BY-4.0
+https://www.gov.uk/accepting-returns-and-giving-refunds,uk-seller-returns-refunds,Accepting returns and giving refunds: the law,seller,returns,en,uk,OGL-v3.0
+https://www.gov.uk/online-and-distance-selling-for-businesses,uk-seller-online-distance-selling,Online and distance selling rules for businesses,seller,seller-obligations,en,uk,OGL-v3.0
+https://europa.eu/youreurope/business/selling-in-eu/solving-disputes-with-customers/alternative-dispute-resolution/index_en.htm,eu-both-alternative-dispute-resolution,Alternative dispute resolution for customer complaints,both,complaints,en,eu,CC-BY-4.0
