@@ -3,7 +3,16 @@
 > Bản K4 của Lab 07. Hướng dẫn Codelabs được phát riêng trên lớp/LMS (không kèm trong repo); yêu cầu Giai đoạn 2 riêng xem [K4_VARIANT.md](K4_VARIANT.md).
 
 ---
+## Thành viên nhóm
+Nguyễn Hoàng Hải	2A202601426
 
+Nguyễn Văn Thành	2A202601030 
+
+Nguyễn Duy Khánh	2A202601530
+
+Ngô Xuân Ninh	2A202601068
+
+Nguyễn Chiến Thắng 2A202601734 
 ## Mục Tiêu
 
 Sau bài thực hành (lab) này, bạn cần có thể:
