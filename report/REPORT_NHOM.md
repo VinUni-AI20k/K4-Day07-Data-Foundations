@@ -100,12 +100,14 @@ chunker = SentenceChunker(max_sentences_per_chunk=3)
 ```
 
 **Thành viên 4 — Mai Tiến Dũng**
-- **Loại chiến lược:** custom — `RegexChunker` / `SemanticChunker` (thư viện `semantic_chunkers`)
-- **Mô tả & lý do chọn cho chủ đề này:** Chọn chiến lược chia theo mức độ liên quan về ngữ nghĩa (`RegexChunker`/`SemanticChunker`) vì mỗi chunk sẽ tập trung vào một chủ đề rõ ràng, phù hợp hơn với việc truy xuất bằng RAG so với cắt theo ranh giới cố định.
+- **Loại chiến lược:** custom — `MarkdownBlockChunker`
+- **Mô tả & lý do chọn cho chủ đề này:** Chọn `MarkdownBlockChunker` vì bộ tài liệu nhóm chủ yếu được viết bằng Markdown và có nhiều tiêu đề chính sách rõ ràng. Chiến lược này chia văn bản theo các block được ngăn cách bằng dòng trống, đồng thời giữ heading gần nhất cùng nội dung chunk. Khi block quá dài, văn bản được tách tiếp theo ranh giới câu. Cách chia này giúp giữ trọn các thông tin quan trọng như thời hạn, mức giá và phần trăm bồi thường, phù hợp với truy xuất RAG hơn cắt theo kích thước cố định. Kết quả đạt 5/5 câu có chunk liên quan trong top-3, 4/5 câu ở top-1 và 10/10 điểm truy xuất.
 - **Code snippet (nếu custom):**
 ```python
-from semantic_chunkers import RegexChunker
-regex_chunker = RegexChunker()
+from src.chunking import MarkdownBlockChunker
+
+chunker = MarkdownBlockChunker(chunk_size=500)
+chunks = chunker.chunk(text)
 ```
 
 ### So Sánh Giữa Các Thành Viên
@@ -115,7 +117,7 @@ regex_chunker = RegexChunker()
 | Nguyễn Thị Thương | Recursive (tinh chỉnh: bỏ separator từ đơn, chunk_size=400) | **8/10** — chạy thật với `EMBEDDING_PROVIDER=local`: 5/5 câu có gold doc trong top-3, 3/5 câu đúng ngay top-1 (chi tiết: `REPORT_NGUYENTHITHUONG_2A202601226.md` Phần 5) | Giữ trọn heading + đoạn văn/gạch đầu dòng thay vì vỡ thành từ đơn; số chunk (29) hợp lý hơn nhiều so với bản mặc định (167); 3/5 câu trúng top-1 | Câu hỏi về số liệu/phần trăm (vd. hạn sử dụng, mức bồi thường) dễ bị nhầm giữa các tài liệu khác nhau cùng chứa nhiều con số|
 | Phạm Tuấn Anh | Custom — `StatisticalChunker` (`semantic_chunkers`) | **10/10** — benchmark K4: 5/5 câu có gold doc trong top-3 | Ngưỡng động theo embedding giúp gom đúng các câu cùng chủ đề vào một chunk; trên K4 đạt top-3 cho cả 5 câu | Tốn thời gian/tài nguyên tính embedding cho từng câu; phụ thuộc thư viện ngoài |
 | Nguyễn Đức Anh | `SentenceChunker` (có sẵn) | *Chưa chạy benchmark* | Giữ trọn ranh giới câu, chunk dễ đọc, ngữ cảnh mạch lạc cho agent | Không nhận biết chủ đề/ý — nếu 1 chủ đề trải dài nhiều câu vẫn có thể bị cắt rời qua nhiều chunk |
-| Mai Tiến Dũng | Custom — `RegexChunker`/`SemanticChunker` (`semantic_chunkers`) | *Chưa chạy benchmark* | Mỗi chunk tập trung một chủ đề rõ ràng, phù hợp truy xuất RAG | Chưa xác nhận lớp/tham số cụ thể đã dùng; cần thư viện ngoài, chưa có kết quả thực nghiệm |
+| Mai Tiến Dũng | Custom — `MarkdownBlockChunker` | 10/10 | Giữ heading cùng block nội dung, đạt 5/5 chunk liên quan trong top-3 và 4/5 ở top-1 | Tạo nhiều chunk hơn baseline, làm tăng chi phí embedding và lưu trữ |
 
 
 **Chiến lược nào tốt nhất cho chủ đề này? Tại sao?**
