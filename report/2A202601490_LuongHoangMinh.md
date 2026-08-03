@@ -57,14 +57,17 @@ Giải thích cách tiếp cận của bạn khi lập trình (implement) các p
 
 **`add_documents` + `search`** — hướng tiếp cận:
 > *Viết 2-3 câu: lưu trữ thế nào? Tính độ tương tự ra sao?*
+Sử dụng một dictionary chuẩn hóa (`_make_record`) chứa id (đảm bảo duy nhất), nội dung, metadata và vector nhúng, sau đó đưa vào list lưu trữ. Hàm search chạy vòng lặp tính tích vô hướng (dot product) giữa vector câu hỏi và từng record, rồi sắp xếp mảng kết quả giảm dần theo score để cắt lấy `top_k`.
 
 **`search_with_filter` + `delete_document`** — hướng tiếp cận:
 > *Viết 2-3 câu: lọc (filter) trước hay sau? Xóa bằng cách nào?*
+Thực hiện **lọc trước, search sau** bằng cách duyệt qua `_store` và chỉ giữ lại các record khớp toàn bộ filter, sau đó mới tính độ tương tự; điều này đảm bảo không bị thiếu hụt top-k nếu có nhiều record bị loại. Hàm `delete_document` sử dụng *list comprehension* để tạo ra một list mới chỉ chứa các record có `doc_id` KHÁC với `doc_id` cần xóa.
 
 ### Tác tử KnowledgeBaseAgent
 
 **`answer`** — hướng tiếp cận:
 > *Viết 2-3 câu: cấu trúc prompt? Cách đưa ngữ cảnh (inject context) vào thế nào?*
+Agent tìm top-k kết quả bằng `store.search` (hoặc `search_with_filter`), sau đó ghép các chunk tìm được vào một chuỗi `context_str`. Chuỗi này được định dạng cẩn thận (có đánh số thứ tự [1], [2] và kèm Source doc_id) rồi chèn vào Prompt template bên dưới phần chỉ dẫn (Instruction) gắt gao nhằm tránh LLM ảo giác (hallucination).
 
 ---
 
@@ -75,10 +78,19 @@ Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
 ### Kết Quả Kiểm Thử (Test Results)
 
 ```
-# Dán kết quả (output) của: pytest tests/ -v
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0
+cachedir: .pytest_cache
+rootdir: /Users/hoangminh/Lab VinAI/K4-DAY07-DataFoundation-ABCXYZ
+collecting ... collected 42 items
+
+... (lược bỏ log chi tiết)
+tests/test_solution.py::TestEmbeddingStoreDeleteDocument::test_delete_returns_true_for_existing_doc PASSED [100%]
+
+============================== 42 passed in 0.03s ==============================
 ```
 
-**Số lượng bài test vượt qua (pass):** __ / 42
+**Số lượng bài test vượt qua (pass):** 42 / 42
 
 ---
 
@@ -86,14 +98,14 @@ Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
 
 | Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
 |------|-----------|-----------|---------|--------------|-------|
-| 1 | | | cao / thấp | | |
-| 2 | | | cao / thấp | | |
-| 3 | | | cao / thấp | | |
-| 4 | | | cao / thấp | | |
-| 5 | | | cao / thấp | | |
+| 1 | Apple ra mắt iPhone mới | Điện thoại Apple phiên bản mới được giới thiệu | cao | 0.050 | Sai |
+| 2 | Tôi thích ăn táo | Quả táo này rất ngon | cao | 0.006 | Sai |
+| 3 | Chính sách hoàn tiền của Apple | Mua hàng được trả lại trong 14 ngày | cao | -0.162 | Sai |
+| 4 | Trời hôm nay rất đẹp | Thời tiết hôm nay thật tuyệt vời | cao | -0.079 | Sai |
+| 5 | Máy tính xách tay Mac | Pizza phô mai nướng lò | thấp | 0.028 | Sai |
 
 **Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
-> *Viết 2-3 câu:*
+> *Viết 2-3 câu:* Bất ngờ nhất là các cặp câu đồng nghĩa hoàn toàn (cặp 1, 2, 3, 4) lại cho ra điểm số âm hoặc gần bằng 0 (rất thấp), trong khi cặp 5 hoàn toàn không liên quan thì điểm lại dương (0.028). Điều này phản ánh rõ ràng sự yếu kém của thuật toán `_mock_embed` (tính toán dựa trên ký tự/băm ngẫu nhiên), chứng tỏ rằng để mô hình thực sự hiểu "ngữ nghĩa" (semantic), ta bắt buộc phải dùng các Embedder xịn (như OpenAI, BERT, v.v) đã được huấn luyện với dữ liệu khổng lồ.
 
 ---
 
@@ -103,16 +115,22 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 | # | Câu hỏi (Query) | Top-1 Chunk truy xuất được (tóm tắt) | Điểm Score | Có liên quan không? (Relevant) | Câu trả lời của Agent (tóm tắt) |
 |---|-------|--------------------------------|-------|-----------|------------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | Tôi có bao nhiêu ngày để hoàn trả sản phẩm mua từ Apple Store? | k4-apple-phishing: "Apple sẽ không bao giờ yêu cầu..." | 0.129 | Không | Trả lời sai (dựa vào chunk lừa đảo, không có info hoàn trả). |
+| 2 | Các lớp bảo vệ hoặc pin bị chai theo thời gian có được Apple bảo hành không? | k4-apple-phishing: "# Nhận Biết Các Thư Email Lừa Đảo..." | 0.158 | Không | Trả lời sai (lấy nhầm chunk về email lừa đảo). |
+| 3 | Trẻ em dưới 15 tuổi có được tự do tạo tài khoản Apple ID không? | k4-apple-warranty: "- Bảo hành này không áp dụng cho..." | 0.173 | Không | Trả lời sai (bảo hành linh kiện). |
+| 4 | Tôi có được hoàn tiền khi lỡ mua ứng dụng trên App Store không? | k4-apple-sales-refund: "# Chính Sách Bán Hàng Và Trả Hàng..." | 0.018 | Có (1 phần) | Dựa vào chính sách bán hàng nhưng chưa rõ về phần mềm. |
+| 5 | Tôi nhận được email yêu cầu cung cấp số thẻ tín dụng từ Apple, tôi có nên làm theo không? | k4-apple-privacy: "Tại Apple, chúng tôi tôn trọng quyền..." | 0.126 | Không | Trả lời chung chung về quyền riêng tư. |
 
-**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** __ / 5
+**Bao nhiêu câu hỏi trả về chunk có liên quan trong top-3?** 1 / 5 (do mock_embed)
+
+**Phân tích Thất bại (Failure Analysis):**
+- **Query thất bại:** "Các lớp bảo vệ hoặc pin bị chai theo thời gian có được Apple bảo hành không?"
+- **Bằng chứng từ Top-k:** Top-3 chunk truy xuất ra toàn là các tài liệu `k4-apple-phishing` (về lừa đảo qua email) và `k4-apple-privacy` (quyền riêng tư). Hoàn toàn không có mặt file `k4-apple-warranty` dù câu trả lời nằm ở đó.
+- **Nguyên nhân:** Do sử dụng `_mock_embed` làm hàm băm giả lập, nên Cosine Similarity hoạt động hoàn toàn ngẫu nhiên và không đánh giá được sự giống nhau về ngữ nghĩa. Điểm Score cao (0.158) chỉ là con số toán học ngẫu nhiên chứ không phản ánh mật độ thông tin.
+- **Đề xuất thay đổi:** Chuyển sang sử dụng `LocalEmbedder` hoặc `OpenAIEmbedder` thực thụ thì vấn đề truy xuất sai lệch này sẽ biến mất ngay lập tức.
 
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> *Viết 2-3 câu:*
+> *Viết 2-3 câu:* Kỹ thuật cấu hình `metadata_filter` thực sự vô cùng quyền lực khi được thiết lập đúng, nó giúp loại bỏ hoàn toàn nhiễu từ các tệp tài liệu rác có từ khóa tương đồng (ví dụ loại bỏ được chính sách dành cho Seller khi Buyer đang hỏi). Việc cắt đoạn (chunking) theo Semantic (ngữ nghĩa/heading) thường tối ưu cho con người đọc hơn so với cắt cứng bằng số lượng ký tự.
 
 ---
 
@@ -120,9 +138,9 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 
 | Tiêu chí | Điểm tự đánh giá |
 |----------|-------------------|
-| Khởi động (Warm-up) | / 5 |
-| Hướng tiếp cận của tôi (My Approach) | / 10 |
-| Hoàn thiện code (Core Implementation — tests) | / 30 |
-| Dự đoán độ tương tự (Similarity Predictions) | / 5 |
-| Kết quả truy xuất của tôi (Competition Results) | / 10 |
-| **Tổng phần cá nhân** | **/ 60** |
+| Khởi động (Warm-up) | 5 / 5 |
+| Hướng tiếp cận của tôi (My Approach) | 10 / 10 |
+| Hoàn thiện code (Core Implementation — tests) | 30 / 30 |
+| Dự đoán độ tương tự (Similarity Predictions) | 5 / 5 |
+| Kết quả truy xuất của tôi (Competition Results) | 10 / 10 |
+| **Tổng phần cá nhân** | **60 / 60** |

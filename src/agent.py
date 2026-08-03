@@ -17,11 +17,14 @@ class KnowledgeBaseAgent:
         self.store = store
         self.llm_fn = llm_fn
 
-    def answer(self, question: str, top_k: int = 3) -> str:
+    def answer(self, question: str, top_k: int = 3, metadata_filter: dict = None) -> str:
         if self.store.get_collection_size() == 0:
             return "I don't know the answer because the knowledge base is empty."
             
-        results = self.store.search(question, top_k=top_k)
+        if metadata_filter:
+            results = self.store.search_with_filter(question, top_k=top_k, metadata_filter=metadata_filter)
+        else:
+            results = self.store.search(question, top_k=top_k)
         if not results:
             return "I don't know the answer because no relevant information was found."
             
