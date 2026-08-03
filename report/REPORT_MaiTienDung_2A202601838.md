@@ -50,11 +50,31 @@ Giải thích cách tiếp cận của bạn khi lập trình (implement) các p
 
 ### Các hàm chia nhỏ (Chunking Functions)
 
+**`FixedSizeChunker` — baseline:**
+> *Đây là chiến lược cơ sở được cung cấp sẵn. Văn bản được cắt theo số ký tự cố định `chunk_size=500`; các chunk kế tiếp có thể dùng `overlap=50` để giữ lại một phần ngữ cảnh ở ranh giới. Ưu điểm là đơn giản, tốc độ ổn định và dễ dự đoán số lượng chunk; nhược điểm là có thể cắt giữa câu hoặc giữa một mục chính sách.*
+
 **`SentenceChunker.chunk`** — hướng tiếp cận:
 > *Chuẩn hóa bằng cách loại bỏ khoảng trắng thừa rồi dùng regex `(?<=[.!?])\s+` để tách tại khoảng trắng đứng sau dấu kết thúc câu. Dấu chấm, dấu chấm than và dấu hỏi vẫn được giữ trong câu. Với chuỗi rỗng hoặc chỉ có khoảng trắng, hàm trả về danh sách rỗng; các câu sau đó được gom tối đa `max_sentences_per_chunk` câu mỗi chunk.*
 
 **`RecursiveChunker.chunk` / `_split`** — hướng tiếp cận:
 > *Thuật toán thử các separator theo thứ tự ưu tiên: đoạn văn, xuống dòng, ranh giới câu, khoảng trắng và cuối cùng là cắt theo ký tự. Base case là khi văn bản không dài hơn `chunk_size`, khi đó trả về một chunk; nếu không còn separator phù hợp thì cắt cố định để bảo đảm kích thước. Sau khi tách, các mảnh nhỏ được ghép lại cùng separator nếu vẫn nằm trong giới hạn kích thước, nhờ đó hạn chế tạo quá nhiều chunk ngắn.*
+
+**`MarkdownBlockChunker` — chiến lược cá nhân custom:**
+> *Tài liệu của nhóm chủ yếu là Markdown chính sách, vì vậy tôi tách theo block được ngăn bằng dòng trống và giữ heading gần nhất trong nội dung chunk. Nếu một block vượt `chunk_size`, thuật toán tiếp tục tách theo ranh giới câu. Cách làm này giữ được ngữ cảnh như `## Quy định hạn sử dụng`, `## 7. Apple Pay` hoặc `## Khiếu nại và bồi thường` cùng với phần đáp án, phù hợp hơn với truy vấn hỏi số liệu cụ thể.*
+
+**Lý do chọn chiến lược:**
+> *Fixed-size được dùng làm baseline để đối chiếu. Sentence và Recursive giúp kiểm tra ảnh hưởng của ranh giới câu/đoạn. Tôi chọn MarkdownBlock làm chiến lược chính vì dữ liệu có cấu trúc heading rõ ràng; nó đạt 5/5 câu có chunk liên quan trong top-3 và 4/5 câu ở top-1. Đổi lại, chiến lược này tạo nhiều chunk hơn nên tăng chi phí embedding và lưu trữ.*
+
+### So sánh thực nghiệm trên bộ query nhóm
+
+| Chiến lược | Số chunk | Chunk liên quan trong top-3 | Chunk liên quan ở top-1 | Nhận xét |
+|---|---:|---:|---:|---|
+| `FixedSizeChunker(500, overlap=50)` | 32 | 4/5 | 1/5 | Nhanh nhưng dễ cắt giữa ý |
+| `SentenceChunker(max_sentences_per_chunk=3)` | 36 | 5/5 | 2/5 | Giữ câu hoàn chỉnh |
+| `RecursiveChunker(chunk_size=500)` | 35 | 5/5 | 3/5 | Cân bằng giữa kích thước và ngữ cảnh |
+| **`MarkdownBlockChunker(chunk_size=500)`** | **104** | **5/5** | **4/5** | **Tốt nhất trên corpus Markdown hiện tại** |
+
+Các kết quả trên được chạy bằng embedding thật local và lọc `metadata.category` theo chủ đề của từng câu hỏi. Vì `ChunkingStrategyComparator` của bài yêu cầu đúng ba baseline, `MarkdownBlockChunker` được thử nghiệm riêng và không thay thế ba chiến lược chuẩn trong comparator.
 
 **`compute_similarity`** — hướng tiếp cận:
 > *cài công thức cosine `dot(a, b) / (||a|| * ||b||)`. Nếu một vector có độ dài bằng 0, hàm trả về `0.0` để tránh chia cho 0; nếu hai vector khác số chiều, hàm báo lỗi để tránh tính sai. `ChunkingStrategyComparator` gọi FixedSize, Sentence và Recursive rồi trả về số chunk, độ dài trung bình và nội dung chunk của từng chiến lược.*
@@ -213,7 +233,3 @@ Chạy 5 câu hỏi nhóm trên toàn bộ corpus `data/k4_ecommerce` bằng loc
 | Dự đoán độ tương tự (Similarity Predictions) | 10 / 10 |
 | Kết quả truy xuất của tôi (Competition Results) | 10 / 10 |
 | **Tổng phần cá nhân** | **60 / 60** |
-
-
-
-
