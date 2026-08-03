@@ -1,7 +1,7 @@
 # Báo Cáo Nhóm — Lab 7: Embedding & Vector Store
 
-**Nhóm:** [Tên nhóm]
-**Thành viên:** [Họ tên từng thành viên]
+**Nhóm:** Sigmoid
+**Thành viên:** Nguyễn Đức Anh, Nguyễn Trọng Đăng Khoa, Nguyễn Duy Thái, Nguyễn Hoàng Long
 **Ngày:** [Ngày nộp]
 
 > **Nộp 1 bản / nhóm.** Phần cá nhân (hướng tiếp cận, kết quả riêng, dự đoán…) mỗi thành viên nộp riêng trong `REPORT_CANHAN.md`. Chi tiết thang điểm: `docs/SCORING.md`.
