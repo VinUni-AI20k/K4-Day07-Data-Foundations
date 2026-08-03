@@ -1,3 +1,7 @@
 doc_id,file_path,title,source_url,retrieved_at,document_version,license_or_permission
-k4-returns-policy,data/k4_ecommerce/returns-policy.md,Chính sách đổi trả,https://example.com/chinh-sach/doi-tra,2026-08-02,2026.1,example-template-replace-me
-k4-seller-listing,data/k4_ecommerce/seller-listing.md,Quy định đăng bán,https://example.com/nguoi-ban/dang-ban,2026-08-02,2026.1,example-template-replace-me
+shopee-delivery-process,data/k4_ecommerce/shopee-delivery-process.md,Cách đơn vị vận chuyển giao hàng cho Người mua,https://help.shopee.vn/portal/4/article/79569,2026-08-03,not-stated,public-page-robots-allowed
+shopee-payment-methods,data/k4_ecommerce/shopee-payment-methods.md,Shopee hiện đang có những phương thức thanh toán nào?,https://help.shopee.vn/portal/4/article/79198-,2026-08-03,not-stated,public-page-robots-allowed
+shopee-return-refund-policy,data/k4_ecommerce/shopee-return-refund-policy.md,Chính sách trả hàng và hoàn tiền Shopee,https://help.shopee.vn/portal/4/article/77251,2026-08-03,2026-03-04,public-page-robots-allowed
+shopee-return-refund-request-guide,data/k4_ecommerce/shopee-return-refund-request-guide.md,Hướng dẫn gửi yêu cầu Trả hàng/Hoàn tiền,https://help.shopee.vn/portal/4/article/79233,2026-08-03,not-stated,public-page-robots-allowed
+shopee-seller-listing-rules,data/k4_ecommerce/shopee-seller-listing-rules.md,Quy định đăng bán sản phẩm trên Shopee,https://help.shopee.vn/portal/4/article/77246,2026-08-03,2024-08-14,public-page-robots-allowed
+shopee-shipping-policy,data/k4_ecommerce/shopee-shipping-policy.md,Chính sách vận chuyển Shopee,https://help.shopee.vn/portal/4/article/77250,2026-08-03,2026-03-20,public-page-robots-allowed
