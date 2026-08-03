@@ -1,6 +1,6 @@
 """Heading-aware strategy owned by Nguyen Dang Long."""
 
-from src.chunking import RecursiveChunker
+from .chunking import RecursiveChunker
 
 
 class HeadingRecursiveChunker(RecursiveChunker):
