@@ -74,16 +74,16 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 > Mỗi thành viên điền một khối dưới đây (copy thêm nếu nhóm có nhiều hơn 3 người).
 
 **Nguyễn Đức Đạt — branch `datnd`**
-- **Loại chiến lược thực tế trong `run_benchmark.py`:** FixedSizeChunker mặc định (`chunk_size=500`, `overlap=50`).
-- **Mô tả & lý do chọn:** Cấu hình đơn giản, ổn định, có overlap để giảm mất ngữ cảnh tại biên và làm baseline dễ tái lập.
+- **Loại chiến lược thực tế trong `run_benchmark.py`:** SentenceChunker (`max_sentences_per_chunk=3`), do branch đổi mặc định của `build_knowledge_base()`.
+- **Mô tả & lý do chọn:** Giữ ranh giới câu và phù hợp tài liệu chính sách/FAQ; implementation của branch dùng regex giữ delimiter theo câu. Một số câu dài làm chunk vượt kích thước mục tiêu.
 
 **Đỗ Duy Đức — branch `ducdd`**
 - **Loại chiến lược:** FixedSizeChunker (`chunk_size=500`, `overlap=50`).
 - **Mô tả & lý do chọn:** Là baseline có tốc độ cao và số chunk dễ dự đoán; overlap 50 giữ lại một phần thông tin khi câu bị cắt.
 
 **Kiều Hồng Phong — branch `phong`**
-- **Loại chiến lược thực tế trong `bench.py`:** RecursiveChunker (`chunk_size=500`); branch cũng có thử nghiệm `LangChainSentenceChunker`.
-- **Mô tả & lý do chọn:** Ưu tiên ranh giới đoạn/câu, phù hợp chính sách có danh sách và nhiều mục; runner đã lưu kết quả Hugging Face thật trong `real_benchmark_output.txt`.
+- **Loại chiến lược thực tế trong `bench.py`:** SentenceChunker (`max_sentences_per_chunk=3`); branch cũng có lớp thử nghiệm `LangChainSentenceChunker`.
+- **Mô tả & lý do chọn:** Ưu tiên ranh giới câu để context dễ đọc; runner đã lưu kết quả embedding Hugging Face thật trong `real_benchmark_output.txt`.
 
 **Vũ Ngọc Bảo Sơn — branch `vnbson`**
 - **Loại chiến lược:** CustomChunker (`max_chunk_size=1000`) theo heading, điều khoản, mục đánh số và FAQ; fallback RecursiveChunker.
@@ -93,20 +93,30 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 - **Loại chiến lược:** RecursiveChunker (`chunk_size=500`).
 - **Mô tả & lý do chọn:** Giữ đoạn/câu tự nhiên trước khi cắt theo từ/ký tự, cân bằng giữa độ mạch lạc và kích thước context.
 
-> Kiểm tra branch cho thấy Đạt/Đức và Phong/Hoàng đang có cấu hình runner trùng nhau. Báo cáo giữ đúng cấu hình thực tế thay vì coi chúng là bốn chiến lược khác nhau.
+> Kiểm tra commit mới nhất cho thấy Đạt và Phong đều chạy SentenceChunker 3 câu, nhưng dùng hai implementation regex khác nhau; Đức dùng Fixed, Sơn dùng Custom và Hoàng dùng Recursive. Vì vậy nhóm có bốn họ chiến lược thực tế, trong đó Sentence có hai biến thể.
 
 ### So Sánh Giữa Các Thành Viên
 
 | Thành viên | Chiến lược (Strategy) | Điểm truy xuất (/10) | Điểm mạnh | Điểm yếu |
 |-----------|----------|----------------------|-----------|----------|
-| Nguyễn Đức Đạt | Fixed 500/50 | 5/5 Top-3 | Score lexical cao nhất ở Q1, Q2, Q4; deterministic. | Cắt giữa câu/bảng; trùng cấu hình với Đức. |
-| Đỗ Duy Đức | Fixed 500/50 | 5/5 Top-3 | Baseline nhanh, overlap giảm mất ngữ cảnh. | Cắt theo ký tự; trùng cấu hình với Đạt. |
-| Kiều Hồng Phong | Recursive 500 | 5/5 Top-3 | Chunk theo cấu trúc, không vượt 500 ký tự. | Nhiều chunk hơn Fixed; trùng runner với Hoàng. |
+| Nguyễn Đức Đạt | Sentence 3 câu | 5/5 Top-3 | Giữ ranh giới câu; score lexical tốt ở Q4. | Có chunk dài tới 2,527 ký tự. |
+| Đỗ Duy Đức | Fixed 500/50 | 5/5 Top-3 | Baseline nhanh, overlap giảm mất ngữ cảnh. | Cắt theo ký tự; ít giữ cấu trúc. |
+| Kiều Hồng Phong | Sentence 3 câu | 5/5 Top-3 | Giữ ranh giới câu; có runner benchmark và output HF. | Có chunk dài tới 2,607 ký tự. |
 | Vũ Ngọc Bảo Sơn | Custom 1000 | 5/5 Top-3 | Chỉ 47 chunk; mạnh ở Q3 và Q5; giữ heading. | Chunk dài tới khoảng 1,004 ký tự, có thể chứa thêm nhiễu. |
-| Lê Mai Việt Hoàng | Recursive 500 | 5/5 Top-3 | Cân bằng độ dài và tính mạch lạc; phù hợp văn bản nhiều đoạn. | 69 chunk, nhiều hơn Custom; trùng runner với Phong. |
+| Lê Mai Việt Hoàng | Recursive 500 | 5/5 Top-3 | Cân bằng độ dài và tính mạch lạc; phù hợp văn bản nhiều đoạn. | 69 chunk, nhiều hơn Custom. |
+
+### Thống kê chạy cùng corpus
+
+| Branch / thành viên | Cấu hình runner | Tổng chunk | Trung bình | Min | Max |
+|---|---|---:|---:|---:|---:|
+| `datnd` / Nguyễn Đức Đạt | Sentence 3 câu | 48 | 577.81 | 52 | 2,527 |
+| `ducdd` / Đỗ Duy Đức | Fixed 500/50 | 64 | 479.81 | 232 | 500 |
+| `phong` / Kiều Hồng Phong | Sentence 3 câu | 53 | 522.98 | 55 | 2,607 |
+| `vnbson` / Vũ Ngọc Bảo Sơn | Custom 1000 | 47 | 592.04 | 55 | 1,004 |
+| `hoanglmv` / Lê Mai Việt Hoàng | Recursive 500 | 69 | 401.93 | 55 | 499 |
 
 **Chiến lược nào tốt nhất cho chủ đề này? Tại sao?**
-> Cả ba cấu hình duy nhất đều tìm đúng gold document trong Top-3 cho 5/5 câu khi dùng cùng phép xếp hạng lexical cosine. CustomChunker 1000 hiệu quả nhất về số lượng chunk (47 so với 64 Fixed và 69 Recursive) và mạnh ở câu cần gom bằng chứng/bảng hoàn tiền; Recursive 500 có chunk ngắn, mạch lạc hơn và an toàn khi đưa vào context. Nhóm chưa thể tuyên bố một chiến lược thắng tuyệt đối trước khi chạy lại cả ba bằng cùng local multilingual embedder và chấm câu trả lời LLM.
+> Cả năm runner đều tìm đúng gold document trong Top-3 cho 5/5 câu khi dùng cùng phép xếp hạng lexical cosine. CustomChunker 1000 tạo ít chunk nhất (47) và mạnh ở câu cần gom bằng chứng/bảng hoàn tiền; Recursive 500 có chunk ngắn, ổn định nhất và không vượt 500 ký tự. Hai implementation Sentence của Đạt và Phong giữ câu nhưng có chunk cực dài do câu/bảng trong chính sách không có đủ dấu kết thúc; vì vậy cần chấm thêm grounding bằng local multilingual embedder trước khi kết luận.
 
 **Phương pháp so sánh:** Checkout logic chunker trực tiếp từ từng remote branch bằng `git show`, chạy trên cùng 7 tài liệu Shopee và 5 query. Do local Sentence Transformers không cài hoàn tất trong môi trường tổng hợp, bảng trên dùng cosine của vector tần suất từ để so sánh công bằng tương đối; không trộn các score này với score Hugging Face đã lưu riêng trên branch `phong`.
 
@@ -132,11 +142,11 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
 | # | Câu hỏi | Chiến lược tốt nhất cho câu này | Có chunk liên quan trong top-3? | Ghi chú |
 |---|---------|-------------------------------|-------------------------------|---------|
-| 1 | Thời hạn yêu cầu | Fixed 500/50 | Có, 5/5 branch | Fixed có score lexical Top-1 cao nhất 0.5482; Recursive/HF trên branch Phong cũng tìm đúng doc. |
-| 2 | Sản phẩm hạn chế | Fixed 500/50 | Có, 5/5 branch | Fixed 0.7536, Recursive 0.7448, Custom 0.7135; cả ba Top-1 đúng. |
+| 1 | Thời hạn yêu cầu | Fixed 500/50 | Có, 5/5 branch | Fixed có score lexical Top-1 cao nhất 0.5482; Sentence Đạt 0.5392 và Sentence Phong 0.5390. |
+| 2 | Sản phẩm hạn chế | Fixed 500/50 | Có, 5/5 branch | Fixed 0.7536; Recursive 0.7448; Sentence Phong 0.7484; tất cả Top-1 đúng. |
 | 3 | Video bằng chứng | Custom 1000 | Có, 5/5 branch | Custom 0.3628 giữ nhiều tiêu chí trong cùng section; Fixed/Recursive vẫn Top-1 đúng. |
-| 4 | Theo dõi yêu cầu | Fixed 500/50 | Có, 5/5 branch | Lexical Top-1 đều đúng; output HF của branch Phong từng chọn `shopee-returns-07` ở Top-1, cho thấy nhiễu ngữ nghĩa giữa hai bài theo dõi. |
-| 5 | Thời gian hoàn tiền | Custom 1000 | Có, 5/5 branch | Custom 0.5196 giữ phần bảng dài tốt hơn; output HF Recursive tìm đúng doc nhưng context Top-1 chưa đủ mọi dòng bảng. |
+| 4 | Theo dõi yêu cầu | Sentence Đạt | Có, 5/5 branch | Sentence Đạt đạt lexical Top-1 0.5992; Fixed 0.5652, Sentence Phong 0.5514 và Recursive 0.5509. |
+| 5 | Thời gian hoàn tiền | Custom 1000 | Có, 5/5 branch | Custom 0.5196 giữ phần bảng dài tốt hơn; output HF trên branch Phong tìm đúng doc nhưng context Top-1 chưa đủ mọi dòng bảng. |
 
 **Lọc bằng metadata có giúp ích không? Ở câu hỏi nào?**
 > Q1 dùng `metadata_filter={"customer_role": "buyer"}` đúng yêu cầu K4. Tuy nhiên cả 7 tài liệu hiện đều mang vai trò `buyer`, nên filter chưa làm giảm tập ứng viên và chưa chứng minh được lợi ích thực tế. Nhóm cần bổ sung ít nhất một tài liệu `seller` hoặc `both` cùng chủ đề để đo mức cải thiện trước/sau filter có ý nghĩa.
@@ -151,7 +161,7 @@ Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 > - Q4 và Q5 là failure cases hữu ích: nhiều tài liệu dùng từ giống nhau và bảng hoàn tiền dễ bị tách, khiến đúng document nhưng context chưa đủ gold answer.
 
 **Bài học rút ra khi so sánh trong nhóm:**
-> Cùng một corpus, Fixed tạo 64 chunk, Recursive 69 chunk và Custom chỉ 47 chunk. Các chiến lược đều tìm đúng gold document trong phép đo lexical, nhưng vị trí ranh giới quyết định một chunk có chứa đủ điều kiện/ngoại lệ để LLM trả lời trọn vẹn hay không; vì vậy cần đánh giá cả grounding, không chỉ document hit.
+> Cùng một corpus, Sentence Đạt tạo 48 chunk, Fixed 64, Sentence Phong 53, Custom 47 và Recursive 69. Các chiến lược đều tìm đúng gold document trong phép đo lexical, nhưng vị trí ranh giới quyết định một chunk có chứa đủ điều kiện/ngoại lệ để LLM trả lời trọn vẹn hay không; vì vậy cần đánh giá cả grounding, không chỉ document hit.
 
 **Nếu làm lại, nhóm sẽ thay đổi gì trong chiến lược dữ liệu (data strategy)?**
 > Nhóm sẽ thống nhất runner chung ngay từ đầu, bắt buộc mỗi thành viên truyền chunker rõ ràng để tránh cấu hình trùng nhau. Corpus cũng sẽ bỏ hai tài liệu template `example.com`, bổ sung tài liệu vai trò `seller/both`, và chạy lại mọi chiến lược bằng cùng phiên bản local multilingual embedder trước khi chấm LLM answer.
