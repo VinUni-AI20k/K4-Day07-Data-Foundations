@@ -2,7 +2,7 @@
 
 **Họ tên:** Nguyễn Trọng Đăng Khoa
 **Mã sinh viên:** 2A202601964
-**Nhóm:** [Tên nhóm]
+**Nhóm:** Sigmoid
 **Ngày:** 2026-08-03
 
 > **Nộp 1 bản / sinh viên.** Phần nhóm (lựa chọn tài liệu, thiết kế chiến lược, bộ câu hỏi đánh giá, demo) nộp chung 1 bản trong `REPORT_NHOM.md`. Chi tiết thang điểm: `docs/SCORING.md`.
@@ -121,7 +121,7 @@ Chạy **5 câu hỏi đánh giá của nhóm** trên mã nguồn cá nhân củ
 **Tự chấm chất lượng truy xuất theo rubric:** câu 1 = 0, câu 2 = 2, câu 3 = 2, câu 4 = 1, câu 5 = 0; tổng **5/10**.
 
 **Điều hay nhất tôi học được từ thành viên khác / nhóm khác (qua demo):**
-> Chưa có kết quả demo hoặc benchmark của thành viên khác trong nhánh này, nên tôi chưa thể viết phần học hỏi chéo mà không bịa nội dung. Phần này cần được Khoa bổ sung sau buổi demo nhóm bằng quan sát thực tế từ một chiến lược của thành viên khác.
+> Qua benchmark chung trên cùng 5 câu hỏi, tôi học được từ chiến lược FixedSize của Nguyễn Đức Anh rằng một baseline đơn giản vẫn có thể vượt chiến lược cấu trúc nếu tham số được tune đúng: cấu hình `800/100` đưa evidence vào top-3 ở 5/5 câu, trong khi Heading 500 của tôi đạt 3/5 câu và đủ evidence ở 2/5 câu. So sánh với Sentence(8) của Nguyễn Duy Thái (top-1 4/5) cũng cho thấy giữ danh sách/điều khoản liền mạch giúp retrieval, nhưng chunk dài tối đa hơn 6.300 ký tự có nguy cơ bị truncate và lẫn chủ đề. Vì vậy, lần cải tiến tiếp theo của tôi sẽ giữ khả năng truy vết heading/clause, đồng thời xử lý bảng và danh sách như đơn vị nguyên tử, thêm overlap có kiểm soát và thử nhiều `chunk_size` thay vì cố định ở 500.
 
 ---
 
