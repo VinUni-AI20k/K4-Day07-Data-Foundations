@@ -8,20 +8,24 @@ class HeadingRecursiveChunker(RecursiveChunker):
 
     def chunk(self, text: str) -> list[str]:
         sections = []
-        current_heading = ""
+        heading_path: list[str] = []
         body = []
         for line in text.splitlines():
             if line.lstrip().startswith("#"):
                 if body:
-                    sections.extend(self._with_heading(current_heading, "\n".join(body)))
+                    sections.extend(self._with_heading(heading_path, "\n".join(body)))
                     body = []
-                current_heading = line.strip()
+                heading = line.strip()
+                level = len(heading) - len(heading.lstrip("#"))
+                heading_path = heading_path[: max(0, level - 1)]
+                heading_path.append(heading)
             else:
                 body.append(line)
         if body:
-            sections.extend(self._with_heading(current_heading, "\n".join(body)))
+            sections.extend(self._with_heading(heading_path, "\n".join(body)))
         return [part for part in sections if part]
 
-    def _with_heading(self, heading: str, body: str) -> list[str]:
+    def _with_heading(self, heading_path: list[str], body: str) -> list[str]:
+        heading = "\n".join(heading_path)
         chunks = super().chunk(body)
         return [f"{heading}\n{chunk}".strip() if heading else chunk for chunk in chunks]

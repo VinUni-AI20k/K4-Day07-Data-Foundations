@@ -91,18 +91,21 @@ Kết quả này xác nhận benchmark semantic phải dùng local multilingual 
 
 ## 4. Kết quả truy xuất của tôi (Competition Results) - 10 điểm
 
-Phần này chờ nhóm khóa đúng năm product benchmark queries và gold answers.
-Tôi sẽ chạy cùng corpus, cùng embedding model và cùng top-k với các thành viên khác.
+Tôi chạy đúng năm golden queries trong `benchmark/queries.py` với package cá nhân, `HeadingRecursiveChunker`, `chunk_size=400`, `top_k=3` và model `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`.
+Kết quả đầy đủ được lưu tại `src/K4_2A202601934_NguyenDangLong/benchmark_results.json`.
 
 | # | Câu hỏi | Top-1 | Score | Relevant | Agent answer |
 |---|---|---|---:|---|---|
-| 1 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
-| 2 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
-| 3 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
-| 4 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
-| 5 | Chưa khóa | Chưa chạy | - | - | Chưa chạy |
+| 1 | Sản phẩm nào phải giặt khô và làm từ gì? | ASOS LUXE cotton corset top | 0.502600 | Không, MISS | Chưa xác nhận |
+| 2 | Đầm maxi ASOS EDITION satin giá bao nhiêu? | Đúng ASOS EDITION satin cami maxi dress | 0.755084 | Có, TOP-1 | Chưa xác nhận |
+| 3 | Áo khoác nào làm từ lông giả? | Đúng Daisy Street faux fur coat | 0.576306 | Có, TOP-1 | Chưa xác nhận |
+| 4 | Sản phẩm đen, cổ yếm để đi biển? | Đúng Public Desire beach dress | 0.530698 | Có, TOP-1 | Chưa xác nhận |
+| 5 | Có maternity dress không và fit thế nào? | Đúng ASOS DESIGN maternity dress | 0.703586 | Có, TOP-1 | Chưa xác nhận |
 
-**Số query có chunk liên quan trong top-3:** Chưa chạy / 5.
+**Số query có chunk liên quan trong top-3:** 4 / 5.
+
+Golden runner tính retrieval tự động là 8/10.
+Tôi chưa nhận điểm cuối cho mục này vì agent answers chưa được chạy và đối chiếu với gold answers.
 
 ## Tự Đánh Giá (Phần Cá Nhân)
 
