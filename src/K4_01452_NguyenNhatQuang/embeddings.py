@@ -61,5 +61,3 @@ class OpenAIEmbedder:
 
 
 _mock_embed = MockEmbedder()
-
-

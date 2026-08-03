@@ -1,0 +1,507 @@
+Embedding backend: mock embeddings fallback
+[!] Dang dung MockEmbedder: score chi phan anh hash, KHONG phan anh ngu nghia. Ket qua duoi day dung de kiem luong ky thuat + so sanh so chunk / coherence / provenance, khong dung de ket luan strategy nao 'hieu' hon.
+
+==============================================================================
+STRATEGY: heading   [Nguyen Quang Ha]
+PARAMS  : keep_breadcrumb=True, max_chunk_size=900, min_chunk_size=120
+CHUNKS  : 50 chunk tu data/k4_ecommerce
+------------------------------------------------------------------------------
+
+[Q1] (so lieu) Nếu người bán không công bố rõ thời hạn trả lời, sau bao lâu đề nghị giao kết hợp đồng của khách hàng hết hiệu lực?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['12 (mười hai) giờ']
+  --- KHONG FILTER ---
+    1. score=+0.2024  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=6  role=buyer
+       ## Điều 70. Xin phép người tiêu dùng khi tiến hành thu thập thông tin 4. Đơn vị thu thập thông tin không cần đ...
+    2. score=+0.1996  doc_id=nd52-quy-che-hoat-dong-san  chunk=2  role=both
+       3. Khi có thay đổi về một trong các nội dung nêu tại Khoản 2 Điều này, thương nhân, tổ chức cung cấp dịch vụ s...
+    3. score=+0.1916  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=7  role=buyer
+       ## Điều 72. Bảo đảm an toàn, an ninh thông tin cá nhân 1. Đơn vị thu thập thông tin phải đảm bảo an toàn, an n...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_6 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+
+[Q2] (dieu kien) Sàn giao dịch thương mại điện tử phải thông báo trước bao nhiêu ngày khi thay đổi quy chế hoạt động?
+  gold doc : nd52-quy-che-hoat-dong-san   anchor: ['ít nhất 5 ngày']
+  --- KHONG FILTER ---
+    1. score=+0.2852  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=3  role=buyer
+       ## 2. Trách nhiệm cung cấp thông tin về hàng hóa, dịch vụ của người bán - Người bán hàng hóa, dịch vụ thuộc da...
+    2. score=+0.2426  doc_id=nd52-trach-nhiem-san-tmdt  chunk=0  role=both
+       # Trách nhiệm của thương nhân, tổ chức cung cấp dịch vụ sàn giao dịch thương mại điện tử ## Điều 35. Cung cấp ...
+    3. score=+0.2132  doc_id=nd52-trach-nhiem-san-tmdt  chunk=2  role=both
+       ## Điều 36. Trách nhiệm của thương nhân, tổ chức cung cấp dịch vụ sàn giao dịch thương mại điện tử 5. Lưu trữ ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_3 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+
+[Q3] (quy trinh) Cơ chế rà soát và xác nhận nội dung hợp đồng phải hiển thị những thông tin gì cho khách hàng trước khi đặt hàng?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['Tổng giá trị của hợp đồng']
+  --- KHONG FILTER ---
+    1. score=+0.2398  doc_id=nd52-dang-ky-thong-bao-website  chunk=3  role=seller
+       ## Điều 54. Điều kiện thiết lập website cung cấp dịch vụ thương mại điện tử 1. Là thương nhân, tổ chức có ngàn...
+    2. score=+0.2107  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=5  role=buyer
+       ## Điều 19. Trả lời đề nghị giao kết hợp đồng 1. Trả lời chấp nhận hoặc không chấp nhận đề nghị giao kết hợp đ...
+    3. score=+0.2062  doc_id=nd52-dang-ky-thong-bao-website  chunk=0  role=seller
+       # Điều kiện và thủ tục thông báo, đăng ký website thương mại điện tử ## Điều 52. Điều kiện thiết lập website t...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-dang-ky-thong-bao-website::chunk_3 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | ## Điều 54. Điều kiện thiết lập webs
+
+[Q4] (liet ke + FILTER BAT BUOC) Chính sách kiểm hàng có phải là một điều kiện giao dịch chung bắt buộc phải công bố không?
+  gold doc : nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung   anchor: ['chính sách kiểm hàng']
+  --- KHONG FILTER ---
+    1. score=+0.2548  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=3  role=buyer
+       ## Điều 69. Chính sách bảo vệ thông tin cá nhân của người tiêu dùng 1. Thương nhân, tổ chức, cá nhân thu thập ...
+    2. score=+0.2016  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=3  role=buyer
+       ## Điều 18. Rà soát và xác nhận nội dung hợp đồng Website thương mại điện tử phải có cơ chế cho phép khách hàn...
+    3. score=+0.1963  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=2  role=buyer
+       ## Điều 17. Đề nghị giao kết hợp đồng Chứng từ điện tử do khách hàng khởi tạo và gửi đi bằng cách sử dụng chức...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_3 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+  --- CO FILTER {'customer_role': 'buyer'} ---
+    1. score=+0.2548  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=3  role=buyer
+       ## Điều 69. Chính sách bảo vệ thông tin cá nhân của người tiêu dùng 1. Thương nhân, tổ chức, cá nhân thu thập ...
+    2. score=+0.2016  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=3  role=buyer
+       ## Điều 18. Rà soát và xác nhận nội dung hợp đồng Website thương mại điện tử phải có cơ chế cho phép khách hàn...
+    3. score=+0.1963  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=2  role=buyer
+       ## Điều 17. Đề nghị giao kết hợp đồng Chứng từ điện tử do khách hàng khởi tạo và gửi đi bằng cách sử dụng chức...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_3 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+    -> A/B: ket qua GIONG HET
+
+[Q5] (ngoai le) Website niêm yết giá mà không nói rõ đã bao gồm thuế và phí vận chuyển chưa thì hiểu thế nào?
+  gold doc : seller-listing   anchor: ['được hiểu là đã bao gồm mọi chi phí']
+  --- KHONG FILTER ---
+    1. score=+0.2788  doc_id=nd52-trach-nhiem-san-tmdt  chunk=1  role=both
+       ## Điều 36. Trách nhiệm của thương nhân, tổ chức cung cấp dịch vụ sàn giao dịch thương mại điện tử 1. Đăng ký ...
+    2. score=+0.2199  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=3  role=buyer
+       ## Điều 69. Chính sách bảo vệ thông tin cá nhân của người tiêu dùng 1. Thương nhân, tổ chức, cá nhân thu thập ...
+    3. score=+0.1863  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=0  role=buyer
+       # Quy trình giao kết hợp đồng khi đặt hàng trực tuyến ## Điều 15. Thông báo mời đề nghị giao kết hợp đồng Nếu ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-trach-nhiem-san-tmdt::chunk_1 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | ## Điều 36. Trách nhiệm của thương nhân, 
+------------------------------------------------------------------------------
+TONG DIEM heading: 0/10  (chunks=50)
+==============================================================================
+STRATEGY: clause   [TV2 (chua dien ten)]
+PARAMS  : keep_clause_lead=True, max_chunk_size=700, min_chunk_size=120
+PARAMS  : -
+TRANG THAI: CHUA IMPLEMENT — bo qua.
+  (ClauseChunker.chunk() chua duoc implement — xem huong dan trong chunkers/tv2_clause.py)
+------------------------------------------------------------------------------
+==============================================================================
+STRATEGY: sliding   [TV3 (chua dien ten)]
+PARAMS  : chunk_size=500, min_chunk_size=120, overlap=200, snap_window=80
+PARAMS  : -
+TRANG THAI: CHUA IMPLEMENT — bo qua.
+  (SlidingWindowChunker.chunk() chua duoc implement — xem huong dan trong chunkers/tv3_sliding.py)
+------------------------------------------------------------------------------
+==============================================================================
+STRATEGY: semantic   [TV4 (chua dien ten)]
+PARAMS  : percentile=25, max_chunk_size=900, min_chunk_size=120, embedding_fn=co
+PARAMS  : -
+TRANG THAI: CHUA IMPLEMENT — bo qua.
+  (SemanticSplitChunker.chunk() chua duoc implement — xem huong dan trong chunkers/tv4_semantic.py)
+------------------------------------------------------------------------------
+==============================================================================
+STRATEGY: fixed   [baseline src/]
+PARAMS  : {'chunk_size': 500, 'overlap': 50}
+CHUNKS  : 67 chunk tu data/k4_ecommerce
+------------------------------------------------------------------------------
+
+[Q1] (so lieu) Nếu người bán không công bố rõ thời hạn trả lời, sau bao lâu đề nghị giao kết hợp đồng của khách hàng hết hiệu lực?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['12 (mười hai) giờ']
+  --- KHONG FILTER ---
+    1. score=+0.2621  doc_id=nd52-quy-che-hoat-dong-san  chunk=2  role=both
+       i điện tử; e) Giới hạn trách nhiệm của thương nhân, tổ chức cung cấp dịch vụ sàn giao dịch thương mại điện tử ...
+    2. score=+0.2535  doc_id=nd52-trach-nhiem-san-tmdt  chunk=6  role=both
+       ng bố công khai cơ chế giải quyết các tranh chấp phát sinh trong quá trình giao dịch trên sàn giao dịch thương...
+    3. score=+0.2033  doc_id=nd52-trach-nhiem-nguoi-ban-tren-san  chunk=1  role=seller
+       ặc cung ứng dịch vụ trên sàn giao dịch thương mại điện tử. 3. Đảm bảo tính chính xác, trung thực của thông tin...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-quy-che-hoat-dong-san::chunk_2 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | i điện tử; | e) Giới hạn trách nhiệm của
+
+[Q2] (dieu kien) Sàn giao dịch thương mại điện tử phải thông báo trước bao nhiêu ngày khi thay đổi quy chế hoạt động?
+  gold doc : nd52-quy-che-hoat-dong-san   anchor: ['ít nhất 5 ngày']
+  --- KHONG FILTER ---
+    1. score=+0.2699  doc_id=seller-listing  chunk=1  role=seller
+       , chính xác, dễ tìm và dễ hiểu; b) Được sắp xếp tại các mục tương ứng trên website và có thể truy cập bằng phư...
+    2. score=+0.2533  doc_id=seller-listing  chunk=0  role=seller
+       # Thông tin người bán phải công bố khi đăng bán ## Điều 28. Cung cấp thông tin trên website thương mại điện tử...
+    3. score=+0.2372  doc_id=returns-policy  chunk=1  role=seller
+       hàng đã mua, cách thức lấy lại tiền, chi phí cho việc hoàn trả này; c) Chính sách bảo hành sản phẩm, nếu có; d...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: seller-listing::chunk_1 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | , chính xác, dễ tìm và dễ hiểu; | b) Được sắp xếp tạ
+
+[Q3] (quy trinh) Cơ chế rà soát và xác nhận nội dung hợp đồng phải hiển thị những thông tin gì cho khách hàng trước khi đặt hàng?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['Tổng giá trị của hợp đồng']
+  --- KHONG FILTER ---
+    1. score=+0.3827  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=3  role=buyer
+       hân hoạt động kinh doanh thương mại điện tử chịu trách nhiệm trong trường hợp việc thu thập, lưu trữ và sử dụn...
+    2. score=+0.2804  doc_id=nd52-trach-nhiem-nguoi-ban-tren-san  chunk=1  role=seller
+       ặc cung ứng dịch vụ trên sàn giao dịch thương mại điện tử. 3. Đảm bảo tính chính xác, trung thực của thông tin...
+    3. score=+0.2408  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=6  role=buyer
+       iện giao dịch chung trước khi gửi đề nghị giao kết hợp đồng. ## 5. Trách nhiệm giải quyết khiếu nại của người ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_3 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+
+[Q4] (liet ke + FILTER BAT BUOC) Chính sách kiểm hàng có phải là một điều kiện giao dịch chung bắt buộc phải công bố không?
+  gold doc : nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung   anchor: ['chính sách kiểm hàng']
+  --- KHONG FILTER ---
+    1. score=+0.3554  doc_id=nd52-dang-ky-thong-bao-website  chunk=4  role=seller
+       ổ chức hoạt động, bao gồm hoạt động cung cấp dịch vụ, hoạt động xúc tiến, tiếp thị dịch vụ cả trong và ngoài m...
+    2. score=+0.2325  doc_id=nd52-dang-ky-thong-bao-website  chunk=5  role=seller
+       theo quy định tại Điều 55 và 58 Nghị định này. ## Điều 55. Hồ sơ đăng ký thiết lập website cung cấp dịch vụ th...
+    3. score=+0.2290  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=3  role=buyer
+       in có tính chất riêng biệt theo sản phẩm như: năm, tháng, ngày sản xuất; hạn sử dụng; số lô sản xuất; số khung...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-dang-ky-thong-bao-website::chunk_4 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | ổ chức hoạt động, bao gồm hoạt động 
+  --- CO FILTER {'customer_role': 'buyer'} ---
+    1. score=+0.2290  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=3  role=buyer
+       in có tính chất riêng biệt theo sản phẩm như: năm, tháng, ngày sản xuất; hạn sử dụng; số lô sản xuất; số khung...
+    2. score=+0.2210  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=8  role=buyer
+       ớc của chủ thể thông tin trong các trường hợp sau: a) Thu thập thông tin cá nhân đã công bố công khai trên các...
+    3. score=+0.2097  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=7  role=buyer
+       ường hợp thương nhân, tổ chức, cá nhân bán hàng không công bố rõ thời hạn trả lời đề nghị giao kết hợp đồng, n...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_3 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+    -> A/B: ket qua KHAC NHAU
+
+[Q5] (ngoai le) Website niêm yết giá mà không nói rõ đã bao gồm thuế và phí vận chuyển chưa thì hiểu thế nào?
+  gold doc : seller-listing   anchor: ['được hiểu là đã bao gồm mọi chi phí']
+  --- KHONG FILTER ---
+    1. score=+0.2339  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=2  role=buyer
+       c người bán cung cấp chi tiết, cụ thể: - Đối với hàng hóa, dịch vụ được giới thiệu trên website, người bán phả...
+    2. score=+0.2169  doc_id=nd52-trach-nhiem-san-tmdt  chunk=1  role=both
+       giao dịch thương mại điện tử: a) Website cho phép người tham gia được mở các gian hàng trên đó để trưng bày, g...
+    3. score=+0.2137  doc_id=seller-listing  chunk=5  role=seller
+       website cung cấp dịch vụ thương mại điện tử quy định tại Mục 2 và 4 Chương này, website phải công bố thông tin...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_2 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+------------------------------------------------------------------------------
+TONG DIEM fixed: 0/10  (chunks=67)
+==============================================================================
+STRATEGY: recursive   [baseline src/]
+PARAMS  : {'separators': ['\n\n', '\n', '. ', ' ', ''], 'chunk_size': 400}
+CHUNKS  : 92 chunk tu data/k4_ecommerce
+------------------------------------------------------------------------------
+
+[Q1] (so lieu) Nếu người bán không công bố rõ thời hạn trả lời, sau bao lâu đề nghị giao kết hợp đồng của khách hàng hết hiệu lực?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['12 (mười hai) giờ']
+  --- KHONG FILTER ---
+    1. score=+0.2753  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=10  role=buyer
+       2. Trường hợp thương nhân, tổ chức, cá nhân bán hàng không công bố rõ thời hạn trả lời đề nghị giao kết hợp đồ...
+    2. score=+0.2614  doc_id=seller-listing  chunk=7  role=seller
+       3. Đối với dịch vụ trên các website cung cấp dịch vụ thương mại điện tử quy định tại Mục 2 và 4 Chương này, we...
+    3. score=+0.2459  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=9  role=buyer
+       2. Đơn vị thu thập thông tin phải thiết lập cơ chế để chủ thể thông tin bày tỏ sự đồng ý một cách rõ ràng, thô...
+    -> diem chunk-level: 2 — anchor nam o chunk top-1
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-quy-trinh-dat-hang-truc-tuyen::chunk_10 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | 2. Trường hợp thương nhân, tổ c
+
+[Q2] (dieu kien) Sàn giao dịch thương mại điện tử phải thông báo trước bao nhiêu ngày khi thay đổi quy chế hoạt động?
+  gold doc : nd52-quy-che-hoat-dong-san   anchor: ['ít nhất 5 ngày']
+  --- KHONG FILTER ---
+    1. score=+0.2520  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=7  role=buyer
+       ## 4. Chính sách kiểm hàng là điều kiện giao dịch chung bắt buộc...
+    2. score=+0.2140  doc_id=nd52-dang-ky-thong-bao-website  chunk=9  role=seller
+       d) Quy chế quản lý hoạt động của website cung cấp dịch vụ thương mại điện tử tuân thủ các quy định tại Nghị đị...
+    3. score=+0.2028  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=7  role=buyer
+       1. Trả lời chấp nhận hoặc không chấp nhận đề nghị giao kết hợp đồng phải được thực hiện dưới hình thức phù hợp...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_7 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+
+[Q3] (quy trinh) Cơ chế rà soát và xác nhận nội dung hợp đồng phải hiển thị những thông tin gì cho khách hàng trước khi đặt hàng?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['Tổng giá trị của hợp đồng']
+  --- KHONG FILTER ---
+    1. score=+0.3060  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=6  role=buyer
+       2. Hiển thị cho khách hàng những thông tin về cách thức trả lời chấp nhận đề nghị giao kết hợp đồng và thời hạ...
+    2. score=+0.2892  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=11  role=buyer
+       4. Đơn vị thu thập thông tin không cần được sự đồng ý trước của chủ thể thông tin trong các trường hợp sau: a)...
+    3. score=+0.2267  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=12  role=buyer
+       ## Điều 72. Bảo đảm an toàn, an ninh thông tin cá nhân 1. Đơn vị thu thập thông tin phải đảm bảo an toàn, an n...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-quy-trinh-dat-hang-truc-tuyen::chunk_6 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | 2. Hiển thị cho khách hàng những
+
+[Q4] (liet ke + FILTER BAT BUOC) Chính sách kiểm hàng có phải là một điều kiện giao dịch chung bắt buộc phải công bố không?
+  gold doc : nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung   anchor: ['chính sách kiểm hàng']
+  --- KHONG FILTER ---
+    1. score=+0.2375  doc_id=nd52-dang-ky-thong-bao-website  chunk=2  role=seller
+       1. Thương nhân, tổ chức, cá nhân thiết lập website thương mại điện tử bán hàng phải thông báo với Bộ Công Thươ...
+    2. score=+0.2194  doc_id=seller-listing  chunk=5  role=seller
+       1. Thông tin về giá hàng hóa hoặc dịch vụ, nếu có, phải thể hiện rõ giá đó đã bao gồm hay chưa bao gồm những c...
+    3. score=+0.2081  doc_id=seller-listing  chunk=7  role=seller
+       3. Đối với dịch vụ trên các website cung cấp dịch vụ thương mại điện tử quy định tại Mục 2 và 4 Chương này, we...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-dang-ky-thong-bao-website::chunk_2 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | 1. Thương nhân, tổ chức, cá nhân thi
+  --- CO FILTER {'customer_role': 'buyer'} ---
+    1. score=+0.1619  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=0  role=buyer
+       # Bảo vệ thông tin cá nhân của người tiêu dùng trong thương mại điện tử ## Thông tin cá nhân là gì (khoản 13 Đ...
+    2. score=+0.1486  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=12  role=buyer
+       ## Điều 72. Bảo đảm an toàn, an ninh thông tin cá nhân 1. Đơn vị thu thập thông tin phải đảm bảo an toàn, an n...
+    3. score=+0.1181  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=9  role=buyer
+       Bên cạnh đó, với các website có chức năng đặt hàng trực tuyến, người bán phải có cơ chế để khách hàng đọc và b...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_0 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+    -> A/B: ket qua KHAC NHAU
+
+[Q5] (ngoai le) Website niêm yết giá mà không nói rõ đã bao gồm thuế và phí vận chuyển chưa thì hiểu thế nào?
+  gold doc : seller-listing   anchor: ['được hiểu là đã bao gồm mọi chi phí']
+  --- KHONG FILTER ---
+    1. score=+0.3442  doc_id=nd52-dang-ky-thong-bao-website  chunk=4  role=seller
+       e) Tên, chức danh, số chứng minh nhân dân, số điện thoại và địa chỉ thư điện tử của người đại diện thương nhân...
+    2. score=+0.2871  doc_id=nd52-dang-ky-thong-bao-website  chunk=6  role=seller
+       c) Phân định quyền và trách nhiệm giữa thương nhân, tổ chức cung cấp dịch vụ thương mại điện tử với các bên sử...
+    3. score=+0.2442  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=14  role=buyer
+       3. Trong trường hợp hệ thống thông tin bị tấn công làm phát sinh nguy cơ mất thông tin của người tiêu dùng, đơ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-dang-ky-thong-bao-website::chunk_4 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | e) Tên, chức danh, số chứng minh nhâ
+------------------------------------------------------------------------------
+TONG DIEM recursive: 2/10  (chunks=92)
+==============================================================================
+STRATEGY: sentence   [baseline src/]
+PARAMS  : {'max_sentences_per_chunk': 3}
+CHUNKS  : 69 chunk tu data/k4_ecommerce
+------------------------------------------------------------------------------
+
+[Q1] (so lieu) Nếu người bán không công bố rõ thời hạn trả lời, sau bao lâu đề nghị giao kết hợp đồng của khách hàng hết hiệu lực?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['12 (mười hai) giờ']
+  --- KHONG FILTER ---
+    1. score=+0.2810  doc_id=seller-listing  chunk=8  role=seller
+       2. Trường hợp phát sinh chậm trễ trong việc giao hàng hoặc cung ứng dịch vụ, thương nhân, tổ chức, cá nhân phả...
+    2. score=+0.2166  doc_id=nd52-trach-nhiem-san-tmdt  chunk=2  role=both
+       Trách nhiệm của thương nhân, tổ chức cung cấp dịch vụ sàn giao dịch thương mại điện tử 1. Đăng ký thiết lập we...
+    3. score=+0.2016  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=4  role=buyer
+       Hiển thị cho khách hàng những thông tin về cách thức trả lời chấp nhận đề nghị giao kết hợp đồng và thời hạn t...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: seller-listing::chunk_8 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | 2. Trường hợp phát sinh chậm trễ trong việc giao hàn
+
+[Q2] (dieu kien) Sàn giao dịch thương mại điện tử phải thông báo trước bao nhiêu ngày khi thay đổi quy chế hoạt động?
+  gold doc : nd52-quy-che-hoat-dong-san   anchor: ['ít nhất 5 ngày']
+  --- KHONG FILTER ---
+    1. score=+0.2607  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=0  role=buyer
+       # Điểm mới về bảo vệ quyền lợi người tiêu dùng trong Nghị định 85/2021/NĐ-CP Ngày 25/9/2021, Chính phủ ban hàn...
+    2. score=+0.2499  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=2  role=buyer
+       ## Điều 18. Rà soát và xác nhận nội dung hợp đồng Website thương mại điện tử phải có cơ chế cho phép khách hàn...
+    3. score=+0.2146  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=3  role=buyer
+       Hiển thị cho khách hàng những thông tin sau: a) Tên hàng hóa hoặc dịch vụ, số lượng và chủng loại; b) Phương t...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_0 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+
+[Q3] (quy trinh) Cơ chế rà soát và xác nhận nội dung hợp đồng phải hiển thị những thông tin gì cho khách hàng trước khi đặt hàng?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['Tổng giá trị của hợp đồng']
+  --- KHONG FILTER ---
+    1. score=+0.3999  doc_id=nd52-trach-nhiem-san-tmdt  chunk=6  role=both
+       7. Áp dụng các biện pháp cần thiết để đảm bảo an toàn thông tin liên quan đến bí mật kinh doanh của thương nhâ...
+    2. score=+0.3683  doc_id=nd52-trach-nhiem-san-tmdt  chunk=7  role=both
+       Có biện pháp xử lý kịp thời khi phát hiện hoặc nhận được phản ánh về hành vi kinh doanh vi phạm pháp luật trên...
+    3. score=+0.2921  doc_id=nd52-dang-ky-thong-bao-website  chunk=8  role=seller
+       2. Hồ sơ đăng ký bao gồm: a) Đơn đăng ký thiết lập website cung cấp dịch vụ thương mại điện tử; b) Bản sao có ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-trach-nhiem-san-tmdt::chunk_6 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | 7. Áp dụng các biện pháp cần thiết để đảm
+
+[Q4] (liet ke + FILTER BAT BUOC) Chính sách kiểm hàng có phải là một điều kiện giao dịch chung bắt buộc phải công bố không?
+  gold doc : nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung   anchor: ['chính sách kiểm hàng']
+  --- KHONG FILTER ---
+    1. score=+0.3143  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=1  role=buyer
+       Chủ thể của hoạt động thương mại điện tử Khoản 6 Điều 1 Nghị định 85/2021/NĐ-CP sửa đổi khoản 5 Điều 24 Nghị đ...
+    2. score=+0.2107  doc_id=nd52-trach-nhiem-san-tmdt  chunk=3  role=both
+       Xây dựng và công bố công khai trên website quy chế hoạt động của sàn giao dịch thương mại điện tử theo quy địn...
+    3. score=+0.1952  doc_id=nd52-trach-nhiem-san-tmdt  chunk=7  role=both
+       Có biện pháp xử lý kịp thời khi phát hiện hoặc nhận được phản ánh về hành vi kinh doanh vi phạm pháp luật trên...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_1 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+  --- CO FILTER {'customer_role': 'buyer'} ---
+    1. score=+0.3143  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=1  role=buyer
+       Chủ thể của hoạt động thương mại điện tử Khoản 6 Điều 1 Nghị định 85/2021/NĐ-CP sửa đổi khoản 5 Điều 24 Nghị đ...
+    2. score=+0.1439  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=6  role=buyer
+       2. Khi trả lời chấp nhận đề nghị giao kết hợp đồng của khách hàng, thương nhân, tổ chức, cá nhân bán hàng phải...
+    3. score=+0.1318  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=5  role=buyer
+       ## Điều 19. Trả lời đề nghị giao kết hợp đồng 1. Trả lời chấp nhận hoặc không chấp nhận đề nghị giao kết hợp đ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_1 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+    -> A/B: ket qua KHAC NHAU
+
+[Q5] (ngoai le) Website niêm yết giá mà không nói rõ đã bao gồm thuế và phí vận chuyển chưa thì hiểu thế nào?
+  gold doc : seller-listing   anchor: ['được hiểu là đã bao gồm mọi chi phí']
+  --- KHONG FILTER ---
+    1. score=+0.3168  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=8  role=buyer
+       Bảo đảm an toàn, an ninh thông tin cá nhân 1. Đơn vị thu thập thông tin phải đảm bảo an toàn, an ninh cho thôn...
+    2. score=+0.2572  doc_id=nd52-dang-ky-thong-bao-website  chunk=0  role=seller
+       # Điều kiện và thủ tục thông báo, đăng ký website thương mại điện tử ## Điều 52. Điều kiện thiết lập website t...
+    3. score=+0.2317  doc_id=nd52-trach-nhiem-nguoi-ban-tren-san  chunk=3  role=seller
+       5. Cung cấp thông tin về tình hình kinh doanh của mình khi có yêu cầu của cơ quan nhà nước có thẩm quyền để ph...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_8 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+------------------------------------------------------------------------------
+TONG DIEM sentence: 0/10  (chunks=69)
+==============================================================================
+STRATEGY: heading_nobreadcrumb   [Ha — ablation]
+PARAMS  : keep_breadcrumb=False, max_chunk_size=400, min_chunk_size=120
+CHUNKS  : 108 chunk tu data/k4_ecommerce
+------------------------------------------------------------------------------
+
+[Q1] (so lieu) Nếu người bán không công bố rõ thời hạn trả lời, sau bao lâu đề nghị giao kết hợp đồng của khách hàng hết hiệu lực?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['12 (mười hai) giờ']
+  --- KHONG FILTER ---
+    1. score=+0.2620  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=16  role=buyer
+       a) Các trường hợp thương nhân, tổ chức, cá nhân cung cấp dịch vụ chấm dứt hợp đồng và cách thức giải quyết hậu...
+    2. score=+0.2464  doc_id=seller-listing  chunk=1  role=seller
+       2. Những thông tin này phải bảo đảm các yêu cầu sau: a) Rõ ràng, chính xác, dễ tìm và dễ hiểu; b) Được sắp xếp...
+    3. score=+0.2459  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=11  role=buyer
+       2. Đơn vị thu thập thông tin phải thiết lập cơ chế để chủ thể thông tin bày tỏ sự đồng ý một cách rõ ràng, thô...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-quy-trinh-dat-hang-truc-tuyen::chunk_16 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | a) Các trường hợp thương nhân, 
+
+[Q2] (dieu kien) Sàn giao dịch thương mại điện tử phải thông báo trước bao nhiêu ngày khi thay đổi quy chế hoạt động?
+  gold doc : nd52-quy-che-hoat-dong-san   anchor: ['ít nhất 5 ngày']
+  --- KHONG FILTER ---
+    1. score=+0.2303  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=2  role=buyer
+       Như vậy, thương nhân cung cấp dịch vụ logistics và vận chuyển hàng hóa giao dịch qua sàn thương mại điện tử ch...
+    2. score=+0.1846  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=5  role=buyer
+       a) Tên hàng hóa hoặc dịch vụ, số lượng và chủng loại; b) Phương thức và thời hạn giao hàng hoặc cung ứng dịch ...
+    3. score=+0.1807  doc_id=seller-listing  chunk=0  role=seller
+       # Thông tin người bán phải công bố khi đăng bán ## Điều 28. Cung cấp thông tin trên website thương mại điện tử...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_2 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+
+[Q3] (quy trinh) Cơ chế rà soát và xác nhận nội dung hợp đồng phải hiển thị những thông tin gì cho khách hàng trước khi đặt hàng?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['Tổng giá trị của hợp đồng']
+  --- KHONG FILTER ---
+    1. score=+0.2875  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=12  role=buyer
+       2. Trường hợp thương nhân, tổ chức, cá nhân bán hàng không công bố rõ thời hạn trả lời đề nghị giao kết hợp đồ...
+    2. score=+0.2805  doc_id=seller-listing  chunk=1  role=seller
+       2. Những thông tin này phải bảo đảm các yêu cầu sau: a) Rõ ràng, chính xác, dễ tìm và dễ hiểu; b) Được sắp xếp...
+    3. score=+0.2391  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=13  role=buyer
+       b) Sử dụng thông tin cá nhân để gửi quảng cáo, giới thiệu sản phẩm và các thông tin có tính thương mại khác. 4...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-quy-trinh-dat-hang-truc-tuyen::chunk_12 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | 2. Trường hợp thương nhân, tổ c
+
+[Q4] (liet ke + FILTER BAT BUOC) Chính sách kiểm hàng có phải là một điều kiện giao dịch chung bắt buộc phải công bố không?
+  gold doc : nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung   anchor: ['chính sách kiểm hàng']
+  --- KHONG FILTER ---
+    1. score=+0.2079  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=6  role=buyer
+       2. Hiển thị cho khách hàng những thông tin về cách thức trả lời chấp nhận đề nghị giao kết hợp đồng và thời hạ...
+    2. score=+0.1994  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=7  role=buyer
+       ## 3. Trách nhiệm của bên thứ ba trong việc cung cấp thông tin Điểm c khoản 3 Điều 26 được bổ sung quy định: "...
+    3. score=+0.1987  doc_id=nd52-dang-ky-thong-bao-website  chunk=4  role=seller
+       đ) Số, ngày cấp và nơi cấp giấy chứng nhận đăng ký kinh doanh của thương nhân, hoặc số, ngày cấp và đơn vị cấp...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-quy-trinh-dat-hang-truc-tuyen::chunk_6 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | 2. Hiển thị cho khách hàng những
+  --- CO FILTER {'customer_role': 'buyer'} ---
+    1. score=+0.2079  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=6  role=buyer
+       2. Hiển thị cho khách hàng những thông tin về cách thức trả lời chấp nhận đề nghị giao kết hợp đồng và thời hạ...
+    2. score=+0.1994  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=7  role=buyer
+       ## 3. Trách nhiệm của bên thứ ba trong việc cung cấp thông tin Điểm c khoản 3 Điều 26 được bổ sung quy định: "...
+    3. score=+0.1963  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=3  role=buyer
+       ## Điều 17. Đề nghị giao kết hợp đồng Chứng từ điện tử do khách hàng khởi tạo và gửi đi bằng cách sử dụng chức...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-quy-trinh-dat-hang-truc-tuyen::chunk_6 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | 2. Hiển thị cho khách hàng những
+    -> A/B: ket qua KHAC NHAU
+
+[Q5] (ngoai le) Website niêm yết giá mà không nói rõ đã bao gồm thuế và phí vận chuyển chưa thì hiểu thế nào?
+  gold doc : seller-listing   anchor: ['được hiểu là đã bao gồm mọi chi phí']
+  --- KHONG FILTER ---
+    1. score=+0.2890  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=5  role=buyer
+       b) Nếu hợp đồng giữa hai bên không quy định rõ trách nhiệm của mỗi bên thì thương nhân, tổ chức, cá nhân hoạt ...
+    2. score=+0.2862  doc_id=nd52-trach-nhiem-san-tmdt  chunk=14  role=both
+       Khi khách hàng trên sàn giao dịch thương mại điện tử phát sinh mâu thuẫn với người bán hoặc bị tổn hại lợi ích...
+    3. score=+0.2750  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=6  role=buyer
+       ## Điều 69. Chính sách bảo vệ thông tin cá nhân của người tiêu dùng 1. Thương nhân, tổ chức, cá nhân thu thập ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_5 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+------------------------------------------------------------------------------
+TONG DIEM heading_nobreadcrumb: 0/10  (chunks=108)
+==============================================================================
+STRATEGY: llm_semantic   [Ha — bonus]
+PARAMS  : max_chunk_size=900, llm_fn=khong, fallback=heading
+CHUNKS  : 50 chunk tu data/k4_ecommerce
+LLM     : khong co llm_fn -> dung HeadingChunker
+------------------------------------------------------------------------------
+
+[Q1] (so lieu) Nếu người bán không công bố rõ thời hạn trả lời, sau bao lâu đề nghị giao kết hợp đồng của khách hàng hết hiệu lực?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['12 (mười hai) giờ']
+  --- KHONG FILTER ---
+    1. score=+0.2024  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=6  role=buyer
+       ## Điều 70. Xin phép người tiêu dùng khi tiến hành thu thập thông tin 4. Đơn vị thu thập thông tin không cần đ...
+    2. score=+0.1996  doc_id=nd52-quy-che-hoat-dong-san  chunk=2  role=both
+       3. Khi có thay đổi về một trong các nội dung nêu tại Khoản 2 Điều này, thương nhân, tổ chức cung cấp dịch vụ s...
+    3. score=+0.1916  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=7  role=buyer
+       ## Điều 72. Bảo đảm an toàn, an ninh thông tin cá nhân 1. Đơn vị thu thập thông tin phải đảm bảo an toàn, an n...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_6 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+
+[Q2] (dieu kien) Sàn giao dịch thương mại điện tử phải thông báo trước bao nhiêu ngày khi thay đổi quy chế hoạt động?
+  gold doc : nd52-quy-che-hoat-dong-san   anchor: ['ít nhất 5 ngày']
+  --- KHONG FILTER ---
+    1. score=+0.2852  doc_id=nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung  chunk=3  role=buyer
+       ## 2. Trách nhiệm cung cấp thông tin về hàng hóa, dịch vụ của người bán - Người bán hàng hóa, dịch vụ thuộc da...
+    2. score=+0.2426  doc_id=nd52-trach-nhiem-san-tmdt  chunk=0  role=both
+       # Trách nhiệm của thương nhân, tổ chức cung cấp dịch vụ sàn giao dịch thương mại điện tử ## Điều 35. Cung cấp ...
+    3. score=+0.2132  doc_id=nd52-trach-nhiem-san-tmdt  chunk=2  role=both
+       ## Điều 36. Trách nhiệm của thương nhân, tổ chức cung cấp dịch vụ sàn giao dịch thương mại điện tử 5. Lưu trữ ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung::chunk_3 | url: https://moit.gov.vn/tin-tuc/thong-bao/mot-so-diem-moi-ve-bao-ve-quyen-loi-nguoi-tieu-dung-trong-nghi-dinh-so-85-2
+
+[Q3] (quy trinh) Cơ chế rà soát và xác nhận nội dung hợp đồng phải hiển thị những thông tin gì cho khách hàng trước khi đặt hàng?
+  gold doc : nd52-quy-trinh-dat-hang-truc-tuyen   anchor: ['Tổng giá trị của hợp đồng']
+  --- KHONG FILTER ---
+    1. score=+0.2398  doc_id=nd52-dang-ky-thong-bao-website  chunk=3  role=seller
+       ## Điều 54. Điều kiện thiết lập website cung cấp dịch vụ thương mại điện tử 1. Là thương nhân, tổ chức có ngàn...
+    2. score=+0.2107  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=5  role=buyer
+       ## Điều 19. Trả lời đề nghị giao kết hợp đồng 1. Trả lời chấp nhận hoặc không chấp nhận đề nghị giao kết hợp đ...
+    3. score=+0.2062  doc_id=nd52-dang-ky-thong-bao-website  chunk=0  role=seller
+       # Điều kiện và thủ tục thông báo, đăng ký website thương mại điện tử ## Điều 52. Điều kiện thiết lập website t...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor (DUNG doc_id nhung SAI section)
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-dang-ky-thong-bao-website::chunk_3 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | ## Điều 54. Điều kiện thiết lập webs
+
+[Q4] (liet ke + FILTER BAT BUOC) Chính sách kiểm hàng có phải là một điều kiện giao dịch chung bắt buộc phải công bố không?
+  gold doc : nd85-2021-diem-moi-bao-ve-nguoi-tieu-dung   anchor: ['chính sách kiểm hàng']
+  --- KHONG FILTER ---
+    1. score=+0.2548  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=3  role=buyer
+       ## Điều 69. Chính sách bảo vệ thông tin cá nhân của người tiêu dùng 1. Thương nhân, tổ chức, cá nhân thu thập ...
+    2. score=+0.2016  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=3  role=buyer
+       ## Điều 18. Rà soát và xác nhận nội dung hợp đồng Website thương mại điện tử phải có cơ chế cho phép khách hàn...
+    3. score=+0.1963  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=2  role=buyer
+       ## Điều 17. Đề nghị giao kết hợp đồng Chứng từ điện tử do khách hàng khởi tạo và gửi đi bằng cách sử dụng chức...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_3 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+  --- CO FILTER {'customer_role': 'buyer'} ---
+    1. score=+0.2548  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=3  role=buyer
+       ## Điều 69. Chính sách bảo vệ thông tin cá nhân của người tiêu dùng 1. Thương nhân, tổ chức, cá nhân thu thập ...
+    2. score=+0.2016  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=3  role=buyer
+       ## Điều 18. Rà soát và xác nhận nội dung hợp đồng Website thương mại điện tử phải có cơ chế cho phép khách hàn...
+    3. score=+0.1963  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=2  role=buyer
+       ## Điều 17. Đề nghị giao kết hợp đồng Chứng từ điện tử do khách hàng khởi tạo và gửi đi bằng cách sử dụng chức...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-bao-ve-thong-tin-ca-nhan::chunk_3 | url: https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/chong-lua-dao/58992/05-quy-dinh-ve-bao-ve-thong-tin-ca-nhan-trong-thuo
+    -> A/B: ket qua GIONG HET
+
+[Q5] (ngoai le) Website niêm yết giá mà không nói rõ đã bao gồm thuế và phí vận chuyển chưa thì hiểu thế nào?
+  gold doc : seller-listing   anchor: ['được hiểu là đã bao gồm mọi chi phí']
+  --- KHONG FILTER ---
+    1. score=+0.2788  doc_id=nd52-trach-nhiem-san-tmdt  chunk=1  role=both
+       ## Điều 36. Trách nhiệm của thương nhân, tổ chức cung cấp dịch vụ sàn giao dịch thương mại điện tử 1. Đăng ký ...
+    2. score=+0.2199  doc_id=nd52-bao-ve-thong-tin-ca-nhan  chunk=3  role=buyer
+       ## Điều 69. Chính sách bảo vệ thông tin cá nhân của người tiêu dùng 1. Thương nhân, tổ chức, cá nhân thu thập ...
+    3. score=+0.1863  doc_id=nd52-quy-trinh-dat-hang-truc-tuyen  chunk=0  role=buyer
+       # Quy trình giao kết hợp đồng khi đặt hàng trực tuyến ## Điều 15. Thông báo mời đề nghị giao kết hợp đồng Nếu ...
+    -> diem chunk-level: 0 — khong chunk nao chua anchor
+    -> agent: [MOCK LLM] Tra loi dua tren context: [1] (nguon: nd52-trach-nhiem-san-tmdt::chunk_1 | url: https://vanban.vcci.com.vn/nghi-dinh-522013nd-cp-cua-chinh-phu-ve-thuong-mai-dien-tu) | ## Điều 36. Trách nhiệm của thương nhân, 
+------------------------------------------------------------------------------
+TONG DIEM llm_semantic: 0/10  (chunks=50)
+
+==============================================================================
+BANG SO SANH STRATEGY (diem chunk-level, toi da 10)
+==============================================================================
+strategy               nguoi phu trach         chunks   Q1   Q2   Q3   Q4   Q5   TONG
+-------------------------------------------------------------------------------------
+heading                Nguyen Quang Ha             50    0    0    0    0    0      0
+fixed                  baseline src/               67    0    0    0    0    0      0
+recursive              baseline src/               92    2    0    0    0    0      2
+sentence               baseline src/               69    0    0    0    0    0      0
+heading_nobreadcrumb   Ha — ablation              108    0    0    0    0    0      0
+llm_semantic           Ha — bonus                  50    0    0    0    0    0      0
+-------------------------------------------------------------------------------------
+Q4 duoc cham theo lan CO metadata_filter (customer_role=buyer).
+
+[CHUA IMPLEMENT] clause                 — TV2 (chua dien ten)
+[CHUA IMPLEMENT] sliding                — TV3 (chua dien ten)
+[CHUA IMPLEMENT] semantic               — TV4 (chua dien ten)
+
+4 chien luoc chinh cua nhom: 1/4 da xong (heading, clause, sliding, semantic).
