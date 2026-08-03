@@ -1,3 +1,3 @@
-# Luong Minh Quan - Recursive policy chunking
+# Luong Minh Quan - Recursive product chunking
 
-This strategy uses recursive separators with moderate overlap to keep seller procedures and evidence requirements together.
+This strategy uses recursive separators to keep product details, size information, care instructions, and material descriptions coherent.

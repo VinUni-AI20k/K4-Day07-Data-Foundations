@@ -31,9 +31,10 @@ Sau bài thực hành (lab) này, bạn cần có thể:
 
 Mỗi sinh viên **tự mình** hoàn thành tất cả các mục CẦN LÀM (TODO) trong `src/chunking.py`, `src/store.py`, và `src/agent.py`. Lớp dữ liệu `Document` (dataclass) và `FixedSizeChunker` đã được lập trình sẵn làm ví dụ.
 
-### Giai Đoạn 2 — Nhóm: So Sánh Chiến Lược Truy Xuất (Retrieval Strategy)
+### Giai Đoạn 2 — Nhóm: Truy Xuất Danh Mục Sản Phẩm
 
-Nhóm cùng chọn một bộ tài liệu và thống nhất 5 câu hỏi đánh giá (benchmark queries). Mỗi thành viên **thử chiến lược riêng** (chunking, metadata), chạy cùng các câu hỏi, rồi **so sánh kết quả trong nhóm** để học hỏi lẫn nhau.
+Nhóm sử dụng danh mục sản phẩm ASOS và thống nhất 5 câu hỏi đánh giá (benchmark queries).
+Mỗi thành viên **thử chiến lược riêng** (chunking, metadata), chạy cùng các câu hỏi, rồi **so sánh kết quả trong nhóm**.
 
 ---
 
@@ -171,7 +172,7 @@ PY
 
 | Giai Đoạn | Hoạt Động |
 |-----------|-----------|
-| Chuẩn bị tài liệu | Nhóm thu thập tài liệu theo **chủ đề cố định của lớp K4** (chính sách TMĐT / hỗ trợ khách hàng), chuyển sang định dạng .md/.txt |
+| Chuẩn bị tài liệu | Nhóm chuẩn hóa danh mục sản phẩm ASOS thành tài liệu Markdown có metadata |
 | Lập trình cá nhân | Khởi động + hoàn thành tất cả TODO (cá nhân) |
 | Thiết kế chiến lược | Mỗi người thử chiến lược riêng, thống nhất 5 câu hỏi đánh giá |
 | So sánh trong nhóm | Chạy đánh giá (benchmark), so sánh kết quả, chuẩn bị thuyết trình |
@@ -195,12 +196,13 @@ PY
 
 ---
 
-## Nhiệm Vụ Nhóm (Giai Đoạn 2) — So Sánh Chiến Lược
+## Nhiệm Vụ Nhóm (Giai Đoạn 2) — Truy Xuất Sản Phẩm
 
-> Trước khi thu thập dữ liệu, đọc [Hướng dẫn crawl và format dữ liệu](docs/DATA_COLLECTION.md). Mỗi nhóm crawl theo **chủ đề cố định của lớp K4** (chính sách TMĐT / hỗ trợ khách hàng — xem [K4_VARIANT.md](K4_VARIANT.md)), dùng 5–10 nguồn công khai/được phép và lưu kèm metadata có thể truy vết.
+> Phạm vi cuối cùng của nhóm là truy xuất sản phẩm từ dataset công khai `UniqueData/asos-e-commerce-dataset`.
+> Dữ liệu được lưu kèm nguồn, giấy phép và metadata có thể truy vết.
 
-1. **Thu thập bộ tài liệu** (5-10 tài liệu) trong chủ đề cố định của lớp K4: chính sách/FAQ/hướng dẫn về thanh toán, đổi trả, giao hàng, quyền riêng tư, điều kiện người bán
-2. **Chuyển sang định dạng .txt/.md** nếu cần (xem mẹo trong exercises.md); nạp bằng `build_knowledge_base()` trong `ingest.py`
+1. **Thu thập bộ tài liệu sản phẩm** từ nguồn dataset công khai đã chọn
+2. **Chuyển mỗi sản phẩm thành một file Markdown**; nạp bằng `build_knowledge_base()` trong `ingest.py`
 3. **Thống nhất 5 câu hỏi đánh giá** kèm theo câu trả lời chuẩn (gold answers)
 4. **Mỗi thành viên thử chiến lược riêng**: phương pháp chunking, các tham số, cấu trúc metadata
 5. **So sánh kết quả trong nhóm**: chiến lược nào cho việc truy xuất tốt hơn? Tại sao?
