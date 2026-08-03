@@ -59,13 +59,24 @@ Số ký tự được tính trên phần nội dung đã làm sạch, không g�
 
 Chạy `ChunkingStrategyComparator().compare()` trên 2-3 tài liệu:
 
-| Tài liệu | Chiến lược (Strategy) | Số lượng Chunk | Độ dài trung bình | Giữ được ngữ cảnh không? |
-|-----------|----------|-------------|------------|-------------------|
-| | FixedSizeChunker (`fixed_size`) | | | |
-| | SentenceChunker (`by_sentences`) | | | |
-| | RecursiveChunker (`recursive`) | | | |
+Khoa chạy cùng `chunk_size=500` trên phần body đã bỏ YAML front matter. Bảng ghi `số chunk / độ dài trung bình`; đây là thống kê cấu trúc thực tế, chưa phải điểm chất lượng semantic retrieval.
+
+| Tài liệu | Fixed-size | By-sentences | Recursive | Heading/clause-aware |
+|-----------|----------:|-------------:|----------:|---------------------:|
+| Hủy đơn hàng | 4 / 468.0 | 6 / 308.5 | 5 / 374.4 | 9 / 264.9 |
+| Trả hàng/hoàn tiền | 39 / 497.9 | 42 / 458.6 | 69 / 281.4 | 76 / 332.5 |
+| Quy định đăng bán | 43 / 494.9 | 77 / 272.8 | 53 / 401.5 | 80 / 348.2 |
+
+Sentence-based không nhận tham số kích thước ký tự nên chunk dài nhất trên ba tài liệu lần lượt là 525, 1,015 và 1,051 ký tự. Custom giữ chunk dài nhất không quá 500 ký tự trong cả ba lần chạy.
 
 ### Chiến lược của từng thành viên
+
+**Nguyễn Trọng Đăng Khoa — 2A202601964**
+- **Loại chiến lược:** custom `MarkdownHeadingChunker` trong `src/chunking.py`.
+- **Cách hoạt động:** Nhận diện cây heading Markdown từ `#` đến `######` và cây nhãn điều khoản như `3.`, `3.1.`, `3.1.2.`. Mỗi chunk bắt đầu bằng đường dẫn heading/nhãn đang hoạt động. Nếu nội dung section quá lớn, phần body được chia đệ quy theo `\n\n`, `\n`, `. `, khoảng trắng rồi cắt cứng; đường dẫn context được lặp lại trên mọi continuation chunk.
+- **Vì sao phù hợp với chính sách Shopee:** Các quy định Shopee tổ chức nghĩa vụ, ngoại lệ, đối tượng áp dụng và chế tài dưới các mục/điều đánh số. Một đoạn như thời hạn “15 ngày” dễ mất phạm vi nếu tách khỏi tiêu đề “Điều kiện yêu cầu trả hàng/hoàn tiền” hoặc nhãn `3.2.`; lặp context giúp retriever trả về đoạn tự giải thích và có vị trí điều khoản để kiểm chứng.
+- **Kiểm tra bảo toàn context:** Điều `3.2.` của chính sách trả hàng/hoàn tiền được chia thành 2 chunks; cả 2 đều giữ `# Chính sách trả hàng và hoàn tiền`, heading mục 3 và nhãn `3.2.`.
+- **So với ba baseline:** Fixed-size kiểm soát độ dài tốt nhưng có thể cắt giữa điều khoản và không hiểu heading. Sentence-based giữ câu nguyên vẹn nhưng có chunk vượt xa 500 ký tự và không tự mang tên section. Recursive ưu tiên ranh giới đoạn/câu và kiểm soát kích thước tốt hơn, nhưng continuation chunk không tự lặp heading. Custom tạo nhiều chunk hơn và tốn thêm token do lặp context, đổi lại giữ được phạm vi chính sách và khả năng truy vết điều/khoản.
 
 > Mỗi thành viên điền một khối dưới đây (copy thêm nếu nhóm có nhiều hơn 3 người).
 

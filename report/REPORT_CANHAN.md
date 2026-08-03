@@ -1,8 +1,9 @@
 # Báo Cáo Cá Nhân — Lab 7: Embedding & Vector Store
 
-**Họ tên:** [Tên sinh viên]
+**Họ tên:** Nguyễn Trọng Đăng Khoa
+**Mã sinh viên:** 2A202601964
 **Nhóm:** [Tên nhóm]
-**Ngày:** [Ngày nộp]
+**Ngày:** 2026-08-03
 
 > **Nộp 1 bản / sinh viên.** Phần nhóm (lựa chọn tài liệu, thiết kế chiến lược, bộ câu hỏi đánh giá, demo) nộp chung 1 bản trong `REPORT_NHOM.md`. Chi tiết thang điểm: `docs/SCORING.md`.
 
@@ -15,29 +16,29 @@
 ### Độ tương tự Cosine (Cosine Similarity) (Bài tập 1.1)
 
 **Độ tương tự cosine cao (High cosine similarity) nghĩa là gì?**
-> *Viết 1-2 câu:*
+> Hai vector embedding hướng gần giống nhau, cho thấy hai văn bản có cách biểu diễn ngữ nghĩa tương tự. Điểm càng gần 1 thì mức tương đồng theo hướng càng cao.
 
 **Ví dụ có độ tương tự CAO:**
-- Câu A:
-- Câu B:
-- Tại sao tương đồng:
+- Câu A: “Người mua có thể yêu cầu hoàn tiền cho đơn hàng.”
+- Câu B: “Khách hàng được gửi yêu cầu trả hàng và nhận lại tiền.”
+- Tại sao tương đồng: Cả hai cùng diễn đạt quyền yêu cầu trả hàng/hoàn tiền dù dùng từ khác nhau.
 
 **Ví dụ có độ tương tự THẤP:**
-- Câu A:
-- Câu B:
-- Tại sao khác:
+- Câu A: “Người mua có thể yêu cầu hoàn tiền cho đơn hàng.”
+- Câu B: “Ảnh sản phẩm phải do Người bán tự chụp.”
+- Tại sao khác: Hai câu thuộc hai nghiệp vụ khác nhau: hoàn tiền và quy định đăng bán.
 
 **Tại sao độ tương tự cosine (cosine similarity) được ưu tiên hơn khoảng cách Euclid (Euclidean distance) cho text embeddings?**
-> *Viết 1-2 câu:*
+> Cosine tập trung vào góc giữa hai vector nên ít bị ảnh hưởng bởi độ lớn của vector. Với text embeddings, hướng thường thể hiện ngữ nghĩa hữu ích hơn khoảng cách tuyệt đối do độ dài hoặc độ lớn biểu diễn gây ra.
 
 ### Bài toán tính toán Chunking (Bài tập 1.2)
 
 **Tài liệu 10,000 ký tự, chunk_size=500, overlap=50. Bao nhiêu chunks?**
-> *Trình bày phép tính:*
-> *Đáp án:*
+> Theo công thức của bài: `ceil((10,000 - 50) / (500 - 50)) = ceil(9,950 / 450) = 23`.
+> Đáp án: **23 chunks**.
 
 **Nếu độ chồng chéo (overlap) tăng lên 100, số lượng chunk thay đổi thế nào? Tại sao muốn độ chồng chéo nhiều hơn?**
-> *Viết 1-2 câu:*
+> Số lượng tăng thành `ceil((10,000 - 100) / (500 - 100)) = ceil(9,900 / 400) = 25` chunks. Overlap lớn hơn giữ thêm ngữ cảnh ở ranh giới chunk, nhưng đổi lại làm tăng số embedding, dung lượng lưu trữ và chi phí truy xuất.
 
 ---
 
@@ -48,23 +49,23 @@ Giải thích cách tiếp cận của bạn khi lập trình (implement) các p
 ### Các hàm chia nhỏ (Chunking Functions)
 
 **`SentenceChunker.chunk`** — hướng tiếp cận:
-> *Viết 2-3 câu: dùng biểu thức chính quy (regex) gì để phát hiện câu? Xử lý trường hợp ngoại lệ (edge case) nào?*
+> Tôi dùng regex `(?<=[.!?])(?:[ \t]+|\n+)` để tách tại khoảng trắng sau `.`, `!`, `?`, nhờ lookbehind nên vẫn giữ dấu câu trong câu đứng trước. Văn bản rỗng hoặc chỉ có whitespace trả về `[]`; whitespace thừa trong từng câu được chuẩn hóa trước khi nhóm tối đa `max_sentences_per_chunk` câu.
 
 **`RecursiveChunker.chunk` / `_split`** — hướng tiếp cận:
-> *Viết 2-3 câu: thuật toán hoạt động thế nào? Base case (trường hợp cơ sở) là gì?*
+> Thuật toán thử separator theo thứ tự ưu tiên và chỉ gọi đệ quy với mảnh vẫn vượt `chunk_size`; các mảnh nhỏ kề nhau được ghép lại nếu còn vừa giới hạn. Base cases xử lý text rỗng, text đã đủ nhỏ, hết separator và separator rỗng; hai trường hợp cuối cắt cứng theo kích thước để không lặp vô hạn hoặc làm mất nội dung.
 
 ### Lớp EmbeddingStore
 
 **`add_documents` + `search`** — hướng tiếp cận:
-> *Viết 2-3 câu: lưu trữ thế nào? Tính độ tương tự ra sao?*
+> Mỗi `Document` được embed đúng một lần và lưu thành record gồm id gốc, storage id duy nhất, content, bản sao metadata và embedding. Bộ nhớ là nguồn dữ liệu tin cậy; ChromaDB chỉ là mirror tùy chọn. Khi search, query được embed rồi tính dot product với các record, sắp xếp score giảm dần và giới hạn `top_k`.
 
 **`search_with_filter` + `delete_document`** — hướng tiếp cận:
-> *Viết 2-3 câu: lọc (filter) trước hay sau? Xóa bằng cách nào?*
+> Metadata được lọc trước khi embed query và xếp hạng để kết quả không bị các record ngoài phạm vi chiếm chỗ trong top-k. `delete_document` xóa tất cả record có id gốc hoặc `metadata["doc_id"]` trùng yêu cầu, đồng thời xóa các storage id tương ứng khỏi Chroma nếu backend này đang hoạt động.
 
 ### Tác tử KnowledgeBaseAgent
 
 **`answer`** — hướng tiếp cận:
-> *Viết 2-3 câu: cấu trúc prompt? Cách đưa ngữ cảnh (inject context) vào thế nào?*
+> Agent gọi `store.search(question, top_k)` rồi đưa từng kết quả vào một khối `[CONTEXT CHUNK n]` tách biệt, kèm document id và nguồn. Prompt chứa nguyên câu hỏi và yêu cầu chỉ trả lời từ context, không thêm thông tin thiếu căn cứ, đồng thời phải nói rõ khi context không đủ trước khi gọi `llm_fn` được inject.
 
 ---
 
@@ -75,10 +76,12 @@ Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
 ### Kết Quả Kiểm Thử (Test Results)
 
 ```
-# Dán kết quả (output) của: pytest tests/ -v
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0
+collected 42 items
+============================== 42 passed in 0.09s ==============================
 ```
 
-**Số lượng bài test vượt qua (pass):** __ / 42
+**Số lượng bài test vượt qua (pass):** 42 / 42
 
 ---
 
@@ -86,11 +89,11 @@ Vượt qua bộ kiểm thử là điều kiện tính điểm phần này.
 
 | Cặp | Câu A | Câu B | Dự đoán | Điểm thực tế | Đúng? |
 |------|-----------|-----------|---------|--------------|-------|
-| 1 | | | cao / thấp | | |
-| 2 | | | cao / thấp | | |
-| 3 | | | cao / thấp | | |
-| 4 | | | cao / thấp | | |
-| 5 | | | cao / thấp | | |
+| 1 | Người mua có thể yêu cầu hoàn tiền cho đơn hàng. | Khách hàng được gửi yêu cầu trả hàng và nhận lại tiền. | cao | Chưa đo | Chưa đánh giá |
+| 2 | Người bán phải đăng ít nhất một ảnh thật tự chụp. | Sản phẩm cần có tối thiểu một hình ảnh do chính người bán chụp. | cao | Chưa đo | Chưa đánh giá |
+| 3 | Người mua phải chờ phản hồi khi hủy đơn đang chờ lấy hàng. | Thực phẩm đông lạnh có thời hạn yêu cầu hoàn tiền là 24 giờ. | thấp | Chưa đo | Chưa đánh giá |
+| 4 | Shopee cấm đăng bán súng và các sản phẩm có hình dạng giống vũ khí. | Vũ khí thuộc danh sách sản phẩm bị cấm hoặc hạn chế mua bán. | cao | Chưa đo | Chưa đánh giá |
+| 5 | Chuyển tiền vào tài khoản ngân hàng có thể cần tối đa bốn ngày làm việc. | Sản phẩm vi phạm có thể bị xóa khỏi sàn. | thấp | Chưa đo | Chưa đánh giá |
 
 **Kết quả nào bất ngờ nhất? Điều này nói gì về cách embeddings biểu diễn ý nghĩa?**
 > *Viết 2-3 câu:*
