@@ -162,3 +162,128 @@ class ChunkingStrategyComparator:
                 "chunks": chunks,
             }
         return comparison
+
+
+class HeadingChunker:
+    """Chiến lược tùy chỉnh: chia Markdown theo ranh giới TIÊU ĐỀ (#, ##, ###...).
+
+    Lý do thiết kế (cho corpus K4 ASOS product listings):
+        - Thân tài liệu có cấu trúc heading rõ ràng: `## Thong tin san pham`,
+          `### Dac diem`, `### Look After Me`, `### About Me`, `### Brand`...
+          Mỗi mục là một ý trọn vẹn (giá / đặc điểm / bảo quản / chất liệu).
+        - Chia theo heading giữ "chunk coherence": không cắt ngang giữa mục như
+          FixedSize/Recursive, nên chunk vừa mạch lạc vừa dễ truy vết.
+        - Bỏ FOOTER nguồn/license ("Nguon: [url] ...") vì đó là boilerplate làm
+          nhiễu embedding (URL dài, câu về dataset), không phải nội dung sản phẩm.
+
+    Cơ chế:
+        1. Loại footer (dòng bắt đầu bằng footer marker + rule `---` ở đuôi).
+        2. Gom các dòng thành từng "mục" bắt đầu tại mỗi dòng tiêu đề.
+        3. Gộp tham lam các mục nhỏ liền kề tới ~max_chars; tách mục quá lớn.
+    """
+
+    _HEADING = re.compile(r"^#{1,6}\s")
+
+    def __init__(
+        self,
+        max_chars: int = 500,
+        drop_footer: bool = True,
+        footer_markers: tuple[str, ...] = ("Nguon:", "Nguồn:", "Thu thap qua dataset", "Source:"),
+    ) -> None:
+        self.max_chars = max(1, max_chars)
+        self.drop_footer = drop_footer
+        self.footer_markers = tuple(footer_markers)
+
+    def chunk(self, text: str) -> list[str]:
+        if not text or not text.strip():
+            return []
+        lines = text.splitlines()
+        if self.drop_footer:
+            lines = self._strip_footer(lines)
+        sections = self._split_sections(lines)
+        return self._pack(sections)
+
+    def _strip_footer(self, lines: list[str]) -> list[str]:
+        cut = len(lines)
+        for index, line in enumerate(lines):
+            stripped = line.strip()
+            if any(stripped.startswith(marker) for marker in self.footer_markers):
+                cut = index
+                break
+        trimmed = lines[:cut]
+        # Bỏ thematic break / dòng trống thừa ở đuôi (thường đứng trước footer).
+        while trimmed and trimmed[-1].strip() in ("", "---", "***", "___"):
+            trimmed.pop()
+        return trimmed
+
+    def _split_sections(self, lines: list[str]) -> list[str]:
+        sections: list[str] = []
+        current: list[str] = []
+        for line in lines:
+            if self._HEADING.match(line) and current:
+                section = "\n".join(current).strip()
+                if section:
+                    sections.append(section)
+                current = [line]
+            else:
+                current.append(line)
+        section = "\n".join(current).strip()
+        if section:
+            sections.append(section)
+        return sections
+
+    def _pack(self, sections: list[str]) -> list[str]:
+        chunks: list[str] = []
+        buffer = ""
+        for section in sections:
+            if len(section) > self.max_chars:
+                if buffer:
+                    chunks.append(buffer)
+                    buffer = ""
+                chunks.extend(self._split_large_section(section))
+                continue
+            candidate = section if not buffer else buffer + "\n\n" + section
+            if len(candidate) <= self.max_chars:
+                buffer = candidate
+            else:
+                if buffer:
+                    chunks.append(buffer)
+                buffer = section
+        if buffer:
+            chunks.append(buffer)
+        return [c for c in chunks if c.strip()]
+
+    def _split_large_section(self, section: str) -> list[str]:
+        # Mục vượt max_chars: giữ dòng TIÊU ĐỀ gắn vào MỌI mảnh con để không mất
+        # ngữ cảnh (mỗi mảnh vẫn biết mình thuộc mục nào).
+        lines = section.splitlines()
+        if lines and self._HEADING.match(lines[0]):
+            heading, body = lines[0], "\n".join(lines[1:]).strip()
+        else:
+            heading, body = "", section
+        prefix = f"{heading}\n" if heading else ""
+        budget = max(1, self.max_chars - len(prefix))
+        pieces = self._pack_lines(body, budget)
+        result = [(prefix + piece).strip() for piece in pieces if piece.strip()]
+        return result or ([heading] if heading.strip() else [])
+
+    def _pack_lines(self, text: str, budget: int) -> list[str]:
+        out: list[str] = []
+        buffer = ""
+        for line in text.splitlines():
+            while len(line) > budget:  # dòng đơn quá dài -> cắt cứng theo ký tự
+                if buffer:
+                    out.append(buffer)
+                    buffer = ""
+                out.append(line[:budget])
+                line = line[budget:]
+            candidate = line if not buffer else buffer + "\n" + line
+            if len(candidate) <= budget:
+                buffer = candidate
+            else:
+                if buffer:
+                    out.append(buffer)
+                buffer = line
+        if buffer:
+            out.append(buffer)
+        return out

@@ -60,4 +60,45 @@ class OpenAIEmbedder:
         return [float(value) for value in response.data[0].embedding]
 
 
+BGE_M3_MODEL = "BAAI/bge-m3"
+
+
+class BGEM3Embedder:
+    """Local BGE-M3 dense embedder (đa ngôn ngữ, hợp corpus Việt/Anh của sản phẩm).
+
+    Áp dụng ý tưởng từ embedding server tham khảo (BAAI/bge-m3) nhưng CHẠY LOCAL,
+    in-process — không cần HTTP. Ưu tiên backend FlagEmbedding (BGEM3FlagModel, đúng
+    như server); nếu môi trường không có thì fallback sang sentence-transformers.
+    Trả về vector dense đã L2-normalize để dot == cosine, khớp EmbeddingStore.
+    """
+
+    def __init__(self, model_name: str = BGE_M3_MODEL, use_fp16: bool = False, device: str | None = None) -> None:
+        self.model_name = model_name
+        try:
+            from FlagEmbedding import BGEM3FlagModel
+
+            kwargs = {"use_fp16": use_fp16}
+            if device:
+                kwargs["device"] = device
+            self._model = BGEM3FlagModel(model_name, **kwargs)
+            self._impl = "flagembedding"
+            self._backend_name = "bge-m3 (FlagEmbedding)"
+        except Exception:
+            from sentence_transformers import SentenceTransformer
+
+            self._model = SentenceTransformer(model_name, device=device)
+            self._impl = "sentence-transformers"
+            self._backend_name = "bge-m3 (sentence-transformers)"
+
+    def __call__(self, text: str) -> list[float]:
+        if self._impl == "flagembedding":
+            output = self._model.encode([text], return_dense=True, return_sparse=False)
+            raw = output["dense_vecs"][0]
+        else:
+            raw = self._model.encode(text, normalize_embeddings=True)
+        vector = raw.tolist() if hasattr(raw, "tolist") else [float(value) for value in raw]
+        norm = math.sqrt(sum(value * value for value in vector)) or 1.0
+        return [value / norm for value in vector]
+
+
 _mock_embed = MockEmbedder()
